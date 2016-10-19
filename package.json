@@ -1,0 +1,14 @@
+{
+  "name"         : "browserstream",
+  "version"      : "0.0.0",
+  "description"  : "A place to search what is available on different streaming services",
+  "main"         : "server.js",
+  "author"       : "Alex Bannon",
+  "scripts": {
+    "start": "node ./server.js"
+  },
+  "dependencies" : {
+    "express"    : "~3.4.4",
+    "mongoose"   : "~3.6.2"
+  }
+}
