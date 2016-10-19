@@ -5,7 +5,7 @@
   "main": "server.js",
   "author": "Alex Bannon",
   "scripts": {
-    "start": "nodemon"
+    "start": "nodemon server/server.js"
   },
   "dependencies": {
     "body-parser": "^1.15.2",

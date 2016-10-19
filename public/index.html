@@ -1,13 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="browserstream">
 <head>
-  <meta charset="UTF-8">
+  <base href="/">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>BrowserStream</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="app.css">
+  <script src="./components/angular/angular.min.js"></script>
+  <script src="./components/angular-route/angular-route.min.js"></script>
+  <script src="app.js"></script>
+  <script src="views/home/home.js"></script>
 </head>
 <body>
   <h1>BrowserStream</h1>
   <p>
     This is a magical place
   </p>
+  <div ng-view></div>
+
+
 </body>
 </html>

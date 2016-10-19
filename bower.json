@@ -1,0 +1,25 @@
+{
+  "name": "browserstream",
+  "description": "A place to search what is available on different streaming services",
+  "main": "server.js",
+  "authors": [
+    "Alex Bannon"
+  ],
+  "license": "alexbannon.com",
+  "homepage": "https://github.com/alexbannon/browserstream",
+  "moduleType": [
+    "es6",
+    "node"
+  ],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "^1.5.8",
+    "angular-route": "^1.5.8"
+  }
+}
