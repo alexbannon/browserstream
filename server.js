@@ -1,7 +1,7 @@
     var express  = require('express');
     var app      = express();
     var mongoose = require('mongoose');
-    var port     = process.env.PORT || 8080;
+    var port     = process.env.PORT || 3000;
     var database = require('./config/database');
     var morgan = require('morgan');             // log requests to the console (express4)
     var bodyParser = require('body-parser');    // pull information from HTML POST (express4)
@@ -18,8 +18,9 @@
     app.use(methodOverride());
 
     // routes ======================================================================
-    require('./app/routes.js')(app);
-
+    app.get('/', function(req, res) {
+      res.sendfile('./public/index.html');
+    });
     // listen (start app with node server.js) ======================================
     app.listen(port);
     console.log("App listening on port " + port);
