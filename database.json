@@ -1,0 +1,10 @@
+{
+  "dev": {
+    "driver": "pg",
+    "user": "local",
+    "password": "password",
+    "host": "localhost",
+    "database": "browserstream",
+    "schema": "public"
+  }
+}
