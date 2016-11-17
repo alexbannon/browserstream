@@ -6,5 +6,6 @@
     "host": "localhost",
     "database": "browserstream",
     "schema": "public"
-  }
+  },
+    "sql-file" : true
 }
