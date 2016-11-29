@@ -4,8 +4,7 @@ var pg = require('pg');
 var http = require('http');
 var config = require('../config/environment/local');
 
-
-// next steps, move scraped netflix data to db
+// TODO: refactor, process.exit();
 // use https://api.guidebox.com/apidocs to expand db dramatically
 // start front end work
 
