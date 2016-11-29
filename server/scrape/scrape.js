@@ -2,24 +2,86 @@ var request = require('request');
 var cheerio = require('cheerio');
 var pg = require('pg');
 var http = require('http');
+var config = require('../config/environment/local');
+
 
 // next steps, move scraped netflix data to db
 // use https://api.guidebox.com/apidocs to expand db dramatically
 // start front end work
 
-function handleImdbResponse(response) {
-  console.log('***');
-  console.log(response);
+var imdbResponse = [];
+var requestCount = 0;
+var final = false;
+var dbCount = 0;
+var keys = ['imdbID', 'Title', 'Year', 'Genre', 'Director', 'Actors', 'Plot', 'Poster', 'imdbRating'];
+var queryString = 'INSERT INTO title (imdb_id, title_name, year, genre, director, actors, plot, image_url, imdb_rating) values ($1, $2, $3, $4, $5, $6, $7, $8, $9)';
+
+function dbSuccess(parseCount) {
+  dbCount++;
+  if (dbCount === )
+  console.log('done!');
+  // process.exit()
 }
 
-function handleImdbError(error) {
+function handleImdbResponse(response, finalResponse) {
+  imdbResponse.push(response);
+  if (finalResponse) {
+    parseResponsesForDb(dbSuccess);
+  }
+}
+
+function handleImdbError(error, finalResponse) {
   console.log('###');
   console.log(error);
+  if (finalResponse && imdbResponse.length > 0) {
+    parseResponsesForDb(dbSuccess)
+  }
+}
+
+function insertRowIntoDb(row, callback, parseCount) {
+  var conString = config.POSTGRES_CONNECT;
+  pg.connect(conString, function (err, client, done) {
+    client.query(queryString, row, function (err, result) {
+      done();
+      if (err) {
+        console.log('DB error');
+        console.log(err);
+      }
+      if (callback) {
+        callback(err, result);
+      }
+    })
+  })
+
+}
+function createValueArray(valuesObject) {
+  var valuesArray = [];
+  for (var i = 0; i < keys.length; i++) {
+    if (!valuesObject['Title']) {
+      return;
+    }
+    if (valuesObject[keys[i]]) {
+      valuesArray.push(valuesObject[keys[i]])
+    } else {
+      valuesArray.push(null);
+    }
+  }
+  return valuesArray;
+}
+function parseResponsesForDb(callback) {
+  for (var i = 0; i < imdbResponse.length; i++) {
+    var dbValues = createValueArray(imdbResponse[i]);
+    if (!dbValues || dbValues.length === 0) {
+      continue;
+    }
+    insertRowIntoDb(dbValues, callback);
+  }
 }
 
 request('http://www.newsday.com/entertainment/movies/best-netflix-movies-to-watch-now-1.6667007', function (error, response, html) {
   if (!error && response.statusCode === 200) {
     var $ = cheerio.load(html);
+    var titleCount = $('#content').children().length;
     $('#content').children().each(function(i, element) {
       var section = $(this);
       var title = section.children('h2').eq(0).text();
@@ -28,13 +90,19 @@ request('http://www.newsday.com/entertainment/movies/best-netflix-movies-to-watc
         var imdbSearch = encodeURI(title);
         var url = 'http://www.omdbapi.com?t=' + imdbSearch;
         request(url, function(error, response, body) {
+          requestCount++;
+          if (requestCount === titleCount) {
+            final = true;
+          }
           if (error) {
-            handleImdbError(error);
+            handleImdbError(error, final);
             return;
           }
           body = JSON.parse(body);
-          handleImdbResponse(body)
+          handleImdbResponse(body, final)
         })
+      } else {
+        titleCount--;
       }
     })
   }
