@@ -1,3 +1,8 @@
-<div>
-  This is the home HTML
+<div ng-repeat="title in titles">
+  <div>
+    <div class="title_name">{{title.title_name}}</div>
+    <div class="image-container">
+      <img src="{{title.image_url}}" />
+    </div>
+  </div>
 </div>
