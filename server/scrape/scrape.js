@@ -4,7 +4,7 @@ var pg = require('pg');
 var http = require('http');
 var config = require('../config/environment/local');
 
-// TODO: refactor, process.exit();
+// TODO: refactor, promise and module.export OR process.exit();
 // use https://api.guidebox.com/apidocs to expand db dramatically
 // start front end work
 
@@ -13,12 +13,26 @@ var requestCount = 0;
 var final = false;
 var dbCount = 0;
 var keys = ['imdbID', 'Title', 'Year', 'Genre', 'Director', 'Actors', 'Plot', 'Poster', 'imdbRating'];
-var queryString = 'INSERT INTO title (imdb_id, title_name, year, genre, director, actors, plot, image_url, imdb_rating) values ($1, $2, $3, $4, $5, $6, $7, $8, $9)';
+var queryString = 'INSERT INTO title (imdb_id, title_name, year, genre, director, actors, plot, image_url, imdb_rating) values ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING title_id';
+var conString = config.POSTGRES_CONNECT;
 
-function dbSuccess(parseCount) {
-  dbCount++;
-  if (dbCount === )
-  console.log('done!');
+function dbSuccess(err, result) {
+  console.log('title_id: ' + result.rows[0].title_id);
+  var whichTitleId = parseInt(result.rows[0].title_id);
+  pg.connect(conString, function (err, client, done) {
+    client.query("SELECT provider_id from provider where name = 'netflix'", function(err, secondRes) {
+      var whichProviderId = secondRes.rows[0].provider_id;
+      client.query("INSERT INTO provider_title (title_id, provider_id) values ($1, $2)", [whichTitleId, whichProviderId], function (err, result) {
+        console.log(result);
+        done();
+        if (err) {
+          console.log('DB error');
+          console.log(err);
+        }
+      })
+    })
+
+  })
   // process.exit()
 }
 
@@ -38,7 +52,6 @@ function handleImdbError(error, finalResponse) {
 }
 
 function insertRowIntoDb(row, callback, parseCount) {
-  var conString = config.POSTGRES_CONNECT;
   pg.connect(conString, function (err, client, done) {
     client.query(queryString, row, function (err, result) {
       done();
