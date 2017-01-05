@@ -9,8 +9,14 @@ angular.module('browserstream.home', ['ngRoute'])
   });
 }])
 
-.controller('HomeCtrl', [ '$http', '$scope', function($http, $scope) {
+.controller('HomeCtrl', [ '$http', '$scope', '$window', function($http, $scope, $window) {
   console.log('home controller initialized');
+
+  $scope.displaySummary = function(title) {
+    title = encodeURI(title);
+    $window.location.href = 'https://www.netflix.com/search?q=' + title;
+  }
+
   $http({
   method: 'GET',
   url: '/api/query/netflix'

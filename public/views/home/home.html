@@ -8,7 +8,7 @@
   <label class="selectorLabel"><input type="checkbox" class="selectorCheckbox" label="Amazon Prime"/>Amazon Prime</label>
 </div>
 <div class="titlesContainer">
-  <div ng-repeat="title in titles" class="imageContainer">
+  <div ng-repeat="title in titles" class="imageContainer" ng-click="displaySummary(title.title_name)">
     <img src="{{title.image_url}}" />
   </div>
 </div>
