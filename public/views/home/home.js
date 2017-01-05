@@ -9,12 +9,23 @@ angular.module('browserstream.home', ['ngRoute'])
   });
 }])
 
-.controller('HomeCtrl', [ '$http', '$scope', '$window', function($http, $scope, $window) {
+.controller('HomeCtrl', [ '$http', '$scope', '$window', '$event', function($http, $scope, $window, $event) {
   console.log('home controller initialized');
 
-  $scope.displaySummary = function(title) {
-    title = encodeURI(title);
-    $window.location.href = 'https://www.netflix.com/search?q=' + title;
+  $scope.selectedTitleObject = {};
+  $scope.displayModal = false;
+
+  $scope.displaySummary = function(titleObject) {
+    console.log('helloo');
+    $scope.selectedTitleObject = titleObject;
+    $scope.displayModal = true;
+    // title = encodeURI(title);
+    // $window.location.href = 'https://www.netflix.com/search?q=' + title;
+  }
+
+  $scope.clickModal = function() {
+    console.log('clickity');
+    $event.preventDefault()();
   }
 
   $http({
