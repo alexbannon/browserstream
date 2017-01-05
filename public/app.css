@@ -1,11 +1,42 @@
-h1 {
-  color: red;
-  font-size: 60px;
-}
-.title_name {
-  text-align: center;
-  font-family: Helvetica, Arial, Sans-Serif;
+head, body, html {
+  margin: 0;
+  padding: 0;
+  font-family: Baskerville, Palatino, HelveticaNeue, Helvetica, Arial;
+  background-color: #eee;
 }
 .image-container {
   text-align: center;
+}
+.header {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  font-size: 48px;
+  line-height: 80px;
+  vertical-align: middle;
+  height: 80px;
+  background-color: rgba(205,227,249,1);
+  color: rgb(255,0,0);
+}
+.selectorContainer {
+  margin: 0 auto;
+  padding: 20px 0;
+  text-align: center;
+  width: 100%;
+  background-color: rgba(175,215,250,1);
+
+}
+.selectorCheckbox {
+  margin: 0 5%;
+}
+.titlesContainer {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+.imageContainer {
+  width: 300px;
+  height: 453px;
+  margin: 5px;
 }
