@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('browserstream.home', ['ngRoute'])
+angular.module('browserstream.home', ['ngRoute', 'ngCookies'])
 
 .config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/', {
@@ -9,37 +9,82 @@ angular.module('browserstream.home', ['ngRoute'])
   });
 }])
 
-.controller('HomeCtrl', [ '$http', '$scope', '$window', function($http, $scope, $window) {
-  console.log('home controller initialized');
+.controller('HomeCtrl', [ '$http', '$scope', '$window', '$cookies', function($http, $scope, $window, $cookies) {
 
   $scope.selectedTitleObject = {};
   $scope.displayModal = false;
 
-  $scope.providers = ['Netflix', 'HBO GO', 'Amazon Prime', 'Hulu'];
+  $scope.providers = [{
+    name: 'Netflix',
+    queryName: 'netflix',
+    selected: true,
+    imageSource: 'http://vignette4.wikia.nocookie.net/smurfs/images/a/a1/Netflix-logo.png/revision/latest?cb=20150508223333'
+  },{
+    name: 'HBO GO',
+    queryName: 'hbogo',
+    selected: false,
+    imageSource: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/HBOGO.svg/2000px-HBOGO.svg.png',
+  },{
+    name: 'Amazon Prime',
+    queryName: 'amazonprime',
+    selected: false,
+    imageSource: 'http://vignette1.wikia.nocookie.net/logopedia/images/2/26/Amazon-prime.png/revision/latest?cb=20150709185638',
+  },{
+    name: 'Hulu',
+    queryName: 'hulu',
+    selected: false,
+    imageSource: 'https://assetshuluimcom-a.akamaihd.net/kitty-staging/uploads/logo_download/file/7/Hulu_Logo_Option_A.png'
+  }];
 
   $scope.displaySummary = function(titleObject) {
-    console.log('helloo');
     $scope.selectedTitleObject = titleObject;
     $scope.displayModal = true;
-    // title = encodeURI(title);
-    // $window.location.href = 'https://www.netflix.com/search?q=' + title;
+  }
+
+  function handleProviderTitleClick(provider, titleName) {
+    var destinationUrl;
+    switch (provider) {
+      case 'netflix':
+        var title = encodeURI($scope.selectedTitleObject.title_name);
+        destinationUrl = 'https://www.netflix.com/search?q=' + title;
+        break;
+      case 'hbo_go':
+        break;
+      case 'hulu':
+        break;
+      case 'amazon_prime':
+        break;
+      default:
+        console.log('provider not found');
+    }
+    $window.location.href = destinationUrl;
   }
 
   $scope.clickModal = function($event) {
-    console.log('clickity');
     $event.stopPropagation();
+    handleProviderTitleClick($scope.selectedTitleObject.name, $scope.selectedTitleObject.title_name);
   }
 
-  $http({
-  method: 'GET',
-  url: '/api/query/netflix'
-}).then(function successCallback(response) {
-  $scope.titles = response.data;
-  console.log(response.data);
-    // this callback will be called asynchronously
-    // when the response is available
-  }, function errorCallback(response) {
-    // called asynchronously if an error occurs
-    // or server returns response with an error status.
-  });
+  function requestTitles() {
+    var url = '/api/query?provider=';
+    for (var i = 0; i < $scope.providers.length; i++) {
+      if ($scope.providers[i].selected) {
+        url += $scope.providers[i].queryName + ',';
+      }
+    }
+    url = url.substring(0, url.length - 1);
+    console.log(url);
+    $http({
+      method: 'GET',
+      url: url
+    }).then(function successCallback(response) {
+      $scope.titles = response.data;
+    }, function errorCallback(response) {
+      console.log(response);
+    });
+
+  }
+
+  requestTitles();
+
 }]);

@@ -2,12 +2,17 @@
   BrowserSTREAM
 </div>
 <div class="selectorContainer">
-  <div ng-repeat="provider in providers" class="providerContainer">
-    <label class="selectorLabel"><input type="checkbox" class="selectorCheckbox" label="{{provider}}"/>{{provider}}</label>
+  <div ng-repeat="provider in providers" class="providerContainer" ng-click="selectProvider($index)">
+    <img ng-src="{{provider.imageSource}}" class="logo" />
+  </div>
+</div>
+<div class="checkboxContainer">
+  <div ng-repeat="provider in providers" class="providerContainer" ng-click="selectProvider($index)">
+    <input type="checkbox" value="{{provider.name}}" class="providerCheckbox" ng-model="provider.selected"/>
   </div>
 </div>
 <div class="titlesContainer">
-  <div ng-repeat="title in titles" class="imageContainer" ng-click="displaySummary(title)">
+  <div ng-repeat="title in titles" ng-class="imageContainer" ng-click="displaySummary(title)">
     <img ng-src="{{title.image_url}}" />
   </div>
 </div>

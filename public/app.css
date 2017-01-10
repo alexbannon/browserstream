@@ -4,6 +4,10 @@ head, body, html {
   font-family: Baskerville, Palatino, HelveticaNeue, Helvetica, Arial;
   background-color: #eee;
 }
+* {
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+}
 .image-container {
   text-align: center;
 }
@@ -21,23 +25,41 @@ head, body, html {
 }
 .selectorContainer {
   margin: 0 auto;
-  padding: 20px 0;
+  padding: 20px 0 0 0;
   text-align: center;
   width: 100%;
   background-color: rgba(175,215,250,1);
-
+}
+.checkboxContainer {
+  background-color: rgba(175,215,250,1);
+  width: 100%;
+  padding: 0 0 10px 0;
 }
 .providerContainer {
   display: inline-block;
-  margin: 0 5%;
-}
-.selectorLabel {
-  display: inline-block;
+  width: 25%;
+  padding: 0 1.25%;
+  vertical-align: middle;
+  position: relative;
+  text-align: center;
 }
 .titlesContainer {
   display: flex;
   justify-content: space-around;
   flex-wrap: wrap;
+}
+.providerCheckbox {
+  text-align: middle;
+  margin: 0 auto;
+}
+.logo {
+  width: 100%;
+  display: inline-block;
+}
+.centerImage {
+  display: inline-block;
+    height: 100%;
+    vertical-align: middle;
 }
 .imageContainer {
   width: 300px;
