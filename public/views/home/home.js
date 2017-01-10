@@ -9,11 +9,13 @@ angular.module('browserstream.home', ['ngRoute'])
   });
 }])
 
-.controller('HomeCtrl', [ '$http', '$scope', '$window', '$event', function($http, $scope, $window, $event) {
+.controller('HomeCtrl', [ '$http', '$scope', '$window', function($http, $scope, $window) {
   console.log('home controller initialized');
 
   $scope.selectedTitleObject = {};
   $scope.displayModal = false;
+
+  $scope.providers = ['Netflix', 'HBO GO', 'Amazon Prime', 'Hulu'];
 
   $scope.displaySummary = function(titleObject) {
     console.log('helloo');
@@ -23,9 +25,9 @@ angular.module('browserstream.home', ['ngRoute'])
     // $window.location.href = 'https://www.netflix.com/search?q=' + title;
   }
 
-  $scope.clickModal = function() {
+  $scope.clickModal = function($event) {
     console.log('clickity');
-    $event.preventDefault()();
+    $event.stopPropagation();
   }
 
   $http({

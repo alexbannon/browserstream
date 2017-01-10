@@ -27,8 +27,12 @@ head, body, html {
   background-color: rgba(175,215,250,1);
 
 }
-.selectorCheckbox {
+.providerContainer {
+  display: inline-block;
   margin: 0 5%;
+}
+.selectorLabel {
+  display: inline-block;
 }
 .titlesContainer {
   display: flex;

@@ -4,4 +4,8 @@ module.exports = function(app) {
   app.get('/', function(req, res) {
     res.sendfile('./public/index.html');
   });
+  app.get('/modal/:id', function(req, res) {
+    res.sendfile('./public/index.html');
+  });
+
 };
