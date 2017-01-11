@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('browserstream')
+angular.module('browserstreams')
 
 .service('Modal', ['$window', function($window) {
   return {

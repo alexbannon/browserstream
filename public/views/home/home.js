@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('browserstream.home', ['ngRoute', 'ngCookies'])
+angular.module('browserstreams.home', ['ngRoute', 'ngCookies'])
 
 .config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/', {

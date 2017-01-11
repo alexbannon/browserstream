@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('browserstream')
+angular.module('browserstreams')
 
 .service('TitlesApi', ['$http', function($http) {
   return {

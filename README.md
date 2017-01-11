@@ -1,4 +1,4 @@
-# browserstream
+# browserstreams
 
 ### A PostgreSQL, Node, Express, and Angular app that uses Cheerio for scraping.
 

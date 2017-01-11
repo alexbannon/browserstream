@@ -1,8 +1,8 @@
 'use strict';
 
-angular.module('browserstream', [
+angular.module('browserstreams', [
   'ngRoute',
-  'browserstream.home'
+  'browserstreams.home'
 ]).
 config(['$locationProvider', '$routeProvider', function($locationProvider, $routeProvider) {
   $routeProvider.otherwise({redirectTo: '/'});
