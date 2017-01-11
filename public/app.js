@@ -2,7 +2,7 @@
 
 angular.module('browserstream', [
   'ngRoute',
-  'browserstream.home',
+  'browserstream.home'
 ]).
 config(['$locationProvider', '$routeProvider', function($locationProvider, $routeProvider) {
   $routeProvider.otherwise({redirectTo: '/'});

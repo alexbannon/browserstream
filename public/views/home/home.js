@@ -9,10 +9,7 @@ angular.module('browserstream.home', ['ngRoute', 'ngCookies'])
   });
 }])
 
-.controller('HomeCtrl', [ '$http', '$scope', '$window', '$cookies', function($http, $scope, $window, $cookies) {
-
-  $scope.selectedTitleObject = {};
-  $scope.displayModal = false;
+.controller('HomeCtrl', ['$scope', '$cookies', 'Modal', 'TitlesApi', function($scope, $cookies, Modal, TitlesApi) {
 
   $scope.providers = [{
     name: 'Netflix',
@@ -41,50 +38,19 @@ angular.module('browserstream.home', ['ngRoute', 'ngCookies'])
     $scope.displayModal = true;
   }
 
-  function handleProviderTitleClick(provider, titleName) {
-    var destinationUrl;
-    switch (provider) {
-      case 'netflix':
-        var title = encodeURI($scope.selectedTitleObject.title_name);
-        destinationUrl = 'https://www.netflix.com/search?q=' + title;
-        break;
-      case 'hbo_go':
-        break;
-      case 'hulu':
-        break;
-      case 'amazon_prime':
-        break;
-      default:
-        console.log('provider not found');
-    }
-    $window.location.href = destinationUrl;
+  $scope.selectProvider = function(providerIndex) {
+    console.log('you selected: ' + $scope.providers[providerIndex].name);
   }
 
   $scope.clickModal = function($event) {
     $event.stopPropagation();
-    handleProviderTitleClick($scope.selectedTitleObject.name, $scope.selectedTitleObject.title_name);
+    Modal.handleProviderTitleClick($scope.selectedTitleObject);
   }
 
-  function requestTitles() {
-    var url = '/api/query?provider=';
-    for (var i = 0; i < $scope.providers.length; i++) {
-      if ($scope.providers[i].selected) {
-        url += $scope.providers[i].queryName + ',';
-      }
-    }
-    url = url.substring(0, url.length - 1);
-    console.log(url);
-    $http({
-      method: 'GET',
-      url: url
-    }).then(function successCallback(response) {
-      $scope.titles = response.data;
-    }, function errorCallback(response) {
-      console.log(response);
-    });
-
-  }
-
-  requestTitles();
+  TitlesApi.requestTitles($scope.providers).then(function successCallback(response) {
+    $scope.titles = response.data;
+  }, function errorCallback(response) {
+    console.log(response);
+  });
 
 }]);
