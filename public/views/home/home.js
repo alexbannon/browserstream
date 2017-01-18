@@ -47,10 +47,13 @@ angular.module('browserstreams.home', ['ngRoute', 'ngCookies'])
     Modal.handleProviderTitleClick($scope.selectedTitleObject);
   }
 
-  TitlesApi.requestTitles($scope.providers).then(function successCallback(response) {
+  TitlesApi.requestTitles($scope.providers, 'top', 0).then(function successCallback(response) {
     $scope.titles = response.data;
-  }, function errorCallback(response) {
-    console.log(response);
+  }, function errorCallback(error) {
+    if (error.message && error.message === 'no provider selected') {
+      $scope.providers[0].selected = true;
+    }
+    console.log(error);
   });
 
 }]);

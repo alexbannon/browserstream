@@ -2,20 +2,39 @@
 
 angular.module('browserstreams')
 
-.service('TitlesApi', ['$http', function($http) {
+.service('TitlesApi', ['$http', '$q', function($http, $q) {
   return {
-    requestTitles: function(providersArray) {
-      var url = '/api/query?provider=';
+    requestTitles: function(providersArray, sort, start) {
+      var dataObject = {
+        sort: sort,
+        start: start,
+        providers: []
+      };
+      var url = '/api/query';
       for (var i = 0; i < providersArray.length; i++) {
         if (providersArray[i].selected) {
-          url += providersArray[i].queryName + ',';
+          dataObject.providers.push({
+            name: providersArray[i].queryName
+          })
         }
       }
-      url = url.substring(0, url.length - 1);
-      return $http({
-        method: 'GET',
-        url: url
-      })
+      if (dataObject.providers.length === 0) {
+        return $q(function(resolve, reject) {
+          reject({
+            message: 'no provider selected'
+          });
+        });
+      } else {
+        return $http({
+          method: 'POST',
+          url: url,
+          headers: {
+            'Content-Type': 'application/json',
+            'Cache-Control': 'public, max-age=60'
+          },
+          data: dataObject
+        });
+      }
     }
   }
 }]);
