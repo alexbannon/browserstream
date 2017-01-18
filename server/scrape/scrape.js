@@ -6,7 +6,6 @@ var config = require('../config/environment/local');
 
 // TODO: refactor, promise and module.export OR process.exit();
 // use https://api.guidebox.com/apidocs to expand db dramatically
-// start front end work
 
 var imdbResponse = [];
 var requestCount = 0;

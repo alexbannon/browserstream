@@ -1,13 +1,13 @@
-
 'use strict';
 // var _ = require('lodash');
 var config = require('../../config/environment/local.js');
 var pg = require('pg');
+var util = require('util');
 
-var requestStream = function(providers, callback) {
+var requestStreams = function(providers, sort, callback) {
   var query = "SELECT * FROM provider_title JOIN provider ON provider_title.provider_id = provider.provider_id JOIN title ON title.title_id = provider_title.title_id where provider.name = '";
   for (var i = 0; i < providers.length; i++) {
-    query += providers[i] + "'"
+    query += providers[i].name + "'"
     if (i === providers.length - 1) {
       break;
     }
@@ -28,12 +28,43 @@ var requestStream = function(providers, callback) {
   })
 }
 
+var validatorSchema = {
+  'sort': {
+    notEmpty: true,
+    matches: {
+      options: ['^(top|comedy|action)', 'i']
+    }
+  },
+  'start': {
+    notEmpty: true,
+    isInt: {
+      errorMessage: 'Start Param Not Integer'
+    }
+  },
+  'providers': {
+    notEmpty: true,
+    isArray: {
+      errorMessage: 'Providers is not an array'
+    },
+    eachIsProvider: {
+      errorMessage: 'At Least One Provider Invalid'
+    }
+  }
+}
+
 exports.index = function (req, res) {
-  var providers = req.query.provider || 'netflix';
-  providers = providers.split(',');
+  req.checkBody(validatorSchema);
+  req.getValidationResult().then(function(result) {
+    if (!result.isEmpty()) {
+      res.status(400).send('There have been validation errors: ' + util.inspect(result.array()));
+      return;
+    }
+    res.json({
+      hello: 'true'
+    });
+  });
 
-
-  requestStream(providers, function (err, data) {
+  requestStreams(req.body.providers, function (err, data) {
     if (err) {
       res.json({ error: 'error' });
     }
