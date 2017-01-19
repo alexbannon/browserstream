@@ -5,20 +5,35 @@ var pg = require('pg');
 var util = require('util');
 
 function requestStreams(providers, sort, callback) {
-  var query = "SELECT * FROM provider_title JOIN provider ON provider_title.provider_id = provider.provider_id JOIN title ON title.title_id = provider_title.title_id where provider.name = '";
+  var queryValues = [];
+  var parameters = [];
   for (var i = 0; i < providers.length; i++) {
-    query += providers[i].name + "'"
-    if (i === providers.length - 1) {
-      break;
+    switch (providers[i].name) {
+      case 'netflix':
+        break;
+      case 'hbogo':
+        break;
+      case 'amazonprime':
+        break;
+      case 'hulu':
+        break;
+      default:
+        console.log('provider not found');
+        continue;
     }
-    query += " OR provider.name = '";
+    parameters.push(('$' + (i+1)));
+    queryValues.push(providers[i].name);
   }
-  query += ' ORDER BY imdb_rating DESC LIMIT 15';
+  parameters = parameters.join(' ');
+  var finalParams = '(' + parameters + ')';
+  console.log(finalParams)
+  var query = `SELECT * FROM provider_title JOIN provider ON provider_title.provider_id = provider.provider_id JOIN title ON title.title_id = provider_title.title_id WHERE provider.name IN ${finalParams} ORDER BY imdb_rating DESC LIMIT 25`;
+  console.log(query);
   pg.connect(config.POSTGRES_CONNECT, function(err, client, done) {
     if (err) {
       return console.error('could not connect to postgres db: ', err);
     }
-    client.query(query, function(err, result) {
+    client.query(query, queryValues, function(err, result) {
       done();
       if (err) {
         console.log(err);
