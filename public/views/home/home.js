@@ -18,12 +18,12 @@ angular.module('browserstreams.home', ['ngRoute', 'ngCookies'])
     imageSource: 'http://vignette4.wikia.nocookie.net/smurfs/images/a/a1/Netflix-logo.png/revision/latest?cb=20150508223333'
   },{
     name: 'HBO GO',
-    queryName: 'hbogo',
+    queryName: 'hbo_go',
     selected: false,
     imageSource: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/HBOGO.svg/2000px-HBOGO.svg.png',
   },{
     name: 'Amazon Prime',
-    queryName: 'amazonprime',
+    queryName: 'amazon_prime',
     selected: false,
     imageSource: 'http://vignette1.wikia.nocookie.net/logopedia/images/2/26/Amazon-prime.png/revision/latest?cb=20150709185638',
   },{

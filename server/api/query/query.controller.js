@@ -6,16 +6,15 @@ var util = require('util');
 
 function requestStreams(providers, sort, offset, callback) {
   offset = (parseInt(offset) === NaN) ? 0 : offset;
-  console.log(offset);
   var queryValues = [];
   var parametersArray = [];
-  var allowedProviders = ['netflix', 'hbo', 'amazonprime', 'hulu'];
+  var allowedProviders = ['netflix', 'hbo_go', 'amazonprime', 'hulu'];
   providers.forEach((element, index) => {
     if (allowedProviders.indexOf(element.name) === -1) return;
     parametersArray.push(('$' + (index+1)));
     queryValues.push(element.name);
   })
-  var parameters = parametersArray.join(' ');
+  var parameters = parametersArray.join(', ');
   parameters = '(' + parameters + ')';
   var query = `SELECT * FROM provider_title JOIN provider ON provider_title.provider_id = provider.provider_id JOIN title ON title.title_id = provider_title.title_id WHERE provider.name IN ${parameters} ORDER BY imdb_rating DESC LIMIT 25 OFFSET ${offset}`;
   pg.connect(config.POSTGRES_CONNECT, function(err, client, done) {

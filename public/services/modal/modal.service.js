@@ -6,12 +6,13 @@ angular.module('browserstreams')
   return {
     handleProviderTitleClick: function(providerObject) {
       var destinationUrl;
+      var title = encodeURI(providerObject.title_name);
       switch (providerObject.name) {
         case 'netflix':
-          var title = encodeURI(providerObject.title_name);
           destinationUrl = 'https://www.netflix.com/search?q=' + title;
           break;
         case 'hbo_go':
+          destinationUrl = 'http://www.hbo.com/search?type=schedule&q=' + title
           break;
         case 'hulu':
           break;
