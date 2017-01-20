@@ -4,7 +4,9 @@ var config = require('../../config/environment/local.js');
 var pg = require('pg');
 var util = require('util');
 
-function requestStreams(providers, sort, callback) {
+function requestStreams(providers, sort, offset, callback) {
+  offset = (parseInt(offset) === NaN) ? 0 : offset;
+  console.log(offset);
   var queryValues = [];
   var parametersArray = [];
   var allowedProviders = ['netflix', 'hbo', 'amazonprime', 'hulu'];
@@ -15,7 +17,7 @@ function requestStreams(providers, sort, callback) {
   })
   var parameters = parametersArray.join(' ');
   parameters = '(' + parameters + ')';
-  var query = `SELECT * FROM provider_title JOIN provider ON provider_title.provider_id = provider.provider_id JOIN title ON title.title_id = provider_title.title_id WHERE provider.name IN ${parameters} ORDER BY imdb_rating DESC LIMIT 25`;
+  var query = `SELECT * FROM provider_title JOIN provider ON provider_title.provider_id = provider.provider_id JOIN title ON title.title_id = provider_title.title_id WHERE provider.name IN ${parameters} ORDER BY imdb_rating DESC LIMIT 25 OFFSET ${offset}`;
   pg.connect(config.POSTGRES_CONNECT, function(err, client, done) {
     if (err) {
       return console.error('could not connect to postgres db: ', err);
@@ -64,7 +66,7 @@ exports.index = function (req, res) {
       res.status(400).send('There have been validation errors: ' + util.inspect(result.array()));
       return;
     }
-    requestStreams(req.body.providers, req.body.sort, function (err, data) {
+    requestStreams(req.body.providers, req.body.sort, req.body.start, function (err, data) {
       if (err) {
         res.json({ error: 'error' });
       }
