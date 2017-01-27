@@ -21,28 +21,15 @@ var HBO = function(limit) {
         pg.end();
         return;
       }
-      client.query(queryString, queryValues, function(err, result) {
-        done();
+      client.query(`SELECT title_id FROM title WHERE imdb_id='${data.imdbID}'`, function(err, result) {
         if (err) {
-          done();
           console.log(err);
-          callback(err);
-          pg.end();
-          return;
         }
-        var whichTitleId = parseInt(result.rows[0].title_id);
-
-        // TODO - make pg call outside each seed.js file to check the IDs of all providers in db and then pass it when instantiating seed object
-        client.query("SELECT provider_id from provider where name = 'hbo_go'", function(err, secondRes) {
-          if (err) {
-            done();
-            console.log(err);
-            callback(err);
-            pg.end();
-            return;
-          }
-          var whichProviderId = secondRes.rows[0].provider_id;
-          client.query("INSERT INTO provider_title (title_id, provider_id) values ($1, $2)", [whichTitleId, whichProviderId], function (err, result) {
+        if (result.rows && result.rows[0].title_id) {
+          // TODO change all this madness to pool connection and return provider_id as first step. Then either update pg to 9.5 and do an upsert or figure out a good way to do sql functions in node
+          console.log('title ID found: ' + result.rows[0].title_id);
+        } else {
+          client.query(queryString, queryValues, function(err, result) {
             done();
             if (err) {
               done();
@@ -51,11 +38,34 @@ var HBO = function(limit) {
               pg.end();
               return;
             }
-            console.log(result);
-            callback(err, result);
-            pg.end();
+            var whichTitleId = parseInt(result.rows[0].title_id);
+
+            // TODO - make pg call outside each seed.js file to check the IDs of all providers in db and then pass it when instantiating seed object
+            client.query("SELECT provider_id from provider where name = 'hbo_go'", function(err, secondRes) {
+              if (err) {
+                done();
+                console.log(err);
+                callback(err);
+                pg.end();
+                return;
+              }
+              var whichProviderId = secondRes.rows[0].provider_id;
+              client.query("INSERT INTO provider_title (title_id, provider_id) values ($1, $2)", [whichTitleId, whichProviderId], function (err, result) {
+                done();
+                if (err) {
+                  done();
+                  console.log(err);
+                  callback(err);
+                  pg.end();
+                  return;
+                }
+                console.log(result);
+                callback(err, result);
+                pg.end();
+              })
+            })
           })
-        })
+        }
       })
     })
   }
