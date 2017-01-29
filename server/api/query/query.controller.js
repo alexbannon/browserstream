@@ -63,6 +63,9 @@ var validatorSchema = {
 }
 
 exports.index = function (req, res) {
+  if (typeof req.query.providers === 'string') {
+    req.query.providers = [req.query.providers];
+  }
   req.checkQuery(validatorSchema);
   req.getValidationResult().then(function(result) {
     if (!result.isEmpty()) {
