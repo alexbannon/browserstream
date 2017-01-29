@@ -5,18 +5,22 @@ var pg = require('pg');
 var util = require('util');
 
 function requestStreams(providers, sort, offset, callback) {
+  console.log('$$$$');
+  console.log(providers);
+  console.log(providers.length);
   offset = (parseInt(offset) === NaN) ? 0 : offset;
   var queryValues = [];
   var parametersArray = [];
   var allowedProviders = ['netflix', 'hbo_go', 'amazonprime', 'hulu'];
   providers.forEach((element, index) => {
-    if (allowedProviders.indexOf(element.name) === -1) return;
+    if (allowedProviders.indexOf(element) === -1) return;
     parametersArray.push(('$' + (index+1)));
-    queryValues.push(element.name);
+    queryValues.push(element);
   })
   var parameters = parametersArray.join(', ');
   parameters = '(' + parameters + ')';
   var query = `SELECT * FROM provider_title JOIN provider ON provider_title.provider_id = provider.provider_id JOIN title ON title.title_id = provider_title.title_id WHERE provider.name IN ${parameters} ORDER BY imdb_rating DESC LIMIT 25 OFFSET ${offset}`;
+  console.log(query, queryValues);
   pg.connect(config.POSTGRES_CONNECT, function(err, client, done) {
     if (err) {
       return console.error('could not connect to postgres db: ', err);
@@ -59,13 +63,13 @@ var validatorSchema = {
 }
 
 exports.index = function (req, res) {
-  req.checkBody(validatorSchema);
+  req.checkQuery(validatorSchema);
   req.getValidationResult().then(function(result) {
     if (!result.isEmpty()) {
       res.status(400).send('There have been validation errors: ' + util.inspect(result.array()));
       return;
     }
-    requestStreams(req.body.providers, req.body.sort, req.body.start, function (err, data) {
+    requestStreams(req.query.providers, req.query.sort, req.query.start, function (err, data) {
       if (err) {
         res.json({ error: 'error' });
       }

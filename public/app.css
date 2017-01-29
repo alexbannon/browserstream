@@ -1,7 +1,7 @@
 head, body, html {
   margin: 0;
   padding: 0;
-  font-family: Baskerville, Palatino, HelveticaNeue, Helvetica, Arial;
+  font-family: "Avant Garde", Avantgarde, "Century Gothic", CenturyGothic, AppleGothic, sans-serif;
   background-color: #eee;
 }
 * {
@@ -21,7 +21,7 @@ head, body, html {
   vertical-align: middle;
   height: 80px;
   background-color: rgba(205,227,249,1);
-  color: rgb(255,0,0);
+  color: #001f3f;
 }
 .selectorContainer {
   margin: 0 auto 10px auto;

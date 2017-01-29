@@ -19,7 +19,7 @@ angular.module('browserstreams.home', ['ngRoute', 'ngCookies'])
   },{
     name: 'HBO GO',
     queryName: 'hbo_go',
-    selected: false,
+    selected: true,
     imageSource: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/HBOGO.svg/2000px-HBOGO.svg.png',
   },{
     name: 'Amazon Prime',
