@@ -22,6 +22,9 @@
          return Array.isArray(value);
        },
        eachIsProvider: function(values) {
+         if (!values) {
+           return false;
+         }
          var providerArray = ['netflix', 'hbo_go', 'amazonprime', 'hulu'];
         return values.every(function(val) {
           console.log('val: ' + val + ' and does it exist in array: ' + (providerArray.indexOf(val)));

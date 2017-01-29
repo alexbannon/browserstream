@@ -5,7 +5,8 @@
   "main": "server.js",
   "author": "Alex Bannon",
   "scripts": {
-    "start": "nodemon server/server.js"
+    "start": "nodemon server/server.js",
+    "test": "mocha"
   },
   "dependencies": {
     "body-parser": "^1.15.2",
@@ -19,5 +20,10 @@
     "morgan": "^1.7.0",
     "nodemon": "^1.11.0",
     "request": "^2.78.0"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^3.2.0",
+    "supertest": "^2.0.1"
   }
 }
