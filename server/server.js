@@ -9,6 +9,16 @@
     var methodOverride = require('method-override'); // simulate DELETE and PUT (express4)
     var root = process.env.root || path.normalize(__dirname + '/../');
 
+    var redis = require('redis');
+    var redisClient = redis.createClient();
+
+    redisClient.on('ready',function() {
+     console.log("Redis is ready");
+    });
+
+    redisClient.on('error',function(err) {
+     console.log("Error in Redis: " + err);
+    });
     // configuration ===============================================================
     // mongoose.connect(database.url);     // connect to mongoDB database on modulus.io
     app.use(express.static(root + '/public/'));

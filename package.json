@@ -6,7 +6,7 @@
   "author": "Alex Bannon",
   "scripts": {
     "setup": "npm install && bower install",
-    "start": "nodemon server/server.js",
+    "start": "redis-server | nodemon server/server.js",
     "test": "mocha && (webdriver-manager start &) && sleep 5 && protractor conf.js"
   },
   "dependencies": {
@@ -20,6 +20,7 @@
     "mongoose": "~3.6.2",
     "morgan": "^1.7.0",
     "nodemon": "^1.11.0",
+    "redis": "^2.6.5",
     "request": "^2.78.0"
   },
   "devDependencies": {
