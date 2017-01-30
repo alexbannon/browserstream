@@ -5,8 +5,9 @@
   "main": "server.js",
   "author": "Alex Bannon",
   "scripts": {
+    "setup": "npm install && bower install",
     "start": "nodemon server/server.js",
-    "test": "mocha"
+    "test": "mocha && (webdriver-manager start &) && sleep 5 && protractor conf.js"
   },
   "dependencies": {
     "body-parser": "^1.15.2",
@@ -24,6 +25,8 @@
   "devDependencies": {
     "chai": "^3.5.0",
     "mocha": "^3.2.0",
-    "supertest": "^2.0.1"
+    "protractor": "^5.0.0",
+    "supertest": "^2.0.1",
+    "webdriver-manager": "^11.1.1"
   }
 }
