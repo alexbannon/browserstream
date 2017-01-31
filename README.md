@@ -17,3 +17,9 @@ npm install -g db-migrate
 db-migrate up
 npm start
 ```
+
+#### Testing
+```
+npm test
+```
+Will kick off mocha/chai tests as well as protractor tests
