@@ -3,6 +3,9 @@
 var config = require('../../config/environment/local.js');
 var pg = require('pg');
 var util = require('util');
+var redis = require('redis');
+var redisClient = redis.createClient();
+
 
 function requestStreams(providers, sort, offset, callback) {
   console.log('$$$$');
@@ -72,15 +75,36 @@ exports.index = function (req, res) {
       res.status(400).send('There have been validation errors: ' + util.inspect(result.array()));
       return;
     }
-    requestStreams(req.query.providers, req.query.sort, req.query.start, function (err, data) {
-      if (err) {
-        res.json({ error: 'error' });
+    var cacheKey = 'y-redis-';
+    for (var i = 0; i < req.query.providers.length; i++) {
+      cacheKey += req.query.providers[i];
+    }
+    cacheKey += req.query.sort;
+    cacheKey += req.query.start;
+    redisClient.get(cacheKey, function(err, result) {
+      if (result) {
+        res.header('Cache-Control', 'max-age=3600, public');
+        result = JSON.parse(result);
+        if (result.rows) {
+          res.json(result.rows);
+          return;
+        }
       }
-      if (data && data.rows[0] && data.rows[0].title_name) {
-        res.header('Cache-Control', 'max-age=900, public');
-        res.json(data.rows);
-      }
-    });
+      requestStreams(req.query.providers, req.query.sort, req.query.start, function (err, data) {
+        if (err) {
+          res.json({ error: 'error' });
+        }
+        if (data && data.rows[0] && data.rows[0].title_name) {
+          var cacheData = {
+            rows: data.rows
+          };
+          cacheData = JSON.stringify(cacheData);
+          redisClient.setex(cacheKey, 86400, cacheData);
+          res.header('Cache-Control', 'max-age=3600, public');
+          res.json(data.rows);
+        }
+      });
+    })
   });
 
 };
