@@ -2,71 +2,57 @@ var request = require('request');
 var pg = require('pg');
 var config = require('../config/environment/local');
 
-var HBO = function(limit) {
-  var self = this;
+var Seed = function(limit, poolClient, providerId, providerName) {
   this.limit = limit;
+  this.client = poolClient;
+  this.providerId = providerId;
+  this.providerName = providerName;
   this.finalImdbData = [];
-  self.count = 0;
-  self.total;
+  this.count = 0;
+  this.total;
+  var self = this;
+
+  function query(query, queryValuesArray) {
+    return new Promise((resolve, reject) => {
+      self.client.query(query, queryValuesArray, function(err, result) {
+        if (err) {
+          console.log(err);
+          reject(err);
+        }
+        resolve(result);
+      })
+    })
+  }
 
   function insertDataIntoDB(data, callback) {
     var queryString = 'INSERT INTO title (imdb_id, title_name, year, genre, director, actors, plot, image_url, imdb_rating) values ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING title_id';
     var queryValues = [data.imdbID, data.Title, data.Year, data.Genre, data.Director, data.Actors, data.Plot, data.Poster, data.imdbRating];
     // TODO handle ability to still add movies to provider_title even if title is already in db (ie multiple providers host movie);
-    pg.connect(config.POSTGRES_CONNECT, function(err, client, done) {
-      if (err) {
-        done();
-        console.error('could not connect to postgres db: ', err);
-        callback(err);
-        pg.end();
-        return;
-      }
-      client.query(`SELECT title_id FROM title WHERE imdb_id='${data.imdbID}'`, function(err, result) {
-        if (err) {
-          console.log(err);
-        }
-        if (result.rows && result.rows[0].title_id) {
-          // TODO change all this madness to pool connection and return provider_id as first step. Then either update pg to 9.5 and do an upsert or figure out a good way to do sql functions in node
+    console.log('select title_id from title where imdb=' + data.imdbID);
+    query(`SELECT title_id FROM title WHERE imdb_id='${data.imdbID}'`, []).then(function(result) {
+      if (result.rows) {
+        if (result.rows.length > 0) {
+          // TODO figure out a way to continue flow even when title already in db
           console.log('title ID found: ' + result.rows[0].title_id);
-        } else {
-          client.query(queryString, queryValues, function(err, result) {
-            done();
-            if (err) {
-              done();
-              console.log(err);
-              callback(err);
-              pg.end();
-              return;
-            }
-            var whichTitleId = parseInt(result.rows[0].title_id);
-
-            // TODO - make pg call outside each seed.js file to check the IDs of all providers in db and then pass it when instantiating seed object
-            client.query("SELECT provider_id from provider where name = 'hbo_go'", function(err, secondRes) {
-              if (err) {
-                done();
-                console.log(err);
-                callback(err);
-                pg.end();
-                return;
-              }
-              var whichProviderId = secondRes.rows[0].provider_id;
-              client.query("INSERT INTO provider_title (title_id, provider_id) values ($1, $2)", [whichTitleId, whichProviderId], function (err, result) {
-                done();
-                if (err) {
-                  done();
-                  console.log(err);
-                  callback(err);
-                  pg.end();
-                  return;
-                }
-                console.log(result);
-                callback(err, result);
-                pg.end();
-              })
-            })
-          })
         }
+      }
+      console.log('queryString/queryValues');
+
+      query(queryString, queryValues).then(function(result) {
+        console.log(result);
+        console.log(result.rows);
+        var whichTitleId = parseInt(result.rows[0].title_id);
+
+        query("INSERT INTO provider_title (title_id, provider_id) values ($1, $2)", [whichTitleId, self.providerId]).then(function(result) {
+          callback(err, result);
+        }).catch(function(error) {
+          callback(error);
+        })
+      }).catch(function(error) {
+        callback(error);
       })
+    }).catch(function(err) {
+      callback(err);
     })
   }
 
@@ -75,6 +61,7 @@ var HBO = function(limit) {
     var url = 'http://www.omdbapi.com?';
     return new Promise((resolve, reject) => {
       if (imdbId) {
+        // TODO check my db first - no need to hit free API so hard over time - a lot of titles will be in there the more this is used
         url += 'i=' + imdbId;
       } else if (title) {
         url += 't=' + title;
@@ -85,20 +72,24 @@ var HBO = function(limit) {
       request(url, function(error, response, body) {
         if (!error && response.statusCode === 200) {
           body = JSON.parse(body);
-          insertDataIntoDB(body, (err, result) => {
-            if (result) {
-              resolve(result);
-            } else {
-              reject(err);
-            }
-          })
+          if (body.imdbID) {
+            console.log('inserting into db with returned imdb info for imdbid: ' + body.imdbID);
+            insertDataIntoDB(body, (err, result) => {
+              if (result) {
+                resolve(result);
+              } else {
+                reject(err);
+              }
+            })
+          } else {
+            console.log('no imdbId');
+            reject(error);
+          }
         } else {
           reject(error);
         }
       })
     });
-
-
   }
 
   function handleGuideboxData(data) {
@@ -106,7 +97,6 @@ var HBO = function(limit) {
     self.total = data.length;
 
     return new Promise((resolve, reject) => {
-
       function handleCount() {
         self.count++;
         if (self.count === self.total) {
@@ -133,11 +123,10 @@ var HBO = function(limit) {
         }
       }
     })
-
   }
 
   function requestGuidebox() {
-    var url = 'http://api-public.guidebox.com/v2/movies?api_key=' + config.GUIDEBOX_API_KEY + '&sources=hbo&limit=' + self.limit;
+    var url = 'http://api-public.guidebox.com/v2/movies?api_key=' + config.GUIDEBOX_API_KEY + `&sources=${self.providerName}&limit=` + self.limit;
     console.log(url);
     return new Promise((resolve, reject) => {
       request(url, function (error, response, body) {
@@ -155,19 +144,11 @@ var HBO = function(limit) {
         }
       })
     })
-
   }
 
-
-  this.addHboToDatabase = function() {
-    console.log('addHboToDatabase called');
-    requestGuidebox().then(result => {
-      console.log('ALL DONE');
-    }).catch(err => {
-      console.log('ERROR');
-      console.log(err);
-    })
+  this.addProviderTitlesToDatabase = function() {
+    return requestGuidebox();
   }
 }
 
-module.exports = HBO;
+module.exports = Seed;

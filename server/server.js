@@ -1,7 +1,6 @@
     var express  = require('express');
     var app      = express();
     var path = require('path');
-    var mongoose = require('mongoose');
     var port     = process.env.PORT || 3000;
     var morgan = require('morgan');             // log requests to the console (express4)
     var bodyParser = require('body-parser');    // pull information from HTML POST (express4)
@@ -20,7 +19,6 @@
      console.log("Error in Redis: " + err);
     });
     // configuration ===============================================================
-    // mongoose.connect(database.url);     // connect to mongoDB database on modulus.io
     app.use(express.static(root + '/public/'));
     app.use(morgan('dev'));                                         // log every request to the console
     app.use(bodyParser.urlencoded({'extended':'true'}));            // parse application/x-www-form-urlencoded
@@ -35,7 +33,7 @@
          if (!values) {
            return false;
          }
-         var providerArray = ['netflix', 'hbo_go', 'amazonprime', 'hulu'];
+         var providerArray = ['netflix', 'hbo_go', 'amazon_prime', 'hulu'];
         return values.every(function(val) {
           console.log('val: ' + val + ' and does it exist in array: ' + (providerArray.indexOf(val)));
           return (providerArray.indexOf(val) !== -1);
