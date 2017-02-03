@@ -1,3 +1,9 @@
+/*
+NOTE: THIS IS UNNEEDED SCRAPING CODE REPLACED BY THE SEEDCONSTRUCTOR FILE
+KEEP IN CASE API REPLACEMENT NEEDED AND RETURN TO SCRAPING FOR NETFLIX IS NECESSARY
+*/
+
+/*
 var request = require('request');
 var cheerio = require('cheerio');
 var pg = require('pg');
@@ -118,3 +124,4 @@ request('http://www.newsday.com/entertainment/movies/best-netflix-movies-to-watc
     })
   }
 })
+*/

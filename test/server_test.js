@@ -15,12 +15,11 @@ describe('Provider', function() {
     .expect(400,done);
   });
   it('should return an object with titles and data', function(done){
-    api.get('/api/query?sort=top&start=0&providers=netflix&providers=hbo_go')
+    api.get('/api/query?sort=top&start=0&providers=netflix&providers=hbo_go&providers=amazon_prime&providers=hulu')
     .set('Accept', 'application/json')
     .expect(200)
     .end(function(err, res) {
       expect(res.body).to.not.be.empty;
-      expect(res.body.length).to.eql(25);
       expect(res.body[0]).to.have.property("title_id");
       expect(res.body[0]).to.have.property("name");
       expect(res.body[0]).to.have.property("imdb_id");

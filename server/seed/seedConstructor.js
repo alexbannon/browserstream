@@ -6,14 +6,24 @@ var Seed = function(limit, poolClient, providerId, providerName) {
   this.limit = limit;
   this.client = poolClient;
   this.providerId = providerId;
+  this.titleId;
   this.providerName = providerName;
   this.finalImdbData = [];
   this.count = 0;
   this.total;
+  this.skip = false;
   var self = this;
 
-  function query(query, queryValuesArray) {
+  function query(query, queryValuesArray, skip) {
     return new Promise((resolve, reject) => {
+      if (skip) {
+        var skippedResult = {
+          rows: [{title_id: self.titleId}]
+        }
+        self.skip = false;
+        resolve(skippedResult);
+        return;
+      }
       self.client.query(query, queryValuesArray, function(err, result) {
         if (err) {
           console.log(err);
@@ -27,23 +37,27 @@ var Seed = function(limit, poolClient, providerId, providerName) {
   function insertDataIntoDB(data, callback) {
     var queryString = 'INSERT INTO title (imdb_id, title_name, year, genre, director, actors, plot, image_url, imdb_rating) values ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING title_id';
     var queryValues = [data.imdbID, data.Title, data.Year, data.Genre, data.Director, data.Actors, data.Plot, data.Poster, data.imdbRating];
-    // TODO handle ability to still add movies to provider_title even if title is already in db (ie multiple providers host movie);
     console.log('select title_id from title where imdb=' + data.imdbID);
     query(`SELECT title_id FROM title WHERE imdb_id='${data.imdbID}'`, []).then(function(result) {
       if (result.rows) {
         if (result.rows.length > 0) {
-          // TODO figure out a way to continue flow even when title already in db
-          console.log('title ID found: ' + result.rows[0].title_id);
+          self.skip = true;
+          self.titleId = result.rows[0].title_id
         }
       }
-      console.log('queryString/queryValues');
-
-      query(queryString, queryValues).then(function(result) {
+      query(queryString, queryValues, self.skip).then(function(result) {
         console.log(result);
         console.log(result.rows);
         var whichTitleId = parseInt(result.rows[0].title_id);
 
         query("INSERT INTO provider_title (title_id, provider_id) values ($1, $2)", [whichTitleId, self.providerId]).then(function(result) {
+          /*
+          TODO: Figure out how to remove connections in provider_titles on each rev
+          maybe add a date column and go through and remove all previous ones on success?
+          ISSUE: when the connection is already there between the provider and title the date won’t get updated
+          so make sure it does if you go this route. Maybe change primary key to be title_id, provider_id, and date?
+          Or just make a patch statement in the final catch?
+          */
           callback(err, result);
         }).catch(function(error) {
           callback(error);
@@ -51,8 +65,8 @@ var Seed = function(limit, poolClient, providerId, providerName) {
       }).catch(function(error) {
         callback(error);
       })
-    }).catch(function(err) {
-      callback(err);
+    }).catch(function(error) {
+      callback(error);
     })
   }
 
