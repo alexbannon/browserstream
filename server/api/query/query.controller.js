@@ -14,7 +14,7 @@ function requestStreams(providers, sort, offset, callback) {
   offset = (parseInt(offset) === NaN) ? 0 : offset;
   var queryValues = [];
   var parametersArray = [];
-  var allowedProviders = ['netflix', 'hbo_go', 'amazonprime', 'hulu'];
+  var allowedProviders = ['netflix', 'hbo_go', 'amazon_prime', 'hulu'];
   providers.forEach((element, index) => {
     if (allowedProviders.indexOf(element) === -1) return;
     parametersArray.push(('$' + (index+1)));
@@ -22,7 +22,7 @@ function requestStreams(providers, sort, offset, callback) {
   })
   var parameters = parametersArray.join(', ');
   parameters = '(' + parameters + ')';
-  var query = `SELECT * FROM provider_title JOIN provider ON provider_title.provider_id = provider.provider_id JOIN title ON title.title_id = provider_title.title_id WHERE provider.name IN ${parameters} ORDER BY imdb_rating DESC LIMIT 25 OFFSET ${offset}`;
+  var query = `SELECT * FROM provider_title JOIN provider ON provider_title.provider_id = provider.provider_id JOIN title ON title.title_id = provider_title.title_id WHERE provider.name IN ${parameters} ORDER BY imdb_rating DESC OFFSET ${offset}`;
   console.log(query, queryValues);
   pg.connect(config.POSTGRES_CONNECT, function(err, client, done) {
     if (err) {
@@ -75,7 +75,7 @@ exports.index = function (req, res) {
       res.status(400).send('There have been validation errors: ' + util.inspect(result.array()));
       return;
     }
-    var cacheKey = 'y-redis-';
+    var cacheKey = 'z-redis-';
     for (var i = 0; i < req.query.providers.length; i++) {
       cacheKey += req.query.providers[i];
     }
@@ -99,7 +99,7 @@ exports.index = function (req, res) {
             rows: data.rows
           };
           cacheData = JSON.stringify(cacheData);
-          redisClient.setex(cacheKey, 86400, cacheData);
+          redisClient.setex(cacheKey, 100, cacheData);
           res.header('Cache-Control', 'max-age=3600, public');
           res.json(data.rows);
         }

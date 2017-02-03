@@ -55,7 +55,8 @@ angular.module('browserstreams.home', ['ngRoute', 'ngCookies'])
       $scope.titles = response.data;
     }, function errorCallback(error) {
       if (error.message && error.message === 'no provider selected') {
-        $scope.providers[0].selected = true;
+        $scope.titles = [];
+        // $scope.providers[0].selected = true;
       }
       console.log(error);
     });
