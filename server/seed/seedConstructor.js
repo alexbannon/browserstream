@@ -21,7 +21,7 @@ var Seed = function(limit, poolClient, providerId, providerName) {
       }
       self.client.query(query, queryValuesArray, function(err, result) {
         if (err) {
-          reject(err);
+          reject({queryError: err});
         }
         resolve(result);
       });
@@ -39,7 +39,7 @@ var Seed = function(limit, poolClient, providerId, providerName) {
     }
     query(queryString, queryValues, returnValue).then(function(result) {
       var whichTitleId = parseInt(result.rows[0].title_id);
-
+      
       query("INSERT INTO provider_title (title_id, provider_id) values ($1, $2)", [whichTitleId, self.providerId]).then(function(result) {
         /*
         TODO: Figure out how to remove connections in provider_titles on each rev
@@ -48,7 +48,7 @@ var Seed = function(limit, poolClient, providerId, providerName) {
         so make sure it does if you go this route. Maybe change primary key to be title_id, provider_id, and date?
         Or just make a patch statement in the final catch?
         */
-        callback(null, result);
+        callback(false, result);
       }).catch(err => callback(err));
     }).catch(err => callback(err));
   }
@@ -60,7 +60,7 @@ var Seed = function(limit, poolClient, providerId, providerName) {
           if (result.rows.length > 0) {
             resolve(result.rows[0].title_id);
           } else {
-            reject('no title in db');
+            reject({noTitleInDb: imdbId});
           }
         } else {
           reject('query did not return rows');
@@ -99,6 +99,9 @@ var Seed = function(limit, poolClient, providerId, providerName) {
               reject('no imdbId');
             }
           } else {
+            console.log('ERROR WITH OMDBAPI');
+            console.log(error);
+            console.log(response.statusCode);
             reject(error);
           }
         });
