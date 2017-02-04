@@ -22,4 +22,4 @@ npm start
 ```
 npm test
 ```
-Will kick off mocha/chai tests as well as protractor tests
+Will kick off mocha/chai tests as well as protractor tests if the mocha/chai tests pass
