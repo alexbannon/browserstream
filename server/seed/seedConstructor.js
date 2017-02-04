@@ -24,8 +24,8 @@ var Seed = function(limit, poolClient, providerId, providerName) {
           reject(err);
         }
         resolve(result);
-      })
-    })
+      });
+    });
   }
 
   function insertDataIntoDB(data, titleInDB, callback) {
@@ -79,7 +79,7 @@ var Seed = function(limit, poolClient, providerId, providerName) {
           } else {
             reject(err);
           }
-        })
+        });
       }).catch(err => {
         console.log(err);
         var url = 'http://www.omdbapi.com?';
@@ -94,15 +94,15 @@ var Seed = function(limit, poolClient, providerId, providerName) {
                 } else {
                   reject(err);
                 }
-              })
+              });
             } else {
               reject('no imdbId');
             }
           } else {
             reject(error);
           }
-        })
-      })
+        });
+      });
     });
   }
 
@@ -124,12 +124,12 @@ var Seed = function(limit, poolClient, providerId, providerName) {
           }).catch(err => {
             console.log(err);
             handleCount();
-          })
+          });
         } else {
           handleCount();
         }
       }
-    })
+    });
   }
 
   function requestGuidebox() {
@@ -142,17 +142,17 @@ var Seed = function(limit, poolClient, providerId, providerName) {
             resolve(result);
           }).catch(err => {
             reject(err);
-          })
+          });
         } else {
           reject(error);
         }
-      })
-    })
+      });
+    });
   }
 
   this.addProviderTitlesToDatabase = function() {
     return requestGuidebox();
-  }
-}
+  };
+};
 
 module.exports = Seed;

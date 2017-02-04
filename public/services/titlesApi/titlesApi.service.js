@@ -10,7 +10,7 @@ angular.module('browserstreams')
       for (var i = 0; i < providersArray.length; i++) {
         if (providersArray[i].selected) {
           count++;
-          url+= '&providers=' + providersArray[i].queryName
+          url+= '&providers=' + providersArray[i].queryName;
         }
       }
       if (count === 0) {
@@ -30,5 +30,5 @@ angular.module('browserstreams')
         });
       }
     }
-  }
+  };
 }]);

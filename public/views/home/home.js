@@ -36,19 +36,19 @@ angular.module('browserstreams.home', ['ngRoute', 'ngCookies'])
   $scope.displaySummary = function(titleObject) {
     $scope.selectedTitleObject = titleObject;
     $scope.displayModal = true;
-  }
+  };
   $scope.hideModal = function() {
     $scope.displayModal = false;
-  }
+  };
 
   $scope.selectProvider = function(providerIndex) {
     callTitlesApi();
-  }
+  };
 
   $scope.clickModal = function($event) {
     $event.stopPropagation();
     Modal.handleProviderTitleClick($scope.selectedTitleObject);
-  }
+  };
 
   function callTitlesApi() {
     TitlesApi.requestTitles($scope.providers, 'top', 0).then(function successCallback(response) {

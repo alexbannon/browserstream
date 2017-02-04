@@ -8,18 +8,15 @@ var redisClient = redis.createClient();
 
 
 function requestStreams(providers, sort, offset, callback) {
-  console.log('$$$$');
-  console.log(providers);
-  console.log(providers.length);
-  offset = (parseInt(offset) === NaN) ? 0 : offset;
+  offset = (isNaN(parseInt(offset))) ? 0 : offset;
   var queryValues = [];
   var parametersArray = [];
   var allowedProviders = ['netflix', 'hbo_go', 'amazon_prime', 'hulu'];
   providers.forEach((element, index) => {
-    if (allowedProviders.indexOf(element) === -1) return;
+    if (allowedProviders.indexOf(element) === -1) {return;}
     parametersArray.push(('$' + (index+1)));
     queryValues.push(element);
-  })
+  });
   var parameters = parametersArray.join(', ');
   parameters = '(' + parameters + ')';
   var query = `SELECT * FROM provider_title JOIN provider ON provider_title.provider_id = provider.provider_id JOIN title ON title.title_id = provider_title.title_id WHERE provider.name IN ${parameters} ORDER BY imdb_rating DESC OFFSET ${offset}`;
@@ -37,8 +34,8 @@ function requestStreams(providers, sort, offset, callback) {
         callback(err, result);
       }
       pg.end();
-    })
-  })
+    });
+  });
 }
 
 var validatorSchema = {
@@ -63,7 +60,7 @@ var validatorSchema = {
       errorMessage: 'At Least One Provider Invalid'
     }
   }
-}
+};
 
 exports.index = function (req, res) {
   if (typeof req.query.providers === 'string') {
@@ -104,7 +101,7 @@ exports.index = function (req, res) {
           res.json(data.rows);
         }
       });
-    })
+    });
   });
 
 };

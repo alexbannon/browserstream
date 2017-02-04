@@ -42,7 +42,7 @@
      }
     }));
     app.use(methodOverride('X-HTTP-Method-Override'));
-    app.disable('x-powered-by')
+    app.disable('x-powered-by');
 
     // routes ======================================================================
     require('./routes.js')(app);

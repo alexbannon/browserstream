@@ -1,0 +1,8 @@
+node_modules
+./public/components
+./server/config/environment
+dump.rdb
+.jshintrc
+.gitignore
+./migrations
+./test

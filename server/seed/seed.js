@@ -18,7 +18,7 @@ function addProviderInfo(client, dbProviderName, imdbProviderName) {
         reject(err);
       });
     });
-  })
+  });
 }
 
 pool.connect((err, client, done) => {
@@ -37,8 +37,8 @@ pool.connect((err, client, done) => {
   }).catch(err => {
     console.log(err);
     done();
-    client.release()
-    pool.end()
-  })
+    client.release();
+    pool.end();
+  });
 
 });

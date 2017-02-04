@@ -25,5 +25,5 @@ angular.module('browserstreams')
       }
       $window.location.href = destinationUrl;
     }
-  }
-}])
+  };
+}]);
