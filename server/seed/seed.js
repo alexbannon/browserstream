@@ -21,24 +21,27 @@ function addProviderInfo(client, dbProviderName, imdbProviderName) {
   });
 }
 
-pool.connect((err, client, done) => {
-  if (err) {
-    console.log(err);
-    return done(err);
-  }
-  // addProviderInfo(client, 'hbo_go', 'hbo');
-  // addProviderInfo(client, 'netflix', 'netflix');
-  // addProviderInfo(client, 'amazon_prime', 'amazon_prime');
-  // addProviderInfo(client, 'hulu', 'hulu_plus');
-  addProviderInfo(client, 'hbo_go', 'hbo').then(result => {
+function addProviders(client, done, index) {
+  if (index === (config.PROVIDERS.length - 1)) {
+    console.log('ALL DONE');
     client.release();
     pool.end();
-    console.log('ALL DONE');
+    return;
+  }
+  addProviderInfo(client, config.PROVIDERS[index].dbName, config.PROVIDERS[index].imdbName).then(result => {
+    addProviders(client, done, (index + 1));
   }).catch(err => {
     console.log(err);
     done();
     client.release();
     pool.end();
-  });
+  })
+}
 
+pool.connect((err, client, done) => {
+  if (err) {
+    console.log(err);
+    return done(err);
+  }
+  addProviders(client, done, 0);
 });
