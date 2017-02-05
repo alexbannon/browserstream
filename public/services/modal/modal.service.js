@@ -4,10 +4,14 @@ angular.module('browserstreams')
 
 .service('Modal', ['$window', function($window) {
   return {
-    handleProviderTitleClick: function(providerObject) {
+    handleProviderTitleClick: function(providerObject, provider) {
+      var providerParameter = providerObject.providers_names[0];
+      if (provider) {
+        providerParameter = provider;
+      }
       var destinationUrl;
       var title = encodeURI(providerObject.title_name);
-      switch (providerObject.name) {
+      switch (providerParameter) {
         case 'netflix':
           destinationUrl = 'https://www.netflix.com/search?q=' + title;
           break;
@@ -22,6 +26,7 @@ angular.module('browserstreams')
           break;
         default:
           console.log('provider not found');
+          return;
       }
       $window.location.href = destinationUrl;
     }

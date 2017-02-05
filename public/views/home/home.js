@@ -9,7 +9,7 @@ angular.module('browserstreams.home', ['ngRoute', 'ngCookies'])
   });
 }])
 
-.controller('HomeCtrl', ['$scope', '$cookies', 'Modal', 'TitlesApi', function($scope, $cookies, Modal, TitlesApi) {
+.controller('HomeCtrl', ['$scope', '$cookies', 'Modal', 'TitlesApi', 'LocalStorage', function($scope, $cookies, Modal, TitlesApi, LocalStorage) {
 
   $scope.providers = [{
     name: 'Netflix',
@@ -24,12 +24,12 @@ angular.module('browserstreams.home', ['ngRoute', 'ngCookies'])
   },{
     name: 'Amazon Prime',
     queryName: 'amazon_prime',
-    selected: false,
+    selected: true,
     imageSource: 'http://vignette1.wikia.nocookie.net/logopedia/images/2/26/Amazon-prime.png/revision/latest?cb=20150709185638',
   },{
     name: 'Hulu',
     queryName: 'hulu',
-    selected: false,
+    selected: true,
     imageSource: 'https://assetshuluimcom-a.akamaihd.net/kitty-staging/uploads/logo_download/file/7/Hulu_Logo_Option_A.png'
   }];
 
@@ -37,7 +37,9 @@ angular.module('browserstreams.home', ['ngRoute', 'ngCookies'])
     $scope.selectedTitleObject = titleObject;
     $scope.displayModal = true;
     TitlesApi.getAdditionalTitleInfo(titleObject.title_id).then(function(result) {
-      $scope.additionalTitleInfo = result;
+      console.log('hello');
+      console.log(result.data[0]);
+      $scope.additionalTitleInfo = result.data[0];
     }).catch(function(error) {
       console.log('error retrieving more title info ', error);
     });
@@ -51,8 +53,15 @@ angular.module('browserstreams.home', ['ngRoute', 'ngCookies'])
   };
 
   $scope.clickModal = function($event) {
+    console.log($event.target);
     $event.stopPropagation();
+    console.log('CLICK MODAL: ' + $scope.selectedTitleObject);
     Modal.handleProviderTitleClick($scope.selectedTitleObject);
+  };
+  $scope.clickModalProvider = function(provider, $event) {
+    console.log('Click ICON');
+    $event.stopPropagation();
+    Modal.handleProviderTitleClick($scope.selectedTitleObject, provider);
   };
 
   function callTitlesApi() {

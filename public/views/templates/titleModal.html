@@ -4,18 +4,32 @@
       <div class="modalImageContainer">
         <div class="modalImage" background-image="{{selectedTitleObject.image_url}}"></div>
       </div>
-      <div class="modalTitle">
+      <h1 class="modalTitle">
         {{selectedTitleObject.title_name}}
-      </div>
-      <div class="modalPlot">
-
-      </div>
+      </h1>
+      <h4 class="subheader">
+        ({{additionalTitleInfo.year}})
+      </h4>
+      <h2 class="modalDirector">
+        Directed By: {{additionalTitleInfo.director}}
+      </h2>
+      <p class="modalParagraph">
+        {{additionalTitleInfo.plot}}
+      </p>
+      <p class="modalParagraph">
+        Genre: {{additionalTitleInfo.genre}}
+      </p>
+      <div class="paddingBottom"></div>
     </div>
     <div class="modalBottomInfo">
-      Available On:
-      <div ng-repeat="provider in selectedTitleObject.providers_names">
-        {{provider}}
+      <div class="iconContainer">
+        <div class="providerIcon" ng-click="clickModalProvider(provider, $event);" ng-class="provider" ng-repeat="provider in selectedTitleObject.providers_names">
+          <img class="iconLogo" ng-class="provider" src="../../assets/{{provider}}.png" />
+        </div>
       </div>
+      <h1 class="moreInfo">
+        More Info:
+      </h1>
     </div>
   </div>
 </div>
