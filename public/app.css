@@ -18,14 +18,19 @@ head, body, html {
   text-align: center;
   background-color: rgba(205,227,249,1);
   color: #001f3f;
+  height: 2em;
+  position: relative;
+}
+.selectorBackground {
+  width: 100%;
+  background-color: rgba(175,215,250,1);
 }
 .selectorContainer {
   margin: 0 auto 10px auto;
-  padding: 20px 0 25px 0;
+  padding: 0 0 10px 0;
   text-align: center;
-  width: 100%;
-  background-color: rgba(175,215,250,1);
   position: relative;
+  max-width: 1024px;
 }
 .checkboxContainer {
   background-color: rgba(175,215,250,1);
@@ -38,6 +43,7 @@ head, body, html {
   padding: 0 1.25%;
   vertical-align: middle;
   text-align: center;
+  max-width: 142px;
 }
 .titlesContainer {
   display: flex;
@@ -47,14 +53,19 @@ head, body, html {
 .providerCheckbox {
   margin: 0 auto;
   position: absolute;
-  bottom: 10px;
+  bottom: 3px;
   align: center;
 }
 .browserstreamLogo {
-  width: 75%;
   display: inline-block;
-  margin: 20px auto;
   padding: 0;
+  height: 50%;
+  position: absolute;
+  top: 25%;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
 }
 .logo {
   width: 100%;

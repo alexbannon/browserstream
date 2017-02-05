@@ -1,10 +1,12 @@
 <div class="header">
   <img class="browserstreamLogo" src="../assets/logo.png" />
 </div>
-<div class="selectorContainer">
-  <div ng-repeat="provider in providers" class="providerContainer" ng-click="selectProvider()">
-    <img ng-src="{{provider.imageSource}}" class="logo" />
-    <input type="checkbox" value="{{provider.name}}" class="providerCheckbox" ng-model="provider.selected"/>
+<div class="selectorBackground">
+  <div class="selectorContainer">
+    <div ng-repeat="provider in providers" class="providerContainer" ng-click="selectProvider();">
+      <img ng-src="{{provider.imageSource}}" class="logo" ng-click="provider.selected = !provider.selected"/>
+      <input type="checkbox" value="{{provider.name}}" class="providerCheckbox" ng-model="provider.selected"/>
+    </div>
   </div>
 </div>
 <div class="titlesContainer">
