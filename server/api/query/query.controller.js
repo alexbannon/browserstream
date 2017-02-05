@@ -19,8 +19,7 @@ function requestStreams(providers, sort, offset, callback) {
   });
   var parameters = parametersArray.join(', ');
   parameters = '(' + parameters + ')';
-  var query = `SELECT * FROM provider_title JOIN provider ON provider_title.provider_id = provider.provider_id JOIN title ON title.title_id = provider_title.title_id WHERE provider.name IN ${parameters} ORDER BY imdb_rating DESC OFFSET ${offset}`;
-  console.log(query, queryValues);
+  var query = `SELECT t.title_id, t.title_name, t.imdb_id, t.image_url, t.imdb_rating, array_agg( p.provider_id ), array_agg( p.name ) FROM provider_title as pt JOIN provider as p ON pt.provider_id = p.provider_id JOIN title as t ON t.title_id = pt.title_id WHERE p.name IN ${parameters} GROUP BY t.title_id, t.title_name ORDER BY imdb_rating DESC LIMIT 25 OFFSET ${offset};`;
   pg.connect(config.POSTGRES_CONNECT, function(err, client, done) {
     if (err) {
       return console.error('could not connect to postgres db: ', err);
@@ -72,7 +71,7 @@ exports.index = function (req, res) {
       res.status(400).send('There have been validation errors: ' + util.inspect(result.array()));
       return;
     }
-    var cacheKey = 'z-redis-';
+    var cacheKey = 'cachekey-redis-';
     for (var i = 0; i < req.query.providers.length; i++) {
       cacheKey += req.query.providers[i];
     }
@@ -96,7 +95,7 @@ exports.index = function (req, res) {
             rows: data.rows
           };
           cacheData = JSON.stringify(cacheData);
-          redisClient.setex(cacheKey, 100, cacheData);
+          redisClient.setex(cacheKey, config.REDIS_CACHE_TIME, cacheData);
           res.header('Cache-Control', 'max-age=3600, public');
           res.json(data.rows);
         }
