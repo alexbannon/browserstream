@@ -11,7 +11,7 @@
 </div>
 <div class="titlesContainer">
   <div ng-repeat="title in titles | orderBy:'-imdb_rating'" class="imageContainer" ng-click="displaySummary(title)">
-    <img ng-src="{{title.image_url}}" />
+    <span class="centerImageHelper"></span><img class="posterImage" ng-src="{{title.image_url}}" />
   </div>
 </div>
 <div ng-include="'/views/templates/titleModal.html'"></div>
