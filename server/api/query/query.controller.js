@@ -19,7 +19,7 @@ function requestStreams(providers, sort, offset, callback) {
   });
   var parameters = parametersArray.join(', ');
   parameters = '(' + parameters + ')';
-  var query = `SELECT t.title_id, t.title_name, t.imdb_id, t.image_url, t.imdb_rating, array_agg( p.provider_id ), array_agg( p.name ) FROM provider_title as pt JOIN provider as p ON pt.provider_id = p.provider_id JOIN title as t ON t.title_id = pt.title_id WHERE p.name IN ${parameters} GROUP BY t.title_id, t.title_name ORDER BY imdb_rating DESC LIMIT 30 OFFSET ${offset};`;
+  var query = `SELECT t.title_id, t.title_name, t.imdb_id, t.image_url, t.imdb_rating, array_agg( p.provider_id ) as providers_ids, array_agg( p.name ) as providers_names FROM provider_title as pt JOIN provider as p ON pt.provider_id = p.provider_id JOIN title as t ON t.title_id = pt.title_id WHERE p.name IN ${parameters} GROUP BY t.title_id, t.title_name ORDER BY imdb_rating DESC LIMIT 30 OFFSET ${offset};`;
   pg.connect(config.POSTGRES_CONNECT, function(err, client, done) {
     if (err) {
       return console.error('could not connect to postgres db: ', err);
