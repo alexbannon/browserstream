@@ -11,6 +11,8 @@ angular.module('browserstreams.home', ['ngRoute', 'ngCookies'])
 
 .controller('HomeCtrl', ['$scope', '$cookies', 'Modal', 'TitlesApi', 'LocalStorage', function($scope, $cookies, Modal, TitlesApi, LocalStorage) {
 
+  LocalStorage.getFromStorage('providerSelections');
+
   $scope.providers = [{
     name: 'Netflix',
     queryName: 'netflix',
