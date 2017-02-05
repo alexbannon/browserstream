@@ -2,3 +2,4 @@ node_modules
 components
 environment
 dump.rdb
+.eslintrc

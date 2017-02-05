@@ -12,11 +12,11 @@
     var redisClient = redis.createClient();
 
     redisClient.on('ready',function() {
-     console.log("Redis is ready");
+     console.log('Redis is ready');
     });
 
     redisClient.on('error',function(err) {
-     console.log("Error in Redis: " + err);
+     console.log('Error in Redis: ' + err);
     });
     // configuration ===============================================================
     app.use(express.static(root + '/public/'));
@@ -49,4 +49,4 @@
 
     // listen (start app with node server.js) ======================================
     app.listen(port);
-    console.log("App listening on port " + port);
+    console.log('App listening on port ' + port);

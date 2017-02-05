@@ -1,5 +1,4 @@
 var request = require('request');
-var pg = require('pg');
 var config = require('../config/environment/local');
 
 var Seed = function(limit, poolClient, providerId, providerName) {
@@ -39,8 +38,8 @@ var Seed = function(limit, poolClient, providerId, providerName) {
     }
     query(queryString, queryValues, returnValue).then(function(result) {
       var whichTitleId = parseInt(result.rows[0].title_id);
-      
-      query("INSERT INTO provider_title (title_id, provider_id) values ($1, $2)", [whichTitleId, self.providerId]).then(function(result) {
+
+      query('INSERT INTO provider_title (title_id, provider_id) values ($1, $2)', [whichTitleId, self.providerId]).then(function(result) {
         /*
         TODO: Figure out how to remove connections in provider_titles on each rev
         maybe add a date column and go through and remove all previous ones on success?

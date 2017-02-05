@@ -41,7 +41,7 @@ angular.module('browserstreams.home', ['ngRoute', 'ngCookies'])
     $scope.displayModal = false;
   };
 
-  $scope.selectProvider = function(providerIndex) {
+  $scope.selectProvider = function() {
     callTitlesApi();
   };
 

@@ -6,7 +6,7 @@ var pool = new Pool(config.PG_POOL_CONFIG);
 
 function addProviderInfo(client, dbProviderName, imdbProviderName) {
   return new Promise((resolve, reject) => {
-    client.query("SELECT provider_id from provider where name = '"+dbProviderName+"'", (err, res) => {
+    client.query(`SELECT provider_id from provider where name = '${dbProviderName}'`, (err, res) => {
       if (err) {
         reject(err);
       }
@@ -29,13 +29,14 @@ function addProviders(client, done, index) {
     return;
   }
   addProviderInfo(client, config.PROVIDERS[index].dbName, config.PROVIDERS[index].imdbName).then(result => {
+    console.log(result);
     addProviders(client, done, (index + 1));
   }).catch(err => {
     console.log(err);
     done();
     client.release();
     pool.end();
-  })
+  });
 }
 
 pool.connect((err, client, done) => {
