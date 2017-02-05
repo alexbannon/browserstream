@@ -14,11 +14,18 @@
   <script src="./components/angular-route/angular-route.min.js"></script>
 
   <script src="app.js"></script>
+  <!-- services -->
   <script src="./services/modal/modal.service.js"></script>
   <script src="./services/titlesApi/titlesApi.service.js"></script>
+  <!-- end services -->
+  <!-- directives -->
+  <script src="./directives/backgroundImage/backgroundImage.directive.js"></script>
+  <!-- end directives -->
+  <!-- views -->
   <script src="views/home/home.js"></script>
+  <!-- end views -->
 </head>
 <body>
-  <div ng-view></div>
+  <div ng-view ng-class="displayModal ? 'disableScroll' : 'enableScroll'"></div>
 </body>
 </html>

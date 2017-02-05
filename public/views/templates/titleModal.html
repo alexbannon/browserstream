@@ -1,5 +1,21 @@
-<div class="descriptionModalOverlay" ng-show="displayModal" ng-click="hideModal()">
+<div class="descriptionModalOverlay" ng-if="displayModal" ng-click="hideModal()">
   <div class="descriptionModal" ng-click="clickModal($event)">
-    {{selectedTitleObject.title_name}}
+    <div class="modalTopInfo">
+      <div class="modalImageContainer">
+        <div class="modalImage" background-image="{{selectedTitleObject.image_url}}"></div>
+      </div>
+      <div class="modalTitle">
+        {{selectedTitleObject.title_name}}
+      </div>
+      <div class="modalPlot">
+
+      </div>
+    </div>
+    <div class="modalBottomInfo">
+      Available On:
+      <div ng-repeat="provider in selectedTitleObject.providers_names">
+        {{provider}}
+      </div>
+    </div>
   </div>
 </div>

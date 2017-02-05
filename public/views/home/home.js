@@ -36,6 +36,11 @@ angular.module('browserstreams.home', ['ngRoute', 'ngCookies'])
   $scope.displaySummary = function(titleObject) {
     $scope.selectedTitleObject = titleObject;
     $scope.displayModal = true;
+    TitlesApi.getAdditionalTitleInfo(titleObject.title_id).then(function(result) {
+      $scope.additionalTitleInfo = result;
+    }).catch(function(error) {
+      console.log('error retrieving more title info ', error);
+    });
   };
   $scope.hideModal = function() {
     $scope.displayModal = false;
