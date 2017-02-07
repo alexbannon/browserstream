@@ -9,9 +9,10 @@
     </div>
   </div>
 </div>
-<div class="titlesContainer">
-  <div ng-repeat="title in titles | orderBy:'-imdb_rating'" class="imageContainer" ng-click="displaySummary(title)">
+<div class="titlesContainer" infinite-scroll='loadMoreTitles()' infinite-scroll-disabled='titleScroll.busy' infinite-scroll-container="body">
+  <div ng-repeat="title in titleScroll.items | orderBy:'-imdb_rating'" class="imageContainer" ng-click="displaySummary(title)">
     <span class="centerImageHelper"></span><img class="posterImage" ng-src="{{title.image_url}}" />
   </div>
 </div>
+<div ng-show='titleScroll.busy'>Loading data...</div>
 <div ng-include="'/views/templates/titleModal.html'"></div>

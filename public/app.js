@@ -2,7 +2,8 @@
 
 angular.module('browserstreams', [
   'ngRoute',
-  'browserstreams.home'
+  'browserstreams.home',
+  'infinite-scroll'
 ]).
 config(['$locationProvider', '$routeProvider', function($locationProvider, $routeProvider) {
   $routeProvider.otherwise({redirectTo: '/'});

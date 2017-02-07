@@ -27,7 +27,7 @@ function requestStreams(providers, sort, offset, callback) {
     client.query(query, queryValues, function(err, result) {
       done();
       if (err) {
-        console.log(err);
+        callback(err);
       }
       if (callback) {
         callback(err, result);
@@ -96,8 +96,11 @@ exports.index = function (req, res) {
           };
           cacheData = JSON.stringify(cacheData);
           redisClient.setex(cacheKey, config.REDIS_CACHE_TIME, cacheData);
-          res.header('Cache-Control', 'max-age=3600, public');
+          res.header('Cache-Control', `max-age=${config.BROWSER_CACHE_TIME}, public`);
           res.json(data.rows);
+        } else {
+          res.status(404);
+          res.json({ error: 'error' });
         }
       });
     });

@@ -92,12 +92,8 @@ head, body, html {
   vertical-align: middle;
   display: inline-block;
 }
-.disableScroll {
-  position: fixed;
+.noScroll {
   overflow: hidden;
-}
-.enableScroll {
-  overflow: scroll;
 }
 .descriptionModalOverlay {
   display: flex;

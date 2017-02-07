@@ -9,7 +9,7 @@ angular.module('browserstreams.home', ['ngRoute', 'ngCookies'])
   });
 }])
 
-.controller('HomeCtrl', ['$scope', '$cookies', 'Modal', 'TitlesApi', 'LocalStorage', '$rootScope', function($scope, $cookies, Modal, TitlesApi, LocalStorage, $rootScope) {
+.controller('HomeCtrl', ['$scope', '$cookies', 'Modal', 'TitlesApi', 'LocalStorage', 'TitleScroll', '$rootScope', function($scope, $cookies, Modal, TitlesApi, LocalStorage, TitleScroll, $rootScope) {
 
   var localStorageSelections = LocalStorage.getFromStorage('providerSelections');
   if (localStorageSelections) {
@@ -17,8 +17,6 @@ angular.module('browserstreams.home', ['ngRoute', 'ngCookies'])
   } else {
     localStorageSelections = ['netflix'];
   }
-
-  $rootScope.whatever = 'disableScroll';
 
   $scope.providers = [{
     name: 'Netflix',
@@ -42,10 +40,12 @@ angular.module('browserstreams.home', ['ngRoute', 'ngCookies'])
     imageSource: 'https://assetshuluimcom-a.akamaihd.net/kitty-staging/uploads/logo_download/file/7/Hulu_Logo_Option_A.png'
   }];
 
+  $scope.titleScroll = new TitleScroll('top');
 
   $scope.displaySummary = function(titleObject) {
     $scope.selectedTitleObject = titleObject;
     $scope.displayModal = true;
+    $rootScope.bodyClass = true;
     TitlesApi.getAdditionalTitleInfo(titleObject.title_id).then(function(result) {
       $scope.additionalTitleInfo = result.data[0];
     }).catch(function(error) {
@@ -54,11 +54,18 @@ angular.module('browserstreams.home', ['ngRoute', 'ngCookies'])
   };
   $scope.hideModal = function() {
     $scope.displayModal = false;
+    $rootScope.bodyClass = false;
   };
 
   $scope.selectProvider = function() {
     LocalStorage.setProviderStorage($scope.providers);
-    callTitlesApi();
+    $scope.titleScroll.changeItemsList('top', $scope.providers);
+  };
+
+  $scope.loadMoreTitles = function() {
+    console.log('should I be busy: ' + $scope.titleScroll.busy);
+    $scope.titleScroll.nextPage($scope.providers);
+    console.log('load more titles');
   };
 
   $scope.clickModal = function($event) {
@@ -69,18 +76,5 @@ angular.module('browserstreams.home', ['ngRoute', 'ngCookies'])
     $event.stopPropagation();
     Modal.handleProviderTitleClick($scope.selectedTitleObject, provider);
   };
-
-  function callTitlesApi() {
-    TitlesApi.requestTitles($scope.providers, 'top', 0).then(function successCallback(response) {
-      $scope.titles = response.data;
-    }, function errorCallback(error) {
-      if (error.message && error.message === 'no provider selected') {
-        $scope.titles = [];
-        // $scope.providers[0].selected = true;
-      }
-      console.log(error);
-    });
-  }
-  callTitlesApi();
 
 }]);

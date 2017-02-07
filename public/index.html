@@ -12,6 +12,7 @@
   <script src="./components/angular/angular.min.js"></script>
   <script src="./components/angular-cookies/angular-cookies.min.js"></script>
   <script src="./components/angular-route/angular-route.min.js"></script>
+  <script src="./components/ngInfiniteScroll/build/ng-infinite-scroll.min.js"></script>
 
   <script src="app.js"></script>
   <!-- services -->
@@ -22,11 +23,15 @@
   <!-- directives -->
   <script src="./directives/backgroundImage/backgroundImage.directive.js"></script>
   <!-- end directives -->
+  <!-- factories -->
+  <script src="./factories/titleScroll.factory.js"></script>
+  <!-- end factories -->
+
   <!-- views -->
   <script src="views/home/home.js"></script>
   <!-- end views -->
 </head>
-<body>
-  <div ng-view ng-class="displayModal ? 'disableScroll' : 'enableScroll'"></div>
+<body ng-class="{'noScroll' : bodyClass}">
+  <div ng-view></div>
 </body>
 </html>
