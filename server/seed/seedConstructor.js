@@ -112,25 +112,32 @@ var Seed = function(limit, poolClient, providerId, providerName) {
     var total = data.length;
 
     return new Promise((resolve, reject) => {
+
+      var requestTimeout = setTimeout(function() {
+        reject();
+      }, 15000);
+
       function handleCount() {
         self.count++;
         if (self.count === total) {
+          clearTimeout(requestTimeout);
           resolve('success');
         }
       }
 
+      function handleError(err) {
+        console.log(err);
+        handleCount();
+      }
+
       for (var i = 0; i < total; i++) {
         if (data[i].imdb) {
-          requestImdbData(data[i].imdb).then(response => {
-            handleCount();
-          }).catch(err => {
-            console.log(err);
-            handleCount();
-          });
+          requestImdbData(data[i].imdb).then(handleCount).catch(handleError);
         } else {
           handleCount();
         }
       }
+
     });
   }
 

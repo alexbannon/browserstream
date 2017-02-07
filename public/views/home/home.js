@@ -9,38 +9,44 @@ angular.module('browserstreams.home', ['ngRoute', 'ngCookies'])
   });
 }])
 
-.controller('HomeCtrl', ['$scope', '$cookies', 'Modal', 'TitlesApi', 'LocalStorage', function($scope, $cookies, Modal, TitlesApi, LocalStorage) {
+.controller('HomeCtrl', ['$scope', '$cookies', 'Modal', 'TitlesApi', 'LocalStorage', '$rootScope', function($scope, $cookies, Modal, TitlesApi, LocalStorage, $rootScope) {
 
-  LocalStorage.getFromStorage('providerSelections');
+  var localStorageSelections = LocalStorage.getFromStorage('providerSelections');
+  if (localStorageSelections) {
+    localStorageSelections = localStorageSelections.split(',');
+  } else {
+    localStorageSelections = ['netflix'];
+  }
+
+  $rootScope.whatever = 'disableScroll';
 
   $scope.providers = [{
     name: 'Netflix',
     queryName: 'netflix',
-    selected: true,
+    selected: (localStorageSelections.indexOf('netflix') > -1),
     imageSource: 'http://vignette4.wikia.nocookie.net/smurfs/images/a/a1/Netflix-logo.png/revision/latest?cb=20150508223333'
   },{
     name: 'HBO GO',
     queryName: 'hbo_go',
-    selected: true,
+    selected: (localStorageSelections.indexOf('hbo_go') > -1),
     imageSource: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/HBOGO.svg/2000px-HBOGO.svg.png',
   },{
     name: 'Amazon Prime',
     queryName: 'amazon_prime',
-    selected: true,
+    selected: (localStorageSelections.indexOf('amazon_prime') > -1),
     imageSource: 'http://vignette1.wikia.nocookie.net/logopedia/images/2/26/Amazon-prime.png/revision/latest?cb=20150709185638',
   },{
     name: 'Hulu',
     queryName: 'hulu',
-    selected: true,
+    selected: (localStorageSelections.indexOf('hulu') > -1),
     imageSource: 'https://assetshuluimcom-a.akamaihd.net/kitty-staging/uploads/logo_download/file/7/Hulu_Logo_Option_A.png'
   }];
+
 
   $scope.displaySummary = function(titleObject) {
     $scope.selectedTitleObject = titleObject;
     $scope.displayModal = true;
     TitlesApi.getAdditionalTitleInfo(titleObject.title_id).then(function(result) {
-      console.log('hello');
-      console.log(result.data[0]);
       $scope.additionalTitleInfo = result.data[0];
     }).catch(function(error) {
       console.log('error retrieving more title info ', error);
@@ -51,17 +57,15 @@ angular.module('browserstreams.home', ['ngRoute', 'ngCookies'])
   };
 
   $scope.selectProvider = function() {
+    LocalStorage.setProviderStorage($scope.providers);
     callTitlesApi();
   };
 
   $scope.clickModal = function($event) {
-    console.log($event.target);
     $event.stopPropagation();
-    console.log('CLICK MODAL: ' + $scope.selectedTitleObject);
     Modal.handleProviderTitleClick($scope.selectedTitleObject);
   };
   $scope.clickModalProvider = function(provider, $event) {
-    console.log('Click ICON');
     $event.stopPropagation();
     Modal.handleProviderTitleClick($scope.selectedTitleObject, provider);
   };

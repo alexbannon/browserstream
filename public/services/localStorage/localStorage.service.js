@@ -12,6 +12,15 @@ angular.module('browserstreams')
 
 .service('LocalStorage', ['$window', '$rootScope', '$cookies', function($window, $rootScope, $cookies) {
   return {
+    setProviderStorage(providers) {
+      var providersArray = [];
+      for (var i = 0; i < providers.length; i++) {
+        if (providers[i].selected) {
+          providersArray.push(providers[i].queryName);
+        }
+      }
+      this.setStorage('providerSelections', providersArray.join(','));
+    },
     setStorage: function(key, value) {
       if ($rootScope.localStorageAvailable === undefined) {
         $rootScope.localStorageAvailable = supportsHtml5Storage();
