@@ -29,10 +29,10 @@ function addProviders(client, done, index, offset) {
     return;
   }
   addProviderInfo(client, config.PROVIDERS[index].dbName, config.PROVIDERS[index].imdbName, offset).then(result => {
-    if (parseInt(result) === 50) {
-      // attempting to not overload free api - might need to make it verrrry slow in production
+    if (parseInt(result) === 20) {
+      // this will take about 2 hours to input all into db on first time
       setTimeout(function() {
-        addProviders(client, done, index, offset + 50);
+        addProviders(client, done, index, offset + 20);
       }, 5000);
     } else {
       addProviders(client, done, (index + 1), 0);
