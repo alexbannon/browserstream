@@ -1,6 +1,6 @@
 angular.module('browserstreams')
 
-.factory('TitleScroll', function($http) {
+.factory('TitleScroll', function($http, $rootScope) {
   var TitleScroll = function(sort) {
     this.sort = sort;
     this.items = [];
@@ -9,7 +9,7 @@ angular.module('browserstreams')
     this.error = false;
   };
 
-  TitleScroll.prototype.nextPage = function(providersArray) {
+  TitleScroll.prototype.nextPage = function(providersArray, emitEvent) {
     if (this.busy) return;
     this.busy = true;
     console.log('loading next page');
@@ -42,6 +42,10 @@ angular.module('browserstreams')
       }
       this.start += 30;
       this.busy = false;
+      if (emitEvent) {
+        // fixing ng-infinite-scroll bug on item change
+        $rootScope.$emit('itemsNotLongEnough');
+      }
       console.log('finished');
     }.bind(this)).catch(function(err) {
       console.log(err);
@@ -55,7 +59,7 @@ angular.module('browserstreams')
     this.sort = newSort;
     this.items = [];
     this.start = 0;
-    this.nextPage(providersArray);
+    this.nextPage(providersArray, true);
   };
 
   return TitleScroll;

@@ -9,7 +9,7 @@ angular.module('browserstreams.home', ['ngRoute', 'ngCookies'])
   });
 }])
 
-.controller('HomeCtrl', ['$scope', '$cookies', 'Modal', 'TitlesApi', 'LocalStorage', 'TitleScroll', '$rootScope', function($scope, $cookies, Modal, TitlesApi, LocalStorage, TitleScroll, $rootScope) {
+.controller('HomeCtrl', ['$scope', '$cookies', 'Modal', 'TitlesApi', 'LocalStorage', 'TitleScroll', '$rootScope', '$document', function($scope, $cookies, Modal, TitlesApi, LocalStorage, TitleScroll, $rootScope, $document) {
 
   var localStorageSelections = LocalStorage.getFromStorage('providerSelections');
   if (localStorageSelections) {
