@@ -57,6 +57,9 @@ exports.index = function (req, res) {
           redisClient.setex(cacheKey, config.REDIS_CACHE_TIME, cacheData);
           res.header('Cache-Control', 'max-age=3600, public');
           res.json(data.rows);
+        } else {
+          res.status(404);
+          res.json({ error: 'error' });
         }
       });
     });

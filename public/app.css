@@ -258,16 +258,15 @@ padding-bottom: 5px;
   display: inline-block;
 }
 .sliderSelected {
-  right: 3%;
+  right: 3px;
 }
 .sliderDeselected {
-  right: 60%;
+  right: 35px;
 }
 .slider {
   cursor: pointer;
   margin: 0 auto;
-  width: 100%;
-  max-width: 95px;
+  width: 72px;
   box-sizing: border-box;
   display: inline-block;
   height: 26px;

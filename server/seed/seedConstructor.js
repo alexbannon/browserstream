@@ -27,14 +27,27 @@ var Seed = function(limit, poolClient, providerId, providerName) {
     });
   }
 
+  function parseIntOrReturnNegative(int) {
+    var intToReturn = parseInt(int);
+    return isNaN(intToReturn) ? -1 : intToReturn;
+  }
+
+  function ParseFloatOrReturnNegative(float) {
+    var floatToReturn = parseFloat(float);
+    return isNaN(floatToReturn) ? -1 : floatToReturn;
+  }
+
   function insertDataIntoDB(data, titleInDB, callback) {
     var returnValue;
     var queryString, queryValues;
     if (titleInDB) {
       returnValue = data;
     } else {
-      queryString = 'INSERT INTO title (imdb_id, title_name, year, genre, director, actors, plot, image_url, imdb_rating) values ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING title_id';
-      queryValues = [data.imdbID, data.Title, data.Year, data.Genre, data.Director, data.Actors, data.Plot, data.Poster, data.imdbRating];
+      queryString = 'INSERT INTO title (imdb_id, title_name, year, genre, director, actors, plot, image_url, imdb_rating, rated, released, runtime, writer, language, country, awards, metascore, type, imdb_votes) values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19) RETURNING title_id';
+      queryValues = [data.imdbID, data.Title, parseIntOrReturnNegative(data.Year), data.Genre, data.Director, data.Actors, data.Plot, data.Poster, data.imdbRating, data.Rated, new Date(data.Released), parseIntOrReturnNegative(data.Runtime.split(' ')[0]), data.Writer, data.Language, data.Country, data.Awards, ParseFloatOrReturnNegative(data.Metascore), data.Type, parseIntOrReturnNegative(data.imdbVotes)];
+      for (var i = 0; i < queryValues.length; i++) {
+        queryValues[i];
+      }
     }
     query(queryString, queryValues, returnValue).then(function(result) {
       var whichTitleId = parseInt(result.rows[0].title_id);

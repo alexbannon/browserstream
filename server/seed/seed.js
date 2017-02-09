@@ -22,7 +22,7 @@ function addProviderInfo(client, dbProviderName, imdbProviderName) {
 }
 
 function addProviders(client, done, index) {
-  if (index === (config.PROVIDERS.length - 1)) {
+  if (index === (config.PROVIDERS.length)) {
     console.log('ALL DONE');
     client.release();
     pool.end();

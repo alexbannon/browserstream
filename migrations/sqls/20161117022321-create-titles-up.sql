@@ -1,12 +1,22 @@
 CREATE TABLE title (
   title_id serial PRIMARY KEY,
   imdb_id varchar(30) UNIQUE,
-  title_name varchar(60) NOT NULL,
+  title_name varchar(200) NOT NULL,
   year int,
   genre varchar(100),
   director varchar(100),
   actors varchar(500),
   plot varchar(1000),
   image_url varchar(350),
-  imdb_rating decimal
+  imdb_rating decimal,
+  rated varchar(25),
+  released date,
+  runtime int,
+  writer varchar(1000),
+  language varchar(100),
+  country varchar(250),
+  awards varchar(250),
+  metascore decimal,
+  type varchar(50),
+  imdb_votes int
 );
