@@ -15,10 +15,10 @@
     </div>
   </div>
 </div>
-<div id="titlesContainer" class="titlesContainer" infinite-scroll='loadMoreTitles()' infinite-scroll-disabled='titleScroll.busy' infinite-scroll-container="body" infinite-scroll-distance='1' infinite-scroll-listen-for-event="itemsNotLongEnough">
+<div id="titlesContainer" class="titlesContainer" infinite-scroll='loadMoreTitles()' infinite-scroll-disabled='titleScroll.busy' infinite-scroll-use-document-bottom="true" infinite-scroll-distance='0.5' infinite-scroll-listen-for-event="itemsNotLongEnough">
   <div ng-repeat="title in titleScroll.items | orderBy:'-imdb_rating'" class="imageContainer" ng-click="displaySummary(title)">
     <span class="centerImageHelper"></span><img class="posterImage" ng-src="{{title.image_url}}" />
   </div>
 </div>
-<div ng-show='titleScroll.busy'>Loading data...</div>
+<div class="loadingData" ng-show='titleScroll.busy'>Loading</div>
 <div ng-include="'/views/templates/titleModal.html'"></div>

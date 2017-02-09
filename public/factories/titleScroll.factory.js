@@ -10,7 +10,7 @@ angular.module('browserstreams')
   };
 
   TitleScroll.prototype.nextPage = function(providersArray, emitEvent) {
-    if (this.busy) return;
+    if (this.busy || this.error) return;
     this.busy = true;
     console.log('loading next page');
 
@@ -57,6 +57,7 @@ angular.module('browserstreams')
 
   TitleScroll.prototype.changeItemsList = function(newSort, providersArray) {
     this.sort = newSort;
+    this.error = false;
     this.items = [];
     this.start = 0;
     this.nextPage(providersArray, true);
