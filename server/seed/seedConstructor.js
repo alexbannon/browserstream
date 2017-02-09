@@ -1,12 +1,14 @@
 var request = require('request');
 var config = require('../config/environment/local');
 
-var Seed = function(limit, poolClient, providerId, providerName) {
+var Seed = function(limit, poolClient, providerId, providerName, offset) {
   this.limit = limit;
   this.client = poolClient;
   this.providerId = providerId;
   this.providerName = providerName;
   this.count = 0;
+  this.offset = offset;
+
   var self = this;
 
   function query(query, queryValuesArray, returnValue) {
@@ -85,6 +87,7 @@ var Seed = function(limit, poolClient, providerId, providerName) {
   function requestImdbData(imdbId) {
     return new Promise((resolve, reject) => {
       checkIfTitleAlreadyExists(imdbId).then(result => {
+        console.log('****** GOT RESULT, NO NEED FOR OMDBAPI *******');
         insertDataIntoDB(result, true, (err, result) => {
           if (result) {
             resolve(result);
@@ -155,13 +158,15 @@ var Seed = function(limit, poolClient, providerId, providerName) {
   }
 
   function requestGuidebox() {
-    var url = 'http://api-public.guidebox.com/v2/movies?api_key=' + config.GUIDEBOX_API_KEY + `&sources=${self.providerName}&limit=` + self.limit;
+    var url = `http://api-public.guidebox.com/v2/movies?api_key=${config.GUIDEBOX_API_KEY}&sources=${self.providerName}&limit=${self.limit}&offset=${self.offset}`;
+    console.log(url);
     return new Promise((resolve, reject) => {
       request(url, function (error, response, body) {
         if (!error && response.statusCode === 200) {
           body = JSON.parse(body);
           handleGuideboxData(body.results).then(result => {
-            resolve(result);
+            console.log(result);
+            resolve(body.total_returned);
           }).catch(err => {
             reject(err);
           });

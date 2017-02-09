@@ -4,14 +4,14 @@ var config = require('../config/environment/local');
 
 var pool = new Pool(config.PG_POOL_CONFIG);
 
-function addProviderInfo(client, dbProviderName, imdbProviderName) {
+function addProviderInfo(client, dbProviderName, imdbProviderName, offset) {
   return new Promise((resolve, reject) => {
     client.query(`SELECT provider_id from provider where name = '${dbProviderName}'`, (err, res) => {
       if (err) {
         reject(err);
       }
       var provider_id = res.rows[0].provider_id;
-      var provider = new Seed(100, client, provider_id, imdbProviderName);
+      var provider = new Seed(50, client, provider_id, imdbProviderName, offset);
       provider.addProviderTitlesToDatabase().then(result => {
         resolve(result);
       }).catch(err => {
@@ -21,16 +21,22 @@ function addProviderInfo(client, dbProviderName, imdbProviderName) {
   });
 }
 
-function addProviders(client, done, index) {
+function addProviders(client, done, index, offset) {
   if (index === (config.PROVIDERS.length)) {
     console.log('ALL DONE');
     client.release();
     pool.end();
     return;
   }
-  addProviderInfo(client, config.PROVIDERS[index].dbName, config.PROVIDERS[index].imdbName).then(result => {
-    console.log(result);
-    addProviders(client, done, (index + 1));
+  addProviderInfo(client, config.PROVIDERS[index].dbName, config.PROVIDERS[index].imdbName, offset).then(result => {
+    if (parseInt(result) === 50) {
+      // attempting to not overload free api - might need to make it verrrry slow in production
+      setTimeout(function() {
+        addProviders(client, done, index, offset + 50);
+      }, 5000);
+    } else {
+      addProviders(client, done, (index + 1), 0);
+    }
   }).catch(err => {
     console.log(err);
     done();
@@ -44,5 +50,5 @@ pool.connect((err, client, done) => {
     console.log(err);
     return done(err);
   }
-  addProviders(client, done, 0);
+  addProviders(client, done, 0, 0);
 });
