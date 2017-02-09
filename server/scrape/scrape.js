@@ -19,16 +19,13 @@ var queryString = 'INSERT INTO title (imdb_id, title_name, year, genre, director
 var conString = config.POSTGRES_CONNECT;
 
 function dbSuccess(err, result) {
-  console.log('title_id: ' + result.rows[0].title_id);
   var whichTitleId = parseInt(result.rows[0].title_id);
   pg.connect(conString, function (err, client, done) {
     client.query("SELECT provider_id from provider where name = 'netflix'", function(err, secondRes) {
       var whichProviderId = secondRes.rows[0].provider_id;
       client.query("INSERT INTO provider_title (title_id, provider_id) values ($1, $2)", [whichTitleId, whichProviderId], function (err, result) {
-        console.log(result);
         done();
         if (err) {
-          console.log('DB error');
           console.log(err);
         }
       })
@@ -46,7 +43,6 @@ function handleImdbResponse(response, finalResponse) {
 }
 
 function handleImdbError(error, finalResponse) {
-  console.log('###');
   console.log(error);
   if (finalResponse && imdbResponse.length > 0) {
     parseResponsesForDb(dbSuccess)
@@ -58,7 +54,6 @@ function insertRowIntoDb(row, callback, parseCount) {
     client.query(queryString, row, function (err, result) {
       done();
       if (err) {
-        console.log('DB error');
         console.log(err);
       }
       if (callback) {

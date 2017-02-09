@@ -60,12 +60,11 @@ angular.module('browserstreams.home', ['ngRoute', 'ngCookies'])
   $scope.selectProvider = function() {
     LocalStorage.setProviderStorage($scope.providers);
     $scope.titleScroll.changeItemsList('top', $scope.providers);
+
   };
 
   $scope.loadMoreTitles = function() {
-    console.log('should I be busy: ' + $scope.titleScroll.busy);
     $scope.titleScroll.nextPage($scope.providers);
-    console.log('load more titles');
   };
 
   $scope.clickModal = function($event) {

@@ -12,8 +12,6 @@ angular.module('browserstreams')
   TitleScroll.prototype.nextPage = function(providersArray, emitEvent) {
     if (this.busy || this.error) return;
     this.busy = true;
-    console.log('loading next page');
-
     var count = 0;
     var url = '/api/query?sort='+this.sort+'&start='+this.start;
     for (var i = 0; i < providersArray.length; i++) {
@@ -46,9 +44,7 @@ angular.module('browserstreams')
         // fixing ng-infinite-scroll bug on item change
         $rootScope.$emit('itemsNotLongEnough');
       }
-      console.log('finished');
     }.bind(this)).catch(function(err) {
-      console.log(err);
       this.busy = false;
       this.error = true;
     }.bind(this));
