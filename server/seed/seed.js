@@ -11,7 +11,7 @@ function addProviderInfo(client, dbProviderName, imdbProviderName, offset) {
         reject(err);
       }
       var provider_id = res.rows[0].provider_id;
-      var provider = new Seed(50, client, provider_id, imdbProviderName, offset);
+      var provider = new Seed(20, client, provider_id, imdbProviderName, offset);
       provider.addProviderTitlesToDatabase().then(result => {
         resolve(result);
       }).catch(err => {
