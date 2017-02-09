@@ -45,6 +45,7 @@ angular.module('browserstreams')
       console.log('finished');
     }.bind(this)).catch(function(err) {
       console.log(err);
+      this.busy = false;
       this.error = true;
     }.bind(this));
 
