@@ -11,7 +11,7 @@ function addProviderInfo(client, dbProviderName, imdbProviderName, offset) {
         reject(err);
       }
       var provider_id = res.rows[0].provider_id;
-      var provider = new Seed(20, client, provider_id, imdbProviderName, offset);
+      var provider = new Seed(4, client, provider_id, imdbProviderName, offset);
       provider.addProviderTitlesToDatabase().then(result => {
         resolve(result);
       }).catch(err => {
@@ -29,11 +29,11 @@ function addProviders(client, done, index, offset) {
     return;
   }
   addProviderInfo(client, config.PROVIDERS[index].dbName, config.PROVIDERS[index].imdbName, offset).then(result => {
-    if (parseInt(result) === 20) {
+    if (parseInt(result) === 4) {
       // this will take about 2 hours to input all into db on first time
       setTimeout(function() {
-        addProviders(client, done, index, offset + 20);
-      }, 5000);
+        addProviders(client, done, index, offset + 4);
+      }, 1000);
     } else {
       addProviders(client, done, (index + 1), 0);
     }
