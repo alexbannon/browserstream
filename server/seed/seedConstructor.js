@@ -11,11 +11,11 @@ var Seed = function(limit, poolClient, providerId, providerName, offset) {
 
   var self = this;
 
-  function query(query, queryValuesArray, returnValue) {
+  function query(query, queryValuesArray, returnKey, returnValue) {
     return new Promise((resolve, reject) => {
-      if (returnValue) {
+      if (returnKey && returnValue) {
         var skippedResult = {
-          rows: [{title_id: returnValue}]
+          rows: [{[returnKey]: returnValue}]
         };
         resolve(skippedResult);
         return;
@@ -29,40 +29,56 @@ var Seed = function(limit, poolClient, providerId, providerName, offset) {
     });
   }
 
-  function parseIntOrReturnNegative(int) {
+  function parseIntOrReturnNull(int) {
     var intToReturn = parseInt(int);
-    return isNaN(intToReturn) ? -1 : intToReturn;
+    return isNaN(intToReturn) ? null : intToReturn;
   }
 
-  function ParseFloatOrReturnNegative(float) {
+  function parseFloatOrReturnNull(float) {
     var floatToReturn = parseFloat(float);
-    return isNaN(floatToReturn) ? -1 : floatToReturn;
+    return isNaN(floatToReturn) ? null : floatToReturn;
+  }
+
+  function dateOrNull(date) {
+    if (isNaN(date)) {
+      return null;
+    } else {
+      return (new Date(date));
+    }
+  }
+
+  function sanitizeData(data) {
+    if (data === 'N/A' || data === '' || data === null) {
+      return null;
+    } else {
+      return data;
+    }
   }
 
   function insertDataIntoDB(data, titleInDB, callback) {
     var returnValue;
-    var queryString, queryValues;
+    var queryString, queryValues, sanitizedData;
     if (titleInDB) {
       returnValue = data;
     } else {
       queryString = 'INSERT INTO title (imdb_id, title_name, year, genre, director, actors, plot, image_url, imdb_rating, rated, released, runtime, writer, language, country, awards, metascore, type, imdb_votes) values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19) RETURNING title_id';
-      queryValues = [data.imdbID, data.Title, parseIntOrReturnNegative(data.Year), data.Genre, data.Director, data.Actors, data.Plot, data.Poster, data.imdbRating, data.Rated, new Date(data.Released), parseIntOrReturnNegative(data.Runtime.split(' ')[0]), data.Writer, data.Language, data.Country, data.Awards, ParseFloatOrReturnNegative(data.Metascore), data.Type, parseIntOrReturnNegative(data.imdbVotes)];
-      for (var i = 0; i < queryValues.length; i++) {
-        queryValues[i];
-      }
+      queryValues = [data.imdbID, data.Title, parseIntOrReturnNull(data.Year), data.Genre, data.Director, data.Actors, data.Plot, data.Poster, parseFloatOrReturnNull(data.imdbRating), data.Rated, dateOrNull(data.Released), parseIntOrReturnNull(data.Runtime.split(' ')[0]), data.Writer, data.Language, data.Country, data.Awards, parseFloatOrReturnNull(data.Metascore), data.Type, parseIntOrReturnNull(data.imdbVotes)];
+      sanitizedData = queryValues.map(sanitizeData);
     }
-    query(queryString, queryValues, returnValue).then(function(result) {
+    query(queryString, sanitizedData, 'title_id', returnValue).then(result => {
       var whichTitleId = parseInt(result.rows[0].title_id);
-
-      query('INSERT INTO provider_title (title_id, provider_id) values ($1, $2)', [whichTitleId, self.providerId]).then(function(result) {
-        /*
-        TODO: Figure out how to remove connections in provider_titles on each rev
-        maybe add a date column and go through and remove all previous ones on success?
-        ISSUE: when the connection is already there between the provider and title the date won’t get updated
-        so make sure it does if you go this route. Maybe change primary key to be title_id, provider_id, and date?
-        Or just make a patch statement in the final catch?
-        */
-        callback(false, result);
+      query(`SELECT title_id, provider_id FROM provider_title WHERE title_id=${whichTitleId} AND provider_id=${self.providerId}`, []).then(result => {
+        var dateToday = new Date();
+        dateToday.setHours(0,0,0,0);
+        var finalQuery = 'INSERT INTO provider_title (title_id, provider_id, date_added, date_updated) values ($1, $2, $3, $4)';
+        var finalValues = [whichTitleId, self.providerId, dateToday, dateToday];
+        if (result.rows.length > 0) {
+          finalQuery = 'UPDATE provider_title SET date_updated=$1 WHERE title_id=$2 AND provider_id=$3';
+          finalValues = [dateToday, whichTitleId, self.providerId];
+        }
+        query(finalQuery, finalValues).then(result => {
+          callback(false, result);
+        }).catch(err => callback(err));
       }).catch(err => callback(err));
     }).catch(err => callback(err));
   }
@@ -70,18 +86,13 @@ var Seed = function(limit, poolClient, providerId, providerName, offset) {
   function checkIfTitleAlreadyExists(imdbId) {
     return new Promise((resolve, reject) => {
       query(`SELECT title_id FROM title WHERE imdb_id='${imdbId}'`, []).then(result => {
-        if (result.rows) {
-          if (result.rows.length > 0) {
-            resolve(result.rows[0].title_id);
-          } else {
-            reject({noTitleInDb: imdbId});
-          }
+        if (result.rows.length > 0) {
+          resolve(result.rows[0].title_id);
         } else {
           reject('query did not return rows');
         }
       }).catch(err => reject(err));
     });
-
   }
 
   function requestImdbData(imdbId) {
@@ -97,7 +108,7 @@ var Seed = function(limit, poolClient, providerId, providerName, offset) {
         });
       }).catch(err => {
         console.log(err);
-        var url = 'http://www.omdbapi.com?';
+        var url = 'http://svr2.omdbapi.com/?';
         url += 'i=' + imdbId;
         request(url, function(error, response, body) {
           if (!error && response.statusCode === 200) {
@@ -159,7 +170,6 @@ var Seed = function(limit, poolClient, providerId, providerName, offset) {
 
   function requestGuidebox() {
     var url = `http://api-public.guidebox.com/v2/movies?api_key=${config.GUIDEBOX_API_KEY}&sources=${self.providerName}&limit=${self.limit}&offset=${self.offset}`;
-    console.log(url);
     return new Promise((resolve, reject) => {
       request(url, function (error, response, body) {
         if (!error && response.statusCode === 200) {

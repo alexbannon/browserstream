@@ -1,6 +1,8 @@
 CREATE TABLE provider_title (
   title_id int NOT NULL,
   provider_id int NOT NULL,
+  date_added date NOT NULL,
+  date_updated date NOT NULL,
   CONSTRAINT pk_title_provider PRIMARY KEY (
     title_id,
     provider_id
