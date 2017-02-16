@@ -1,7 +1,8 @@
 var request = require('request');
 var config = require('../config/environment/local');
 
-var Seed = function(limit, poolClient, providerId, providerName, offset) {
+var Seed = function(limit, poolClient, providerId, providerName, offset, titleType) {
+  this.titleType = titleType;
   this.limit = limit;
   this.client = poolClient;
   this.providerId = providerId;
@@ -169,7 +170,8 @@ var Seed = function(limit, poolClient, providerId, providerName, offset) {
   }
 
   function requestGuidebox() {
-    var url = `http://api-public.guidebox.com/v2/movies?api_key=${config.GUIDEBOX_API_KEY}&sources=${self.providerName}&limit=${self.limit}&offset=${self.offset}`;
+    var url = `http://api-public.guidebox.com/v2/${self.titleType}?api_key=${config.GUIDEBOX_API_KEY}&sources=${self.providerName}&limit=${self.limit}&offset=${self.offset}`;
+    console.log(url);
     return new Promise((resolve, reject) => {
       request(url, function (error, response, body) {
         if (!error && response.statusCode === 200) {

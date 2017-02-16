@@ -25,21 +25,29 @@
     app.use(bodyParser.json());                                     // parse application/json
     app.use(bodyParser.json({ type: 'application/vnd.api+json' })); // parse application/vnd.api+json as json
     app.use(expressValidator({
-     customValidators: {
-       isArray: function(value) {
-         return Array.isArray(value);
-       },
-       eachIsProvider: function(values) {
-         if (!values) {
-           return false;
-         }
-         var providerArray = ['netflix', 'hbo_go', 'amazon_prime', 'hulu'];
-        return values.every(function(val) {
-          console.log('val: ' + val + ' and does it exist in array: ' + (providerArray.indexOf(val)));
-          return (providerArray.indexOf(val) !== -1);
-        });
-       }
-     }
+      customValidators: {
+        isArray: function(value) {
+          return Array.isArray(value);
+        },
+        eachIsProvider: function(values) {
+          if (!values) {
+            return false;
+          }
+          var providerArray = ['netflix', 'hbo_go', 'amazon_prime', 'hulu'];
+          return values.every(function(val) {
+            return (providerArray.indexOf(val) !== -1);
+          });
+        },
+        eachIsTitleType: function(values) {
+          if (!values) {
+            return false;
+          }
+          var providerArray = ['movie', 'series', 'episode'];
+          return values.every(function(val) {
+            return (providerArray.indexOf(val) !== -1);
+          });
+        }
+      }
     }));
     app.use(methodOverride('X-HTTP-Method-Override'));
     app.disable('x-powered-by');

@@ -4,14 +4,14 @@ var config = require('../config/environment/local');
 
 var pool = new Pool(config.PG_POOL_CONFIG);
 
-function addProviderInfo(client, dbProviderName, imdbProviderName, offset) {
+function addProviderInfo(client, dbProviderName, imdbProviderName, offset, titleType) {
   return new Promise((resolve, reject) => {
     client.query(`SELECT provider_id from provider where name = '${dbProviderName}'`, (err, res) => {
       if (err) {
         reject(err);
       }
       var provider_id = res.rows[0].provider_id;
-      var provider = new Seed(4, client, provider_id, imdbProviderName, offset);
+      var provider = new Seed(4, client, provider_id, imdbProviderName, offset, titleType);
       provider.addProviderTitlesToDatabase().then(result => {
         resolve(result);
       }).catch(err => {
@@ -28,7 +28,7 @@ function addProviders(client, done, index, offset) {
     pool.end();
     return;
   }
-  addProviderInfo(client, config.PROVIDERS[index].dbName, config.PROVIDERS[index].imdbName, offset).then(result => {
+  addProviderInfo(client, config.PROVIDERS[index].dbName, config.PROVIDERS[index].imdbName, offset, 'movies').then(result => {
     if (parseInt(result) === 4) {
       // this will take about 2 hours to input all into db on first time
       setTimeout(function() {

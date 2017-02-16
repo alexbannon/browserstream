@@ -9,7 +9,7 @@ angular.module('browserstreams')
     this.error = false;
   };
 
-  TitleScroll.prototype.nextPage = function(providersArray, emitEvent) {
+  TitleScroll.prototype.nextPage = function(providersArray, titleTypeArray, emitEvent) {
     if (this.busy || this.error) return;
     this.busy = true;
     var count = 0;
@@ -23,6 +23,10 @@ angular.module('browserstreams')
     if (count === 0) {
       this.busy = false;
       return;
+    }
+
+    for (var x = 0; x < titleTypeArray.length; x++) {
+      url+= '&titletype=' + titleTypeArray[x];
     }
 
     $http({
@@ -45,18 +49,19 @@ angular.module('browserstreams')
         $rootScope.$emit('itemsNotLongEnough');
       }
     }.bind(this)).catch(function(err) {
+      console.log(err);
       this.busy = false;
       this.error = true;
     }.bind(this));
 
   };
 
-  TitleScroll.prototype.changeItemsList = function(newSort, providersArray) {
+  TitleScroll.prototype.changeItemsList = function(newSort, providersArray, titleTypeArray) {
     this.sort = newSort;
     this.error = false;
     this.items = [];
     this.start = 0;
-    this.nextPage(providersArray, true);
+    this.nextPage(providersArray, titleTypeArray, true);
   };
 
   return TitleScroll;
