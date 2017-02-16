@@ -108,7 +108,7 @@ var Seed = function(limit, poolClient, providerId, providerName, offset) {
         });
       }).catch(err => {
         console.log(err);
-        var url = 'http://svr2.omdbapi.com/?';
+        var url = config.OMDB_API_URL;
         url += 'i=' + imdbId;
         request(url, function(error, response, body) {
           if (!error && response.statusCode === 200) {
