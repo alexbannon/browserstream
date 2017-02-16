@@ -9,7 +9,7 @@ angular.module('browserstreams.home', ['ngRoute', 'ngCookies'])
   });
 }])
 
-.controller('HomeCtrl', ['$scope', '$cookies', 'Modal', 'TitlesApi', 'LocalStorage', 'TitleScroll', '$rootScope', '$document', function($scope, $cookies, Modal, TitlesApi, LocalStorage, TitleScroll, $rootScope, $document) {
+.controller('HomeCtrl', ['$scope', '$cookies', 'Modal', 'TitlesApi', 'LocalStorage', 'TitleScroll', '$rootScope', function($scope, $cookies, Modal, TitlesApi, LocalStorage, TitleScroll, $rootScope) {
 
   var localStorageSelections = LocalStorage.getFromStorage('providerSelections');
   if (localStorageSelections) {
@@ -17,6 +17,8 @@ angular.module('browserstreams.home', ['ngRoute', 'ngCookies'])
   } else {
     localStorageSelections = ['netflix'];
   }
+
+  $scope.titleType = ['movie'];
 
   $scope.providers = [{
     name: 'Netflix',
@@ -59,12 +61,13 @@ angular.module('browserstreams.home', ['ngRoute', 'ngCookies'])
 
   $scope.selectProvider = function() {
     LocalStorage.setProviderStorage($scope.providers);
-    $scope.titleScroll.changeItemsList('top', $scope.providers);
+    $scope.titleScroll.changeItemsList('top', $scope.providers, $scope.titleType);
 
   };
 
   $scope.loadMoreTitles = function() {
-    $scope.titleScroll.nextPage($scope.providers);
+    // TODO: user controlled selection of scope variable for titleType
+    $scope.titleScroll.nextPage($scope.providers, $scope.titleType);
   };
 
   $scope.clickModal = function($event) {
