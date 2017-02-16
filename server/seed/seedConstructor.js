@@ -161,6 +161,8 @@ var Seed = function(limit, poolClient, providerId, providerName, offset, titleTy
       for (var i = 0; i < total; i++) {
         if (data[i].imdb) {
           requestImdbData(data[i].imdb).then(handleCount).catch(handleError);
+        } else if (data[i].imdb_id) {
+          requestImdbData(data[i].imdb_id).then(handleCount).catch(handleError);
         } else {
           handleCount();
         }
@@ -171,13 +173,11 @@ var Seed = function(limit, poolClient, providerId, providerName, offset, titleTy
 
   function requestGuidebox() {
     var url = `http://api-public.guidebox.com/v2/${self.titleType}?api_key=${config.GUIDEBOX_API_KEY}&sources=${self.providerName}&limit=${self.limit}&offset=${self.offset}`;
-    console.log(url);
     return new Promise((resolve, reject) => {
       request(url, function (error, response, body) {
         if (!error && response.statusCode === 200) {
           body = JSON.parse(body);
           handleGuideboxData(body.results).then(result => {
-            console.log(result);
             resolve(body.total_returned);
           }).catch(err => {
             reject(err);

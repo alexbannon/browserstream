@@ -28,7 +28,7 @@ function addProviders(client, done, index, offset) {
     pool.end();
     return;
   }
-  addProviderInfo(client, config.PROVIDERS[index].dbName, config.PROVIDERS[index].imdbName, offset, 'movies').then(result => {
+  addProviderInfo(client, config.PROVIDERS[index].dbName, config.PROVIDERS[index].imdbName, offset, config.PROVIDERS[index].type).then(result => {
     if (parseInt(result) === 4) {
       // this will take about 2 hours to input all into db on first time
       setTimeout(function() {
@@ -50,5 +50,5 @@ pool.connect((err, client, done) => {
     console.log(err);
     return done(err);
   }
-  addProviders(client, done, 0, 0);
+  addProviders(client, done, 0, 1064);
 });
