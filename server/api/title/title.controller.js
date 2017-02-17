@@ -6,10 +6,9 @@ var util = require('util');
 var redis = require('redis');
 var redisClient = redis.createClient();
 
-
 function requestTitleInfo(title_id, callback) {
   if (isNaN(title_id)) { return; }
-  var query = `SELECT title.title_name, title.year, title.genre, title.director, title.actors, title.plot from title WHERE title_id='${title_id}'`;
+  var query = `SELECT title.title_name, title.year, title.genre, title.director, title.actors, title.plot, title.rated, title.released, title.runtime, title.writer, title.language, title.country, title.awards, title.metascore, title.imdb_votes from title WHERE title_id='${title_id}'`;
   pg.connect(config.POSTGRES_CONNECT, function(err, client, done) {
     if (err) {
       return console.error('could not connect to postgres db: ', err);
