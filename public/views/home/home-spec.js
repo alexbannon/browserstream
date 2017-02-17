@@ -1,17 +1,17 @@
 describe('angularjs homepage todo list', function() {
-  xit('should add a todo', function() {
-    browser.get('https://angularjs.org');
+  it('should have 4 clickable sliders', function() {
+    browser.get('http://localhost:3000');
+    browser.waitForAngular();
+    element(by.css('sliderContainer')).isPresent();
+    var sliders = element.all(by.css('.sliderContainer'));
+    expect(sliders.count()).toEqual(4);
 
-    element(by.model('todoList.todoText')).sendKeys('write first protractor test');
-    element(by.css('[value="add"]')).click();
+    element(by.css('slider')).click();
 
-    var todoList = element.all(by.repeater('todo in todoList.todos'));
-    expect(todoList.count()).toEqual(3);
-    expect(todoList.get(2).getText()).toEqual('write first protractor test');
-
-    // You wrote your first test, cross it off the list
-    todoList.get(2).element(by.css('input')).click();
-    var completedAmount = element.all(by.css('.done-true'));
-    expect(completedAmount.count()).toEqual(2);
+    // expect(todoList.get(2).getText()).toEqual('write first protractor test');
+    //
+    // todoList.get(2).element(by.css('input')).click();
+    // var completedAmount = element.all(by.css('.done-true'));
+    // expect(completedAmount.count()).toEqual(2);
   });
 });
