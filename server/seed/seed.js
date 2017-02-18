@@ -1,6 +1,7 @@
 var Seed = require('./seedConstructor.js');
 var Pool = require('pg-pool');
 var config = require('../config/environment/local');
+var CompletenessCheck = require('./completenessCheck.js');
 
 var pool = new Pool(config.PG_POOL_CONFIG);
 
@@ -23,7 +24,14 @@ function addProviderInfo(client, dbProviderName, imdbProviderName, offset, title
 
 function addProviders(client, done, index, offset) {
   if (index === (config.PROVIDERS.length)) {
-    console.log('ALL DONE');
+    console.log('ALL DONE WITH INSERTS, CHECKING IF SAFE TO DELETE...');
+    var completenessCheck = new CompletenessCheck(client);
+    completenessCheck.init().then(response => {
+      console.log(response);
+      console.log('DELETION COMPLETE');
+    }).catch(error => {
+      console.log(error);
+    });
     client.release();
     pool.end();
     return;
