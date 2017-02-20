@@ -1,5 +1,6 @@
 var request = require('request');
-var config = require('../config/environment/local');
+var Config = require('../config/environment/config.js');
+var config = new Config();
 
 var Seed = function(limit, poolClient, providerId, providerName, offset, titleType) {
   this.titleType = titleType;
@@ -23,7 +24,8 @@ var Seed = function(limit, poolClient, providerId, providerName, offset, titleTy
       }
       self.client.query(query, queryValuesArray, function(err, result) {
         if (err) {
-          reject({queryError: err});
+          var errorToPrint = 'ERROR WITH QUERY! ' + err;
+          reject({queryError: errorToPrint});
         }
         resolve(result);
       });
@@ -99,18 +101,19 @@ var Seed = function(limit, poolClient, providerId, providerName, offset, titleTy
   function requestImdbData(imdbId) {
     return new Promise((resolve, reject) => {
       checkIfTitleAlreadyExists(imdbId).then(result => {
-        console.log('****** GOT RESULT, NO NEED FOR OMDBAPI *******');
         insertDataIntoDB(result, true, (err, result) => {
           if (result) {
             resolve(result);
           } else {
-            reject(err);
+            var errorToPrint = 'SOMETHING WENT WRONG WITH INSERT INTO TITLE ON DB ' + err;
+            reject(errorToPrint);
           }
         });
       }).catch(err => {
         console.log(err);
         var url = config.OMDB_API_URL;
         url += 'i=' + imdbId;
+        console.log(url);
         request(url, function(error, response, body) {
           if (!error && response.statusCode === 200) {
             body = JSON.parse(body);
@@ -119,7 +122,8 @@ var Seed = function(limit, poolClient, providerId, providerName, offset, titleTy
                 if (result) {
                   resolve(result);
                 } else {
-                  reject(err);
+                  var errorToPrint = 'SOMETHING WENT WRONG WITH INSERT INTO TITLE ON DB ' + err;
+                  reject(errorToPrint);
                 }
               });
             } else {
@@ -127,9 +131,8 @@ var Seed = function(limit, poolClient, providerId, providerName, offset, titleTy
             }
           } else {
             console.log('ERROR WITH OMDBAPI');
-            console.log(error);
             console.log(response.statusCode);
-            reject(error);
+            reject('ERROR WITH OMDBAPI: ' + response.statusCode);
           }
         });
       });
@@ -141,8 +144,13 @@ var Seed = function(limit, poolClient, providerId, providerName, offset, titleTy
 
     return new Promise((resolve, reject) => {
 
+      if (!total || total === 0) {
+        resolve('nothing to process');
+      }
+
+
       var requestTimeout = setTimeout(function() {
-        reject();
+        reject('timeout');
       }, 15000);
 
       function handleCount() {
@@ -183,7 +191,8 @@ var Seed = function(limit, poolClient, providerId, providerName, offset, titleTy
             reject(err);
           });
         } else {
-          reject(error);
+          console.log('API GUIDEBOX FAILURE: ' + error);
+          reject({error: 'guideboxError'});
         }
       });
     });

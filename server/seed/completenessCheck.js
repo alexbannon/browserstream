@@ -1,6 +1,7 @@
 var request = require('request');
-var config = require('../config/environment/local');
-
+var providerConfig = require('../config/environment/index.js');
+var Config = require('../config/environment/config.js');
+var config = new Config();
 var CompletenessCheck = function(client) {
   this.totalGuideboxCount = 0;
   this.totalDbInserts = 0;
@@ -17,16 +18,46 @@ var CompletenessCheck = function(client) {
   var dateToday = new Date();
   dateToday.setHours(0,0,0,0);
   this.dateToday = dateToday.yyyymmdd();
+  this.getTotalGuideboxCount = function(override) {
+    return new Promise((resolve, reject) => {
+      if (override) {
+        resolve(override);
+        return;
+      }
+      var guideboxRequestCount = 0;
+
+      function handleGuideboxCount(self) {
+        guideboxRequestCount++;
+        if (guideboxRequestCount === providerConfig.PROVIDERS.length) {
+          resolve(self.totalGuideboxCount);
+        }
+      }
+      for (var i = 0; i < providerConfig.PROVIDERS.length; i++) {
+        var url = `http://api-public.guidebox.com/v2/${providerConfig.PROVIDERS[i].type}?api_key=${config.GUIDEBOX_API_KEY}&sources=${providerConfig.PROVIDERS[i].imdbName}&limit=25`;
+        request(url, function (error, response, body) {
+          if (!error) {
+            body = JSON.parse(body);
+            if (body.total_results) {
+              this.totalGuideboxCount += body.total_results;
+            }
+          } else {
+            reject(error);
+          }
+          handleGuideboxCount(this);
+        }.bind(this));
+      }
+    });
+  }.bind(this);
+
   this.init = function() {
     return new Promise((resolve, reject) => {
-      var requestCount = 0;
-      function handleCount(self) {
-        requestCount++;
-        if (requestCount === config.PROVIDERS.length) {
-          self.getDbConnections().then(result => {
+      if (this.totalGuideboxCount > 0) {
+        this.getTotalGuideboxCount(this.totalGuideboxCount).then(function(result) {
+          console.log(result);
+          this.getDbConnections().then(result => {
             // if at least 90% of provider_titles got inserted, I'm calling it a success and deleting old ones
-            if ((self.totalGuideboxCount * (0.9)) < parseInt(result)) {
-              self.removeOldConnections().then(response => {
+            if ((this.totalGuideboxCount * (0.9)) < parseInt(result)) {
+              this.removeOldConnections().then(response => {
                 resolve(response);
               });
             } else {
@@ -35,22 +66,10 @@ var CompletenessCheck = function(client) {
           }).catch(err => {
             reject(err);
           });
-        }
-      }
-
-      for (var i = 0; i < config.PROVIDERS.length; i++) {
-        var url = `http://api-public.guidebox.com/v2/${config.PROVIDERS[i].type}?api_key=${config.GUIDEBOX_API_KEY}&sources=${config.PROVIDERS[i].imdbName}&limit=25`;
-        request(url, function (error, response, body) {
-          if (error) {
-            reject(error);
-          } else {
-            body = JSON.parse(body);
-            if (body.total_results) {
-              this.totalGuideboxCount += body.total_results;
-            }
-          }
-          handleCount(this);
-        }.bind(this));
+        }.bind(this)).catch(err => {
+          console.log(err);
+          reject(err);
+        });
       }
     });
   };

@@ -1,6 +1,6 @@
 node_modules
 components
-environment
+config.js
 dump.rdb
 .eslintrc
 database.json

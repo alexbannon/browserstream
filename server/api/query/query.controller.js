@@ -1,6 +1,7 @@
 'use strict';
 // var _ = require('lodash');
-var config = require('../../config/environment/local.js');
+var Config = require('../../config/environment/config.js');
+var config = new Config();
 var pg = require('pg');
 var util = require('util');
 var redis = require('redis');

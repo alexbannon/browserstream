@@ -4,7 +4,7 @@ CREATE TABLE title (
   title_name varchar(200) NOT NULL,
   year int,
   genre varchar(100),
-  director varchar(100),
+  director varchar(250),
   actors varchar(500),
   plot varchar(1000),
   image_url varchar(350),
