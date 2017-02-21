@@ -12,6 +12,7 @@ npm setup
 install redis (if homebrew is installed, brew install redis will work)
 install postgresql
 create a database called browserstream and a user called "local"
+create a config.js in your config/environment directory that looks like the following (updating the connection with your API keys and postgres information): https://github.com/alexbannon/browserstream/blob/master/fakeConfigFile.js
 ```
 npm install -g db-migrate
 db-migrate up
