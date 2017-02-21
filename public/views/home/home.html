@@ -4,12 +4,12 @@
 </div>
 <div class="selectorBackground">
   <div class="selectorContainer">
-    <div ng-repeat="provider in providers" class="providerContainer" ng-click="provider.selected = !provider.selected; selectProvider();">
+    <div ng-repeat="provider in userSettings.providers" class="providerContainer" ng-click="provider.selected = !provider.selected; selectProvider();">
       <img ng-src="{{provider.imageSource}}" class="logo" />
     </div>
   </div>
   <div class="slidersContainer">
-    <div ng-repeat="provider in providers" class="sliderContainer" ng-click="provider.selected = !provider.selected; selectProvider();">
+    <div ng-repeat="provider in userSettings.providers" class="sliderContainer" ng-click="provider.selected = !provider.selected; selectProvider();">
       <div class="slider">
         <div class="slideBlock" ng-class="provider.selected ? 'sliderSelected' : 'sliderDeselected'"></div>
       </div>

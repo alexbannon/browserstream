@@ -26,7 +26,7 @@ angular.module('browserstreams')
     }
 
     for (var x = 0; x < titleTypeArray.length; x++) {
-      url+= '&titletype=' + titleTypeArray[x];
+      url+= '&titletype=' + titleTypeArray[x].queryName;
     }
 
     $http({
