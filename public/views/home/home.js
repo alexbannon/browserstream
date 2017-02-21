@@ -18,7 +18,7 @@ angular.module('browserstreams.home', ['ngRoute', 'ngCookies'])
     localStorageSelections = ['netflix'];
   }
 
-  $scope.titleType = ['movie'];
+  $scope.titleType = ['movie', 'series'];
 
   $scope.providers = [{
     name: 'Netflix',
@@ -57,6 +57,16 @@ angular.module('browserstreams.home', ['ngRoute', 'ngCookies'])
   $scope.hideModal = function() {
     $scope.displayModal = false;
     $rootScope.bodyClass = false;
+  };
+  $scope.openPrefs = function() {
+    $rootScope.bodyClass = true;
+    $scope.displayModal = false;
+    $scope.showFilter = true;
+  };
+
+  $scope.savePrefs = function() {
+    $rootScope.bodyClass = false;
+    $scope.showFilter = false;
   };
 
   $scope.selectProvider = function() {

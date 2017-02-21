@@ -1,5 +1,6 @@
 <div class="header">
   <img class="browserstreamLogo" src="../assets/logo.png" />
+  <img class="filterButton" ng-click="openPrefs()" src="../assets/filter.png"/>
 </div>
 <div class="selectorBackground">
   <div class="selectorContainer">
@@ -16,9 +17,15 @@
   </div>
 </div>
 <div id="titlesContainer" class="titlesContainer" infinite-scroll='loadMoreTitles()' infinite-scroll-disabled='titleScroll.busy' infinite-scroll-use-document-bottom="true" infinite-scroll-distance='0.5' infinite-scroll-listen-for-event="itemsNotLongEnough">
-  <div ng-repeat="title in titleScroll.items | orderBy:'-imdb_rating'" class="imageContainer" ng-click="displaySummary(title)">
-    <span class="centerImageHelper"></span><img class="posterImage" ng-src="{{title.image_url}}" />
+  <div ng-repeat="title in titleScroll.items | orderBy:'-imdb_rating'" class="imageContainer" ng-click="displaySummary(title)" ng-if="title.imdb_rating">
+    <div ng-if="title.image_url">
+      <span class="centerImageHelper"></span><img class="posterImage" ng-src="{{title.image_url}}" />
+    </div>
+    <div class="titleImageContainer" ng-if="!title.image_url">
+      {{title.title_name}}
+    </div>
   </div>
 </div>
 <div class="loadingData" ng-show='titleScroll.busy'>Loading</div>
 <div ng-include="'/views/templates/titleModal.html'"></div>
+<div ng-include="'/views/templates/filterOverlay.html'"></div>
