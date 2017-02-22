@@ -392,7 +392,7 @@ padding-bottom: 5px;
 
 .filterProviderContainer {
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
   flex-wrap: wrap;
   margin: 10px auto;
   max-width: 1024px;
@@ -428,8 +428,65 @@ padding-bottom: 5px;
      background: #28597a;
      color: #ccc;
   }
+  .close:hover::before, .close:hover::after {
+    background: rgb(150,150,150);
+  }
+
 }
 .selectorSelected {
   border-top-color: #1b435e;
    background: #1b435e;
 }
+.twoProviders {
+  max-width: 200px;
+}
+.capitalize {
+  text-transform: capitalize;
+}
+
+/* CLOSE BUTTON */
+.modalXBox {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  z-index: 2;
+}
+.close {
+  position: relative;
+  display: inline-block;
+  width: 25px;
+  height: 25px;
+  overflow: hidden;
+}
+.close::before, .close::after {
+  content: '';
+  position: absolute;
+  height: 2px;
+  width: 100%;
+  top: 50%;
+  left: 0;
+  margin-top: -1px;
+  background: #fff;
+}
+.close::before {
+  -webkit-transform: rotate(45deg);
+  -moz-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  -o-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+.close::after {
+  -webkit-transform: rotate(-45deg);
+  -moz-transform: rotate(-45deg);
+  -ms-transform: rotate(-45deg);
+  -o-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+}
+.close.black::before, .close.black::after {
+  height: 4px;
+  margin-top: -4px;
+}
+.close.rounded::before, .close.rounded::after {
+  border-radius: 5px;
+}
+/* end close button */

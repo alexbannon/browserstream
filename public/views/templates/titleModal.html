@@ -1,6 +1,7 @@
 <div class="descriptionModalOverlay" ng-if="displayModal" ng-click="hideModal()">
   <div class="descriptionModal" ng-click="clickModal($event)">
     <div class="modalTopInfo">
+      <div class="modalXBox" ng-click="hideModal()"><span class="close rounded black"></span></div>
       <div class="modalImageContainer">
         <div class="modalImage" background-image="{{selectedTitleObject.image_url}}"></div>
       </div>

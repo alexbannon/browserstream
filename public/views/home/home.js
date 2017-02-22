@@ -17,7 +17,8 @@ angular.module('browserstreams.home', ['ngRoute', 'ngCookies'])
   } else {
     localStorageSelections = ['netflix'];
   }
-  // break this mofo into a service
+  // TODO: break this mofo into a service
+  // TODO: download images and place in assets
   $scope.userSettings = {
     providers: [{
       name: 'Netflix',
@@ -49,10 +50,12 @@ angular.module('browserstreams.home', ['ngRoute', 'ngCookies'])
       queryName: 'series',
       selected: true
     }],
+    sortBy: 'alphabetical',
+    sortList: ['best', 'worst', 'alphabetical'],
     genres: []
   };
 
-  $scope.titleScroll = new TitleScroll('top');
+  $scope.titleScroll = new TitleScroll($scope.userSettings.sortBy);
 
   $scope.displaySummary = function(titleObject) {
     $scope.selectedTitleObject = titleObject;
@@ -77,15 +80,15 @@ angular.module('browserstreams.home', ['ngRoute', 'ngCookies'])
   $scope.savePrefs = function() {
     $rootScope.bodyClass = false;
     $scope.showFilter = false;
-    $scope.titleScroll.changeItemsList('top', $scope.userSettings.providers, $scope.userSettings.titleType);
+    $scope.titleScroll.changeItemsList($scope.userSettings.sortBy, $scope.userSettings.providers, $scope.userSettings.titleType);
   };
 
   $scope.selectProvider = function() {
     LocalStorage.setProviderStorage($scope.userSettings.providers);
-    $scope.titleScroll.changeItemsList('top', $scope.userSettings.providers, $scope.userSettings.titleType);
+    $scope.titleScroll.changeItemsList($scope.userSettings.sortBy, $scope.userSettings.providers, $scope.userSettings.titleType);
 
   };
-
+  // TODO refactor everything into a single $scope.userSettings passable value which is originated in a service on controller initialization.
   $scope.loadMoreTitles = function() {
     // TODO: user controlled selection of scope variable for titleType
     $scope.titleScroll.nextPage($scope.userSettings.providers, $scope.userSettings.titleType);

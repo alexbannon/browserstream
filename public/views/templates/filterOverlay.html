@@ -9,6 +9,8 @@
       Providers
     </h1>
     <div class="filterProviderContainer">
+      <div class="allButton"></div>
+      <div class="noneButton"></div>
       <div class="providerSelector" ng-class="provider.selected ? 'selectorSelected' : 'selectorDeselected'" ng-repeat="provider in userSettings.providers" ng-click="provider.selected = !provider.selected;">
         {{provider.name}}
       </div>
@@ -17,8 +19,16 @@
       Type of Content
     </h2>
     <div class="filterProviderContainer">
-      <div class="providerSelector" ng-class="titleType.selected ? 'selectorSelected' : 'selectorDeselected'" ng-repeat="titleType in userSettings.titleType" ng-click="titleType.selected = !titleType.selected;">
+      <div class="providerSelector twoProviders" ng-class="titleType.selected ? 'selectorSelected' : 'selectorDeselected'" ng-repeat="titleType in userSettings.titleType" ng-click="titleType.selected = !titleType.selected;">
         {{titleType.name}}
+      </div>
+    </div>
+    <h2 class="filterCategory">
+      Filter By
+    </h2>
+    <div class="filterProviderContainer">
+      <div class="providerSelector capitalize" ng-class="userSettings.sortBy === sort ? 'selectorSelected' : 'selectorDeselected'" ng-repeat="sort in userSettings.sortList" ng-click="userSettings.sortBy = sort">
+        {{sort}}
       </div>
     </div>
   </div>

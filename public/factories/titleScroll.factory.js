@@ -14,6 +14,7 @@ angular.module('browserstreams')
     this.busy = true;
     var count = 0;
     var url = '/api/query?sort='+this.sort+'&start='+this.start;
+    console.log(url);
     for (var i = 0; i < providersArray.length; i++) {
       if (providersArray[i].selected) {
         count++;

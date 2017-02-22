@@ -34,7 +34,22 @@ function requestStreams(providers, titleType, sort, offset, callback) {
   var titleTypeParams = titleTypeParametersArray.join(', ');
   titleTypeParams = '(' + titleTypeParams + ')';
 
-  var query = `SELECT t.title_id, t.title_name, t.imdb_id, t.image_url, t.imdb_rating, array_agg( p.provider_id ) as providers_ids, array_agg( p.name ) as providers_names FROM provider_title as pt JOIN provider as p ON pt.provider_id = p.provider_id JOIN title as t ON t.title_id = pt.title_id WHERE p.name IN ${providerParams} AND t.type IN ${titleTypeParams} GROUP BY t.title_id, t.title_name ORDER BY imdb_rating DESC LIMIT 30 OFFSET ${offset};`;
+  var sortQuery;
+  switch (sort) {
+    case 'best':
+      sortQuery = 'imdb_rating DESC';
+      break;
+    case 'worst':
+      sortQuery = 'imdb_rating ASC';
+      break;
+    case 'alphabetical':
+      sortQuery = 't.title_name ASC';
+      break;
+    default:
+      sortQuery = 'imdb_rating DESC';
+  }
+
+  var query = `SELECT t.title_id, t.title_name, t.imdb_id, t.image_url, t.imdb_rating, array_agg( p.provider_id ) as providers_ids, array_agg( p.name ) as providers_names FROM provider_title as pt JOIN provider as p ON pt.provider_id = p.provider_id JOIN title as t ON t.title_id = pt.title_id WHERE p.name IN ${providerParams} AND t.type IN ${titleTypeParams} GROUP BY t.title_id, t.title_name ORDER BY ${sortQuery} LIMIT 30 OFFSET ${offset};`;
   pg.connect(config.POSTGRES_CONNECT, function(err, client, done) {
     if (err) {
       return console.error('could not connect to postgres db: ', err);
@@ -56,7 +71,7 @@ var validatorSchema = {
   'sort': {
     notEmpty: true,
     matches: {
-      options: ['^(top|comedy|action)', 'i']
+      options: ['^(best|worst|alphabetical)', 'i']
     }
   },
   'start': {
