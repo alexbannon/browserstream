@@ -1,11 +1,12 @@
 angular.module('browserstreams')
 
-.factory('TitleScroll', function($http, $rootScope) {
-  var TitleScroll = function(sort) {
+.factory('TitleScroll', function($http, $rootScope, $timeout) {
+  var TitleScroll = function(sort, limit) {
     this.sort = sort;
     this.items = [];
     this.busy = false;
     this.start = 0;
+    this.limit = limit;
     this.error = false;
   };
 
@@ -28,6 +29,7 @@ angular.module('browserstreams')
     for (var x = 0; x < titleTypeArray.length; x++) {
       url+= '&titletype=' + titleTypeArray[x].queryName;
     }
+    url += '&limit=' + this.limit;
 
     $http({
       method: 'GET',
@@ -42,8 +44,10 @@ angular.module('browserstreams')
       } else {
         this.items.push(...response.data);
       }
-      this.start += 30;
-      this.busy = false;
+      this.start += this.limit;
+      $timeout(function(){
+        this.busy = false;
+      }.bind(this), 50);
       if (emitEvent) {
         // fixing ng-infinite-scroll bug on item change
         $rootScope.$emit('itemsNotLongEnough');

@@ -8,7 +8,7 @@ var redis = require('redis');
 var redisClient = redis.createClient();
 
 
-function requestStreams(providers, titleType, sort, offset, callback) {
+function requestStreams(providers, titleType, sort, offset, limit, callback) {
   offset = (isNaN(parseInt(offset))) ? 0 : offset;
   var queryValues = [];
   var providersParametersArray = [];
@@ -49,7 +49,7 @@ function requestStreams(providers, titleType, sort, offset, callback) {
       sortQuery = 'imdb_rating DESC';
   }
 
-  var query = `SELECT t.title_id, t.title_name, t.imdb_id, t.image_url, t.imdb_rating, array_agg( p.provider_id ) as providers_ids, array_agg( p.name ) as providers_names FROM provider_title as pt JOIN provider as p ON pt.provider_id = p.provider_id JOIN title as t ON t.title_id = pt.title_id WHERE p.name IN ${providerParams} AND t.type IN ${titleTypeParams} GROUP BY t.title_id, t.title_name ORDER BY ${sortQuery} LIMIT 30 OFFSET ${offset};`;
+  var query = `SELECT t.title_id, t.title_name, t.imdb_id, t.image_url, t.imdb_rating, array_agg( p.provider_id ) as providers_ids, array_agg( p.name ) as providers_names FROM provider_title as pt JOIN provider as p ON pt.provider_id = p.provider_id JOIN title as t ON t.title_id = pt.title_id WHERE p.name IN ${providerParams} AND t.type IN ${titleTypeParams} GROUP BY t.title_id, t.title_name ORDER BY ${sortQuery} LIMIT ${limit} OFFSET ${offset};`;
   pg.connect(config.POSTGRES_CONNECT, function(err, client, done) {
     if (err) {
       return console.error('could not connect to postgres db: ', err);
@@ -97,6 +97,12 @@ var validatorSchema = {
     eachIsTitleType: {
       errorMessage: 'At Least One TitleType Invalid'
     }
+  },
+  'limit': {
+    notEmpty: true,
+    isInt: {
+      errorMessage: 'limit is not an integer'
+    }
   }
 };
 
@@ -123,6 +129,7 @@ exports.index = function (req, res) {
       cacheKey += req.query.titletype[x];
     }
     cacheKey += req.query.sort;
+    cacheKey += req.query.limit;
     cacheKey += req.query.start;
     redisClient.get(cacheKey, function(err, result) {
       if (result) {
@@ -133,7 +140,7 @@ exports.index = function (req, res) {
           return;
         }
       }
-      requestStreams(req.query.providers, req.query.titletype, req.query.sort, req.query.start, function (err, data) {
+      requestStreams(req.query.providers, req.query.titletype, req.query.sort, req.query.start, req.query.limit, function (err, data) {
         if (err) {
           res.json({ error: 'error' });
         }

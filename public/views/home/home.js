@@ -55,7 +55,7 @@ angular.module('browserstreams.home', ['ngRoute', 'ngCookies'])
     genres: []
   };
 
-  $scope.titleScroll = new TitleScroll($scope.userSettings.sortBy);
+  $scope.titleScroll = new TitleScroll($scope.userSettings.sortBy, $rootScope.numFilms);
 
   $scope.displaySummary = function(titleObject) {
     $scope.selectedTitleObject = titleObject;
