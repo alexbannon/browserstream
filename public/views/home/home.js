@@ -83,6 +83,11 @@ angular.module('browserstreams.home', ['ngRoute', 'ngCookies'])
     $scope.titleScroll.changeItemsList($scope.userSettings.sortBy, $scope.userSettings.providers, $scope.userSettings.titleType);
   };
 
+  $scope.searchMovie = function() {
+    console.log($scope.searchInput);
+    $scope.searchInput = '';
+  };
+
   $scope.selectProvider = function() {
     LocalStorage.setProviderStorage($scope.userSettings.providers);
     $scope.titleScroll.changeItemsList($scope.userSettings.sortBy, $scope.userSettings.providers, $scope.userSettings.titleType);

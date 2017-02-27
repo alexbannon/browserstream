@@ -1,6 +1,8 @@
 head, body, html {
   margin: 0;
   padding: 0;
+  min-width: 320px;
+  max-width: 1848px;
   font-family: "Avant Garde", Avantgarde, "Century Gothic", CenturyGothic, AppleGothic, sans-serif;
   background-color: #eee;
 }
@@ -490,3 +492,26 @@ padding-bottom: 5px;
   border-radius: 5px;
 }
 /* end close button */
+
+.searchContainer {
+  position: absolute;
+  left: 15px;
+  top: 6px;
+  width: 25%;
+}
+.searchBar {
+  border-radius: 15px;
+  border: none;
+  background-color: rgba(0,0,0,0.2);
+  outline: none;
+  padding: 0 15px 0 5px;
+  color: rgba(75, 105, 160, 1);
+  width: 100%;
+  position: relative;
+}
+.searchIcon {
+  position: absolute;
+  right: 4px;
+  top: 4px;
+  width: 11px;
+}
