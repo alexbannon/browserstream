@@ -12,16 +12,26 @@ angular.module('browserstreams')
 
 .service('LocalStorage', ['$window', '$rootScope', '$cookies', function($window, $rootScope, $cookies) {
   return {
-    setProviderStorage(providers) {
+    saveUserSettings(userSettingsObject) {
       var providersArray = [];
-      for (var i = 0; i < providers.length; i++) {
-        if (providers[i].selected) {
-          providersArray.push(providers[i].queryName);
+      for (var i = 0; i < userSettingsObject.providers.length; i++) {
+        if (userSettingsObject.providers[i].selected) {
+          providersArray.push(userSettingsObject.providers[i].queryName);
         }
       }
       this.setStorage('providerSelections', providersArray.join(','));
+      var titleTypeArray = [];
+      for (var x = 0; x < userSettingsObject.titleType.length; x++) {
+        if (userSettingsObject.titleType[x].selected) {
+          titleTypeArray.push(userSettingsObject.titleType[x].queryName);
+        }
+      }
+      this.setStorage('titleTypes', titleTypeArray.join(','));
     },
     setStorage: function(key, value) {
+      if (!key || !value) {
+        return;
+      }
       if ($rootScope.localStorageAvailable === undefined) {
         $rootScope.localStorageAvailable = supportsHtml5Storage();
       }

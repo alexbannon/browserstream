@@ -13,21 +13,30 @@ angular.module('browserstreams')
   TitleScroll.prototype.nextPage = function(providersArray, titleTypeArray, emitEvent) {
     if (this.busy || this.error) return;
     this.busy = true;
-    var count = 0;
+    var providerCount = 0;
     var url = '/api/query?sort='+this.sort+'&start='+this.start;
     for (var i = 0; i < providersArray.length; i++) {
       if (providersArray[i].selected) {
-        count++;
+        providerCount++;
         url+= '&providers=' + providersArray[i].queryName;
       }
     }
-    if (count === 0) {
+    if (providerCount === 0) {
       this.busy = false;
       return;
     }
 
+    var titleCount = 0;
+
     for (var x = 0; x < titleTypeArray.length; x++) {
-      url+= '&titletype=' + titleTypeArray[x].queryName;
+      if (titleTypeArray[x].selected) {
+        titleCount++;
+        url+= '&titletype=' + titleTypeArray[x].queryName;
+      }
+    }
+    if (titleCount === 0) {
+      this.busy = false;
+      return;
     }
     url += '&limit=' + this.limit;
 
@@ -45,6 +54,7 @@ angular.module('browserstreams')
         this.items.push(...response.data);
       }
       this.start += this.limit;
+      // not the biggest fan, but infinite scroll was firing too quickly before angular could load titles
       $timeout(function(){
         this.busy = false;
       }.bind(this), 50);
@@ -60,12 +70,12 @@ angular.module('browserstreams')
 
   };
 
-  TitleScroll.prototype.changeItemsList = function(newSort, providersArray, titleTypeArray) {
-    this.sort = newSort;
+  TitleScroll.prototype.changeItemsList = function(userSettings) {
+    this.sort = userSettings.sortBy;
     this.error = false;
     this.items = [];
     this.start = 0;
-    this.nextPage(providersArray, titleTypeArray, true);
+    this.nextPage(userSettings.providers, userSettings.titleType, true);
   };
 
   return TitleScroll;

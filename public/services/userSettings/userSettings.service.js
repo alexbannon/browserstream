@@ -15,7 +15,7 @@ angular.module('browserstreams')
           name: 'Netflix',
           queryName: 'netflix',
           selected: (localStorageSelections.indexOf('netflix') > -1),
-          imageSource: '/assets/netflixLogo.webp'
+          imageSource: '/assets/netflixLogo.png'
         },{
           name: 'HBO GO',
           queryName: 'hbo_go',
@@ -25,7 +25,7 @@ angular.module('browserstreams')
           name: 'Amazon Prime',
           queryName: 'amazon_prime',
           selected: (localStorageSelections.indexOf('amazon_prime') > -1),
-          imageSource: '/assets/amazonPrimeLogo.webp',
+          imageSource: '/assets/amazonPrimeLogo.png',
         },{
           name: 'Hulu',
           queryName: 'hulu',

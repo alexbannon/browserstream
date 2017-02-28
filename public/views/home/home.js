@@ -12,7 +12,7 @@ angular.module('browserstreams.home', ['ngRoute', 'ngCookies'])
 .controller('HomeCtrl', ['$scope', '$cookies', 'Modal', 'TitlesApi', 'LocalStorage', 'TitleScroll', '$rootScope', 'UserSettings', function($scope, $cookies, Modal, TitlesApi, LocalStorage, TitleScroll, $rootScope, UserSettings) {
 
   $scope.userSettings = UserSettings.generateUserSettings();
-  
+
   $scope.titleScroll = new TitleScroll($scope.userSettings.sortBy, $rootScope.numFilms);
 
   $scope.displaySummary = function(titleObject) {
@@ -38,7 +38,8 @@ angular.module('browserstreams.home', ['ngRoute', 'ngCookies'])
   $scope.savePrefs = function() {
     $rootScope.bodyClass = false;
     $scope.showFilter = false;
-    $scope.titleScroll.changeItemsList($scope.userSettings.sortBy, $scope.userSettings.providers, $scope.userSettings.titleType);
+    LocalStorage.saveUserSettings($scope.userSettings);
+    $scope.titleScroll.changeItemsList($scope.userSettings);
   };
 
   $scope.searchMovie = function() {
@@ -47,13 +48,11 @@ angular.module('browserstreams.home', ['ngRoute', 'ngCookies'])
   };
 
   $scope.selectProvider = function() {
-    LocalStorage.setProviderStorage($scope.userSettings.providers);
-    $scope.titleScroll.changeItemsList($scope.userSettings.sortBy, $scope.userSettings.providers, $scope.userSettings.titleType);
+    LocalStorage.saveUserSettings($scope.userSettings);
+    $scope.titleScroll.changeItemsList($scope.userSettings);
 
   };
-  // TODO refactor everything into a single $scope.userSettings passable value which is originated in a service on controller initialization.
   $scope.loadMoreTitles = function() {
-    // TODO: user controlled selection of scope variable for titleType
     $scope.titleScroll.nextPage($scope.userSettings.providers, $scope.userSettings.titleType);
   };
 
