@@ -7,28 +7,47 @@
     </h1>
     <h2 class="filterCategory">
       Providers
-    </h1>
-    <div class="filterProviderContainer">
-      <div class="allButton"></div>
-      <div class="noneButton"></div>
-      <div class="providerSelector" ng-class="provider.selected ? 'selectorSelected' : 'selectorDeselected'" ng-repeat="provider in userSettings.providers" ng-click="provider.selected = !provider.selected;">
-        {{provider.name}}
+    </h2>
+    <div class="filterProviderContainer spaceAround">
+      <div class="filterItem" ng-repeat="provider in userSettings.providers" ng-click="provider.selected = !provider.selected;">
+        <div class="filterName">
+          {{provider.name}}
+        </div>
+        <div class="sliderContainer fullWidth">
+          <div class="slider">
+            <div class="slideBlock" ng-class="provider.selected ? 'sliderSelected' : 'sliderDeselected'"></div>
+          </div>
+        </div>
       </div>
     </div>
     <h2 class="filterCategory">
       Type of Content
     </h2>
-    <div class="filterProviderContainer">
-      <div class="providerSelector twoProviders" ng-class="titleType.selected ? 'selectorSelected' : 'selectorDeselected'" ng-repeat="titleType in userSettings.titleType" ng-click="titleType.selected = !titleType.selected;">
-        {{titleType.name}}
+    <div class="filterProviderContainer centerContent">
+      <div class="filterItem buffer" ng-repeat="titleType in userSettings.titleType" ng-click="titleType.selected = !titleType.selected;">
+        <div class="filterName">
+          {{titleType.name}}
+        </div>
+        <div class="sliderContainer fullWidth">
+          <div class="slider">
+            <div class="slideBlock" ng-class="titleType.selected ? 'sliderSelected' : 'sliderDeselected'"></div>
+          </div>
+        </div>
       </div>
     </div>
     <h2 class="filterCategory">
       Filter By
     </h2>
-    <div class="filterProviderContainer">
-      <div class="providerSelector capitalize" ng-class="userSettings.sortBy === sort ? 'selectorSelected' : 'selectorDeselected'" ng-repeat="sort in userSettings.sortList" ng-click="userSettings.sortBy = sort">
-        {{sort}}
+    <div class="filterProviderContainer centerContent">
+      <div class="filterItem buffer" ng-repeat="sort in userSettings.sortList" ng-click="userSettings.sortBy = sort">
+        <div class="filterName capitalize">
+          {{sort}}
+        </div>
+        <div class="sliderContainer fullWidth">
+          <div class="slider">
+            <div class="slideBlock" ng-class="userSettings.sortBy === sort ? 'sliderSelected' : 'sliderDeselected'"></div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

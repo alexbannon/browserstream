@@ -47,10 +47,22 @@ head, body, html {
   text-align: center;
   max-width: 142px;
 }
+.filterItem {
+  display: inline-block;
+}
 .titlesContainer {
   display: flex;
-  justify-content: space-around;
   flex-wrap: wrap;
+  justify-content: space-around;
+}
+.spaceAround {
+  justify-content: space-around;
+}
+.centerContent {
+  justify-content: center;
+}
+.buffer {
+  margin: 0 10px;
 }
 .providerCheckbox {
   margin: 0 auto;
@@ -253,12 +265,17 @@ box-sizing: border-box;
 padding-bottom: 5px;
 }
 .sliderContainer {
-  width: 25%;
   padding: 0 1.25%;
   vertical-align: middle;
   text-align: center;
   max-width: 142px;
   display: inline-block;
+}
+.quarterWidth {
+  width: 25%;
+}
+.fullWidth {
+  width: 100%;
 }
 .sliderSelected {
   right: 3px;
@@ -395,53 +412,18 @@ padding-bottom: 5px;
 
 .filterProviderContainer {
   display: flex;
-  justify-content: center;
   flex-wrap: wrap;
-  margin: 10px auto;
-  max-width: 1024px;
-}
-.providerSelector {
-  flex-grow: 1;
-  display: inline-block;
-  border-radius: 5px;
-  margin: 0 2px;
- background: #65a9d7;
- background: -webkit-gradient(linear, left top, left bottom, from(#3e779d), to(#65a9d7));
- background: -webkit-linear-gradient(top, #3e779d, #65a9d7);
- background: -moz-linear-gradient(top, #3e779d, #65a9d7);
- background: -ms-linear-gradient(top, #3e779d, #65a9d7);
- background: -o-linear-gradient(top, #3e779d, #65a9d7);
- padding: 5px 10px;
- -webkit-border-radius: 8px;
- -moz-border-radius: 8px;
- border-radius: 8px;
- -webkit-box-shadow: rgba(0,0,0,1) 0 1px 0;
- -moz-box-shadow: rgba(0,0,0,1) 0 1px 0;
- box-shadow: rgba(0,0,0,1) 0 1px 0;
- text-shadow: rgba(0,0,0,.4) 0 1px 0;
- color: white;
- font-size: 14px;
- font-family: Georgia, serif;
- text-decoration: none;
- vertical-align: middle;
+  margin: 15px auto 0 auto;
+  max-width: 700px;
 }
 @media (hover: hover) {
-  .providerSelector:hover {
-    border-top-color: #28597a;
-     background: #28597a;
-     color: #ccc;
-  }
   .close:hover::before, .close:hover::after {
     background: rgb(150,150,150);
   }
-
 }
 .selectorSelected {
   border-top-color: #1b435e;
    background: #1b435e;
-}
-.twoProviders {
-  max-width: 200px;
 }
 .capitalize {
   text-transform: capitalize;
@@ -529,4 +511,8 @@ padding-bottom: 5px;
   right: 4px;
   top: 4px;
   width: 11px;
+}
+.filterName {
+  font-size: 14px;
+  margin: 0 auto 1px auto;
 }

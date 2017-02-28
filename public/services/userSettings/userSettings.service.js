@@ -8,7 +8,8 @@ angular.module('browserstreams')
       var localStorageSelections = LocalStorage.getFromStorage('providerSelections');
       localStorageSelections = localStorageSelections ? localStorageSelections.split(',') : ['netflix'];
       var localStorageTitleTypes = LocalStorage.getFromStorage('titleTypes');
-      localStorageTitleTypes = localStorageTitleTypes ? localStorageTitleTypes.split(',') : ['movies', 'series'];
+      localStorageTitleTypes = localStorageTitleTypes ? localStorageTitleTypes.split(',') : ['movie', 'series'];
+      console.log(localStorageTitleTypes);
 
       return {
         providers: [{
@@ -22,7 +23,7 @@ angular.module('browserstreams')
           selected: (localStorageSelections.indexOf('hbo_go') > -1),
           imageSource: '/assets/hboGoLogo.png',
         },{
-          name: 'Amazon Prime',
+          name: 'Amazon',
           queryName: 'amazon_prime',
           selected: (localStorageSelections.indexOf('amazon_prime') > -1),
           imageSource: '/assets/amazonPrimeLogo.png',
@@ -35,7 +36,7 @@ angular.module('browserstreams')
         titleType: [{
           name: 'Movies',
           queryName: 'movie',
-          selected: (localStorageTitleTypes.indexOf('movies') > -1)
+          selected: (localStorageTitleTypes.indexOf('movie') > -1)
         }, {
           name: 'TV Shows',
           queryName: 'series',

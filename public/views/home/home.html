@@ -14,7 +14,7 @@
     </div>
   </div>
   <div class="slidersContainer">
-    <div ng-repeat="provider in userSettings.providers" class="sliderContainer" ng-click="provider.selected = !provider.selected; selectProvider();">
+    <div ng-repeat="provider in userSettings.providers" class="sliderContainer quarterWidth" ng-click="provider.selected = !provider.selected; selectProvider();">
       <div class="slider">
         <div class="slideBlock" ng-class="provider.selected ? 'sliderSelected' : 'sliderDeselected'"></div>
       </div>
