@@ -9,8 +9,6 @@ angular.module('browserstreams')
       localStorageSelections = localStorageSelections ? localStorageSelections.split(',') : ['netflix'];
       var localStorageTitleTypes = LocalStorage.getFromStorage('titleTypes');
       localStorageTitleTypes = localStorageTitleTypes ? localStorageTitleTypes.split(',') : ['movie', 'series'];
-      console.log(localStorageTitleTypes);
-
       return {
         providers: [{
           name: 'Netflix',
