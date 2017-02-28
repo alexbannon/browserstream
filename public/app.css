@@ -96,6 +96,7 @@ head, body, html {
   vertical-align: middle;
   overflow: hidden;
   height: 222px;
+  line-height: 222px;
 }
 .centerImageHelper {
   display: inline-block;
