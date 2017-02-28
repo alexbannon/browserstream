@@ -481,13 +481,14 @@ padding-bottom: 5px;
   left: 15px;
   top: 6px;
   width: 25%;
+  max-width: 300px;
 }
 .searchBar {
   border-radius: 15px;
   border: none;
   background-color: rgba(0,0,0,0.2);
   outline: none;
-  padding: 0 15px 0 5px;
+  padding: 3px 15px 3px 5px;
   color: rgba(75, 105, 160, 1);
   width: 100%;
   position: relative;
