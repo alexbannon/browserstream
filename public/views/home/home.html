@@ -2,7 +2,7 @@
   <form class="searchContainer" ng-submit="searchMovie()">
     <input type="text" class="searchBar" ng-model="searchInput" placeholder="Find a Title" />
     <input type="submit" style="display:none">
-    <img class="searchIcon" src="../../assets/search_icon.png" />
+    <img class="searchIcon" src="../../assets/search_icon.png" ng-click="searchMovie()"/>
   </form>
   <img class="browserstreamLogo" src="../assets/logo.png" />
   <img class="filterButton" ng-click="openPrefs()" src="../assets/filter.png"/>

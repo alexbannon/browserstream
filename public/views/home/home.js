@@ -43,8 +43,15 @@ angular.module('browserstreams.home', ['ngRoute', 'ngCookies'])
   };
 
   $scope.searchMovie = function() {
-    console.log($scope.searchInput);
-    $scope.searchInput = '';
+    if ($scope.searchInput) {
+      console.log($scope.searchInput);
+      TitlesApi.searchForTitle($scope.searchInput).then(function(result){
+        console.log(result);
+      }).catch(function(err){
+        console.log('error searching api: ' + err);
+      });
+      $scope.searchInput = '';
+    }
   };
 
   $scope.selectProvider = function() {
