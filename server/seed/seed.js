@@ -1,8 +1,7 @@
 var Seed = require('./seedConstructor.js');
 var Pool = require('pg-pool');
 var providerConfig = require('../config/environment/index.js');
-var Config = require('../config/environment/config.js');
-var config = new Config();
+var config = require('../../config/environment/config.js')();
 var CompletenessCheck = require('./completenessCheck.js');
 
 var pool = new Pool(config.PG_POOL_CONFIG);

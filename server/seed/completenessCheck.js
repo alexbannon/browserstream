@@ -1,7 +1,6 @@
 var request = require('request');
 var providerConfig = require('../config/environment/index.js');
-var Config = require('../config/environment/config.js');
-var config = new Config();
+var config = require('../../config/environment/config.js')();
 var CompletenessCheck = function(client) {
   this.totalGuideboxCount = 0;
   this.totalDbInserts = 0;
