@@ -17,9 +17,9 @@ function requestTitleInfo(title_id, callback) {
     client.query(query, function(err, result) {
       done();
       if (err) {
+        callback(err);
         console.log(err);
-      }
-      if (callback) {
+      } else {
         callback(err, result);
       }
       pg.end();
@@ -48,8 +48,7 @@ exports.index = function (req, res) {
       requestTitleInfo(req.params.id, function (err, data) {
         if (err) {
           res.json({ error: 'error' });
-        }
-        if (data && data.rows[0] && data.rows[0].title_name) {
+        } else if (data && data.rows[0] && data.rows[0].title_name) {
           var cacheData = {
             rows: data.rows
           };
