@@ -8,7 +8,7 @@ var redis = require('redis');
 var redisClient = redis.createClient();
 
 
-function requestStreams(providers, titleType, sort, offset, limit, callback) {
+function requestStreams(providers, titleType, sort, offset, limit, genres, callback) {
   offset = (isNaN(parseInt(offset))) ? 0 : offset;
   var queryValues = [];
   var providersParametersArray = [];
@@ -48,8 +48,28 @@ function requestStreams(providers, titleType, sort, offset, limit, callback) {
     default:
       sortQuery = 'imdb_rating DESC';
   }
+  var genresInsert = '';
+  if (genres) {
+    var genresArray = [];
+    var allowedGenres = ['Action', 'Adventure', 'Comedy', 'Drama', 'Romance', 'Mystery', 'Crime', 'Family', 'Sci-Fi', 'Fantasy', 'Horror', 'Thriller'];
+    genres.forEach((element) => {
+      if (allowedGenres.indexOf(element) === -1) { return; }
+      genresArray.push(element);
+    });
+    if (genresArray.length > 0) {
+      genresInsert = 'AND t.genre SIMILAR TO $' + count;
+      var genreValue = '%(';
+      for (var i = 0; i < genresArray.length; i++) {
+        genreValue += genresArray[i] + '|';
+      }
+      genreValue = genreValue.substring(0, genreValue.length - 1);
+      genreValue += ')%';
+      queryValues.push(genreValue);
+    }
 
-  var query = `SELECT t.title_id, t.title_name, t.imdb_id, t.image_url, t.imdb_rating, array_agg( p.provider_id ) as providers_ids, array_agg( p.name ) as providers_names FROM provider_title as pt JOIN provider as p ON pt.provider_id = p.provider_id JOIN title as t ON t.title_id = pt.title_id WHERE p.name IN ${providerParams} AND t.type IN ${titleTypeParams} GROUP BY t.title_id, t.title_name ORDER BY ${sortQuery} LIMIT ${limit} OFFSET ${offset};`;
+  }
+
+  var query = `SELECT t.title_id, t.title_name, t.imdb_id, t.image_url, t.imdb_rating, array_agg( p.provider_id ) as providers_ids, array_agg( p.name ) as providers_names FROM provider_title as pt JOIN provider as p ON pt.provider_id = p.provider_id JOIN title as t ON t.title_id = pt.title_id WHERE p.name IN ${providerParams} AND t.type IN ${titleTypeParams} ${genresInsert} GROUP BY t.title_id, t.title_name ORDER BY ${sortQuery} NULLS LAST LIMIT ${limit} OFFSET ${offset};`;
   pg.connect(config.POSTGRES_CONNECT, function(err, client, done) {
     if (err) {
       callback('could not connect to postgres db');
@@ -105,6 +125,14 @@ var validatorSchema = {
     isInt: {
       errorMessage: 'limit is not an integer'
     }
+  },
+  'genre': {
+    isArray: {
+      errorMessage: 'genres is not an array'
+    },
+    eachIsGenre: {
+      errorMessage: 'At Least One Genre Invalid'
+    }
   }
 };
 
@@ -115,6 +143,10 @@ exports.index = function (req, res) {
   if (typeof req.query.titletype === 'string') {
     req.query.titletype = [req.query.titletype];
   }
+  req.query.genre = req.query.genre || [];
+  if (typeof req.query.genre === 'string') {
+    req.query.genre = [req.query.genre];
+  }
   req.checkQuery(validatorSchema);
   req.getValidationResult().then(function(result) {
     if (!result.isEmpty()) {
@@ -124,11 +156,15 @@ exports.index = function (req, res) {
     var cacheKey = 'cachekey-redis-';
     req.query.providers.sort();
     req.query.titletype.sort();
+    req.query.genre.sort();
     for (var i = 0; i < req.query.providers.length; i++) {
       cacheKey += req.query.providers[i];
     }
     for (var x = 0; x < req.query.titletype.length; x++) {
       cacheKey += req.query.titletype[x];
+    }
+    for (var y = 0; y < req.query.genre.length; y++) {
+      cacheKey += req.query.genre[y];
     }
     cacheKey += req.query.sort;
     cacheKey += req.query.limit;
@@ -142,7 +178,7 @@ exports.index = function (req, res) {
           return;
         }
       }
-      requestStreams(req.query.providers, req.query.titletype, req.query.sort, req.query.start, req.query.limit, function (err, data) {
+      requestStreams(req.query.providers, req.query.titletype, req.query.sort, req.query.start, req.query.limit, req.query.genre, function (err, data) {
         if (err) {
           res.status(404);
           res.json({ error: 'error' });

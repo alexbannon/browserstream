@@ -10,7 +10,7 @@ angular.module('browserstreams')
     this.error = false;
   };
 
-  TitleScroll.prototype.nextPage = function(providersArray, titleTypeArray, emitEvent) {
+  TitleScroll.prototype.nextPage = function(providersArray, titleTypeArray, genresArray, emitEvent) {
     if (this.busy || this.error) return;
     this.busy = true;
     var providerCount = 0;
@@ -38,6 +38,21 @@ angular.module('browserstreams')
       this.busy = false;
       return;
     }
+
+    var turnedOffGenreCount = 0;
+    var urlGenreAddition = '';
+
+    for (var y = 0; y < genresArray.length; y++) {
+      if (genresArray[y].selected) {
+        urlGenreAddition += '&genre=' + genresArray[y].queryName;
+      } else {
+        turnedOffGenreCount++;
+      }
+    }
+    if (turnedOffGenreCount > 0) {
+      url += urlGenreAddition;
+    }
+
     url += '&limit=' + this.limit;
 
     $http({
@@ -57,8 +72,8 @@ angular.module('browserstreams')
       // not the biggest fan, but infinite scroll was firing too quickly before angular could load titles
       $timeout(function(){
         this.busy = false;
-      }.bind(this), 50);
-      if (emitEvent) {
+      }.bind(this), 100);
+      if (emitEvent === 'checkHeight') {
         // fixing ng-infinite-scroll bug on item change
         $rootScope.$emit('itemsNotLongEnough');
       }
@@ -75,7 +90,7 @@ angular.module('browserstreams')
     this.error = false;
     this.items = [];
     this.start = 0;
-    this.nextPage(userSettings.providers, userSettings.titleType, true);
+    this.nextPage(userSettings.providers, userSettings.titleType, userSettings.genres, 'checkHeight');
   };
 
   return TitleScroll;

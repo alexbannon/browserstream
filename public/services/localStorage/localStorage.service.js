@@ -27,6 +27,14 @@ angular.module('browserstreams')
         }
       }
       this.setStorage('titleTypes', titleTypeArray.join(','));
+      var genreArray = [];
+      for (var y = 0; y < userSettingsObject.genres.length; y++) {
+        if (userSettingsObject.genres[y].selected) {
+          genreArray.push(userSettingsObject.genres[y].name);
+        }
+      }
+      this.setStorage('genres', genreArray.join(','));
+
       this.setStorage('sortBy', userSettingsObject.sortBy);
     },
     setStorage: function(key, value) {

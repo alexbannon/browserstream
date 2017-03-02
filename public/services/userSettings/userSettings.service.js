@@ -9,6 +9,8 @@ angular.module('browserstreams')
       localStorageSelections = localStorageSelections ? localStorageSelections.split(',') : ['netflix', 'hbo_go', 'amazon_prime', 'hulu'];
       var localStorageTitleTypes = LocalStorage.getFromStorage('titleTypes');
       localStorageTitleTypes = localStorageTitleTypes ? localStorageTitleTypes.split(',') : ['movie', 'series'];
+      var localStorageGenres = LocalStorage.getFromStorage('genres');
+      localStorageGenres = localStorageGenres ? localStorageGenres.split(',') : ['Action/Adventure', 'Comedy', 'Drama', 'Family', 'Fantasy', 'Horror/Thriller', 'Mystery/Crime', 'Romance'];
       var localStorageSortBy = LocalStorage.getFromStorage('sortBy');
       localStorageSortBy = localStorageSortBy ? localStorageSortBy : 'best';
       if (localStorageSortBy !== 'best' || localStorageSortBy !== 'worst' || localStorageSortBy !== 'alphabetical') {
@@ -48,7 +50,40 @@ angular.module('browserstreams')
         }],
         sortBy: localStorageSortBy,
         sortList: ['best', 'worst', 'alphabetical'],
-        genres: [],
+        genres: [{
+          name: 'Action/Adventure',
+          // db separates these values out and this allows a quick url addition on service http request
+          queryName: 'Action&genre=Adventure',
+          selected: (localStorageGenres.indexOf('Action/Adventure') > -1)
+        },{
+          name: 'Comedy',
+          queryName: 'Comedy',
+          selected: (localStorageGenres.indexOf('Comedy') > -1)
+        },{
+          name: 'Drama',
+          queryName: 'Drama',
+          selected: (localStorageGenres.indexOf('Drama') > -1)
+        },{
+          name: 'Family',
+          queryName: 'Family',
+          selected: (localStorageGenres.indexOf('Family') > -1)
+        },{
+          name: 'Fantasy',
+          queryName: 'Fantasy',
+          selected: (localStorageGenres.indexOf('Fantasy') > -1)
+        },{
+          name: 'Horror/Thriller',
+          queryName: 'Horror&genre=Thriller',
+          selected: (localStorageGenres.indexOf('Horror/Thriller') > -1)
+        },{
+          name: 'Mystery/Crime',
+          queryName: 'Mystery&genre=Crime',
+          selected: (localStorageGenres.indexOf('Mystery/Crime') > -1)
+        },{
+          name: 'Romance',
+          queryName: 'Romance',
+          selected: (localStorageGenres.indexOf('Romance') > -1)
+        }],
         changeMade: true
       };
     }

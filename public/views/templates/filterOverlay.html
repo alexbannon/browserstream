@@ -50,5 +50,21 @@
         </div>
       </div>
     </div>
+    <h2 class="filterCategory">
+      Genres
+    </h2>
+    <div class="filterProviderContainer centerContent">
+      <div class="filterItem buffer" ng-repeat="genre in userSettings.genres" ng-click="genre.selected = !genre.selected; changeTracking.changesMade = true">
+        <div class="filterName capitalize">
+          {{genre.name}}
+        </div>
+        <div class="sliderContainer fullWidth">
+          <div class="slider">
+            <div class="slideBlock" ng-class="genre.selected ? 'sliderSelected' : 'sliderDeselected'"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>

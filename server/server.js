@@ -46,6 +46,15 @@ app.use(expressValidator({
       return values.every(function(val) {
         return (providerArray.indexOf(val) !== -1);
       });
+    },
+    eachIsGenre: function(values) {
+      if (!values) {
+        return false;
+      }
+      var providerArray = ['Action', 'Adventure', 'Comedy', 'Drama', 'Romance', 'Mystery', 'Crime', 'Family', 'Sci-Fi', 'Fantasy', 'Horror', 'Thriller'];
+      return values.every(function(val) {
+        return (providerArray.indexOf(val) !== -1);
+      });
     }
   }
 }));

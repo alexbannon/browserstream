@@ -18,7 +18,7 @@ angular.module('browserstreams.home', ['ngRoute', 'ngCookies'])
   $scope.userSettings = UserSettings.generateUserSettings();
   $scope.changeTracking = {
     changesMade: false
-  }
+  };
 
   $scope.titleScroll = new TitleScroll($scope.userSettings.sortBy, $rootScope.numFilms);
 
@@ -66,7 +66,7 @@ angular.module('browserstreams.home', ['ngRoute', 'ngCookies'])
 
   };
   $scope.loadMoreTitles = function() {
-    $scope.titleScroll.nextPage($scope.userSettings.providers, $scope.userSettings.titleType);
+    $scope.titleScroll.nextPage($scope.userSettings.providers, $scope.userSettings.titleType, $scope.userSettings.genres);
   };
 
   $scope.clickModal = function($event) {
