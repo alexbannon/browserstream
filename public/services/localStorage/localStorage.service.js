@@ -27,6 +27,7 @@ angular.module('browserstreams')
         }
       }
       this.setStorage('titleTypes', titleTypeArray.join(','));
+      this.setStorage('sortBy', userSettingsObject.sortBy);
     },
     setStorage: function(key, value) {
       if (!key || !value) {

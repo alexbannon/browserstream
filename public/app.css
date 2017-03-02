@@ -10,6 +10,11 @@ head, body, html {
   box-sizing: border-box;
   -webkit-box-sizing: border-box;
 }
+a {
+  text-decoration: none;
+  color: inherit;
+  cursor: default;
+}
 .image-container {
   text-align: center;
 }
@@ -517,4 +522,14 @@ padding-bottom: 5px;
 .filterName {
   font-size: 14px;
   margin: 0 auto 1px auto;
+}
+.backContainer {
+  height: 40px;
+  line-height: 40px;
+  vertical-align: middle;
+}
+.backImage {
+  width: 20px;
+  position: relative;
+  top: 4px;
 }

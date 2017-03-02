@@ -6,9 +6,15 @@ angular.module('browserstreams')
   return {
     generateUserSettings: function() {
       var localStorageSelections = LocalStorage.getFromStorage('providerSelections');
-      localStorageSelections = localStorageSelections ? localStorageSelections.split(',') : ['netflix'];
+      localStorageSelections = localStorageSelections ? localStorageSelections.split(',') : ['netflix', 'hbo_go', 'amazon_prime', 'hulu'];
       var localStorageTitleTypes = LocalStorage.getFromStorage('titleTypes');
       localStorageTitleTypes = localStorageTitleTypes ? localStorageTitleTypes.split(',') : ['movie', 'series'];
+      var localStorageSortBy = LocalStorage.getFromStorage('sortBy');
+      localStorageSortBy = localStorageSortBy ? localStorageSortBy : 'best';
+      if (localStorageSortBy !== 'best' || localStorageSortBy !== 'worst' || localStorageSortBy !== 'alphabetical') {
+        localStorageSortBy = 'best';
+      }
+
       return {
         providers: [{
           name: 'Netflix',
@@ -40,9 +46,10 @@ angular.module('browserstreams')
           queryName: 'series',
           selected: (localStorageTitleTypes.indexOf('series') > -1)
         }],
-        sortBy: 'alphabetical',
+        sortBy: localStorageSortBy,
         sortList: ['best', 'worst', 'alphabetical'],
-        genres: []
+        genres: [],
+        changeMade: true
       };
     }
   };

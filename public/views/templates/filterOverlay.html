@@ -9,7 +9,7 @@
       Providers
     </h2>
     <div class="filterProviderContainer spaceAround">
-      <div class="filterItem" ng-repeat="provider in userSettings.providers" ng-click="provider.selected = !provider.selected;">
+      <div class="filterItem" ng-repeat="provider in userSettings.providers" ng-click="provider.selected = !provider.selected; changeTracking.changesMade = true">
         <div class="filterName">
           {{provider.name}}
         </div>
@@ -24,7 +24,7 @@
       Type of Content
     </h2>
     <div class="filterProviderContainer centerContent">
-      <div class="filterItem buffer" ng-repeat="titleType in userSettings.titleType" ng-click="titleType.selected = !titleType.selected;">
+      <div class="filterItem buffer" ng-repeat="titleType in userSettings.titleType" ng-click="titleType.selected = !titleType.selected; changeTracking.changesMade = true">
         <div class="filterName">
           {{titleType.name}}
         </div>
@@ -39,7 +39,7 @@
       Filter By
     </h2>
     <div class="filterProviderContainer centerContent">
-      <div class="filterItem buffer" ng-repeat="sort in userSettings.sortList" ng-click="userSettings.sortBy = sort">
+      <div class="filterItem buffer" ng-repeat="sort in userSettings.sortList" ng-click="userSettings.sortBy = sort; changeTracking.changesMade = true">
         <div class="filterName capitalize">
           {{sort}}
         </div>
