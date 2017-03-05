@@ -13,7 +13,7 @@
     </div>
   </div>
 </div>
-<div id="titlesContainer" class="titlesContainer" infinite-scroll='loadMoreTitles()' infinite-scroll-disabled='titleScroll.busy' infinite-scroll-distance='0.5' infinite-scroll-listen-for-event="itemsNotLongEnough">
+<div id="titlesContainer" class="titlesContainer" infinite-scroll='loadMoreTitles()' infinite-scroll-disabled='titleScroll.busy' infinite-scroll-distance='0.25' infinite-scroll-listen-for-event="itemsNotLongEnough">
   <div ng-repeat="title in titleScroll.items" class="imageContainer" ng-click="displaySummary(title)" ng-if="title.imdb_rating">
     <div ng-if="title.image_url">
       <span class="centerImageHelper"></span><img class="posterImage" ng-src="{{title.image_url}}" />
