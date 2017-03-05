@@ -7,7 +7,8 @@
   "scripts": {
     "setup": "npm install && bower install",
     "start": "redis-server | nodemon server/server.js",
-    "test": "mocha && (webdriver-manager start &) && sleep 5 && protractor conf.js"
+    "test": "mocha && (webdriver-manager start &) && sleep 5 && protractor conf.js",
+    "jshint": "jshint ."
   },
   "dependencies": {
     "body-parser": "^1.15.2",
@@ -33,6 +34,7 @@
     "webdriver-manager": "^11.1.1"
   },
   "pre-commit": [
-    "test"
+    "test",
+    "jshint"
   ]
 }

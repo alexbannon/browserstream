@@ -1,5 +1,5 @@
 var request = require('request');
-var config = require('../../config/environment/config.js')();
+var config = require('../config/environment/config.js')();
 
 var Seed = function(limit, poolClient, providerId, providerName, offset, titleType) {
   this.titleType = titleType;

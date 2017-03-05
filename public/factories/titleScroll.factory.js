@@ -11,7 +11,9 @@ angular.module('browserstreams')
   };
 
   TitleScroll.prototype.nextPage = function(providersArray, titleTypeArray, genresArray, emitEvent) {
-    if (this.busy || this.error) return;
+    if (this.busy || this.error) {
+      return;
+    }
     this.busy = true;
     var providerCount = 0;
     var url = '/api/query?sort='+this.sort+'&start='+this.start;

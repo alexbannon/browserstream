@@ -1,6 +1,6 @@
 var request = require('request');
 var providerConfig = require('../config/environment/index.js');
-var config = require('../../config/environment/config.js')();
+var config = require('../config/environment/config.js')();
 var CompletenessCheck = function(client) {
   this.totalGuideboxCount = 0;
   this.totalDbInserts = 0;
@@ -24,26 +24,28 @@ var CompletenessCheck = function(client) {
         return;
       }
       var guideboxRequestCount = 0;
+      var self = this;
 
-      function handleGuideboxCount(self) {
+      function handleGuideboxCount() {
         guideboxRequestCount++;
         if (guideboxRequestCount === providerConfig.PROVIDERS.length) {
           resolve(self.totalGuideboxCount);
         }
       }
+      function handleGuideboxResponse(error, response, body){
+        if (!error) {
+          body = JSON.parse(body);
+          if (body.total_results) {
+            self.totalGuideboxCount += body.total_results;
+          }
+        } else {
+          reject(error);
+        }
+        handleGuideboxCount();
+      }
       for (var i = 0; i < providerConfig.PROVIDERS.length; i++) {
         var url = `http://api-public.guidebox.com/v2/${providerConfig.PROVIDERS[i].type}?api_key=${config.GUIDEBOX_API_KEY}&sources=${providerConfig.PROVIDERS[i].imdbName}&limit=25`;
-        request(url, function (error, response, body) {
-          if (!error) {
-            body = JSON.parse(body);
-            if (body.total_results) {
-              this.totalGuideboxCount += body.total_results;
-            }
-          } else {
-            reject(error);
-          }
-          handleGuideboxCount(this);
-        }.bind(this));
+        request(url, handleGuideboxResponse);
       }
     });
   }.bind(this);

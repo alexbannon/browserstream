@@ -15,7 +15,7 @@ describe('Provider', function() {
     .expect(400,done);
   });
   it('should return an object with titles and data', function(done){
-    api.get('/api/query?sort=top&start=0&providers=netflix&providers=hbo_go&providers=amazon_prime&providers=hulu&titletype=movie')
+    api.get('/api/query?sort=best&start=0&providers=netflix&providers=hbo_go&providers=amazon_prime&providers=hulu&titletype=movie&limit=50')
     .set('Accept', 'application/json')
     .expect(200)
     .end(function(err, res) {

@@ -1,5 +1,5 @@
 describe('angularjs homepage todo list', function() {
-  it('should have 4 clickable sliders', function() {
+  xit('should have 4 clickable sliders', function() {
     browser.get('http://localhost:3000');
     browser.waitForAngular();
     element(by.css('sliderContainer')).isPresent();

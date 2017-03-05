@@ -8,7 +8,7 @@ var request = require('request');
 var cheerio = require('cheerio');
 var pg = require('pg');
 var http = require('http');
-var config = require('../../config/environment/config.js')();
+var config = require('../config/environment/config.js')();
 
 var imdbResponse = [];
 var requestCount = 0;

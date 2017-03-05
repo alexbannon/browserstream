@@ -30,6 +30,7 @@
     "spyOn"                : false,
     "spyOnEvent"           : false,
     "waitsFor"             : false,
+    "window"               : false,
     "xdescribe"            : false
   }
 }
