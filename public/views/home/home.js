@@ -78,4 +78,15 @@ angular.module('browserstreams.home', ['ngRoute', 'ngCookies'])
     Modal.handleProviderTitleClick(titleObject, providerOverride);
   };
 
+  $scope.movies = [
+  'Hunt for Red October',
+  'Avatar',
+  'Whatever Trevor',
+  'This is the End',
+  'The Shining',
+  'Breaking Bad',
+  'Pulp Fiction',
+  'The Quick Brown Fox Jumped Over the Lazy Dog'
+];
+
 }]);
