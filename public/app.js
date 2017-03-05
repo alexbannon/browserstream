@@ -12,6 +12,7 @@ angular.module('browserstreams', [
   $locationProvider.html5Mode(true);
 }])
 .run(['$rootScope', function($rootScope){
+  var fake;
   // this is to change the API request to be dependent on screen size so its not requesting unnecessary titles
   $rootScope.numFilms = 30;
   var width = 770, height = 1023;
