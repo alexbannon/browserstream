@@ -24,7 +24,7 @@ angular.module('browserstreams', [
   }
   var titleWidth = Math.floor(width / 154);
   var titleHeight = Math.ceil((height - 119) / 226);
-  $rootScope.numFilms = (titleWidth * titleHeight * 1.5);
+  $rootScope.numFilms = (titleWidth * titleHeight * 1.2);
 
   $rootScope.numFilms = $rootScope.numFilms >= 120 ? 120 : $rootScope.numFilms;
   // round up to tens place to reduce clutter in caching system
