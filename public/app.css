@@ -15,16 +15,17 @@ a {
   color: inherit;
   cursor: default;
 }
-.image-container {
-  text-align: center;
+.noScroll {
+  overflow: hidden;
 }
+
+/* HEADER */
 .header {
   width: 100%;
   margin: 0;
   padding: 0;
   background-color: rgba(205,227,249,1);
   color: #001f3f;
-  height: 2em;
 }
 .logoContainer {
   height:2em;
@@ -34,6 +35,70 @@ a {
   vertical-align: middle;
   margin: 0 auto 0 10px;
 }
+.browserstreamLogo {
+  display: inline-block;
+  padding: 0;
+  height: 20px;
+  vertical-align: middle;
+}
+.floatContainer {
+  width:auto;
+  height:2em;
+  overflow:hidden;
+  padding-right: 5px;
+}
+.searchContainer {
+  display: inline-block;
+  position: relative;
+  margin: 2px 0 0 5px;
+  width: 95%;
+  padding-right: 32px;
+}
+.searchBar {
+  border-radius: 2px 0 0 2px;
+  border: none;
+  background-color: white;
+  outline: none;
+  color: black;
+  height: 27px;
+  font-size: 16px;
+  width: 100%;
+}
+.searchIconContainer {
+  display: inline-block;
+  background-color: orange;
+  margin: 0;
+  height: 27px;
+  width: 32px;
+  position: absolute;
+  right: 0;
+  top: 0;
+  border-radius: 0 2px 2px 0;
+  line-height: 27px;
+  vertical-align: middle;
+  text-align: center;
+}
+.searchIcon {
+  width: 20px;
+  margin: 3px auto;
+}
+
+/* filter header */
+.providerContainer {
+  display: inline-block;
+  width: 25%;
+  padding: 0 1.25%;
+  vertical-align: middle;
+  text-align: center;
+  max-width: 142px;
+  cursor: pointer;
+}
+.logo {
+  width: 100%;
+  display: inline-block;
+}
+
+/* main title view */
 .selectorBackground {
   width: 100%;
   background-color: rgba(175,215,250,1);
@@ -44,22 +109,6 @@ a {
   text-align: center;
   position: relative;
   max-width: 1024px;
-}
-.checkboxContainer {
-  background-color: rgba(175,215,250,1);
-  width: 100%;
-  padding: 0 0 10px 0;
-}
-.providerContainer {
-  display: inline-block;
-  width: 25%;
-  padding: 0 1.25%;
-  vertical-align: middle;
-  text-align: center;
-  max-width: 142px;
-}
-.filterItem {
-  display: inline-block;
 }
 .titlesContainer {
   display: flex;
@@ -72,38 +121,10 @@ a {
 .centerContent {
   justify-content: center;
 }
-.buffer {
-  margin: 0 10px;
-}
-.providerCheckbox {
-  margin: 0 auto;
-  position: absolute;
-  bottom: 3px;
-  align: center;
-}
-.browserstreamLogo {
-  display: inline-block;
-  padding: 0;
-  height: 20px;
-  vertical-align: middle;
-}
-.logo {
-  width: 100%;
-  display: inline-block;
-}
 .centerImage {
   display: inline-block;
-    height: 100%;
-    vertical-align: middle;
-}
-.imageContainer {
-  margin: 2px;
-  text-align: center;
+  height: 100%;
   vertical-align: middle;
-  overflow: hidden;
-  height: 222px;
-  line-height: 222px;
-  position: relative;
 }
 .centerImageHelper {
   display: inline-block;
@@ -115,9 +136,137 @@ a {
   vertical-align: middle;
   display: inline-block;
 }
-.noScroll {
-  overflow: hidden;
+.titleImageContainer {
+  display: inline-block;
+  width: 150px;
+  vertical-align: middle;
+  display: inline-block;
+  height: 218.5px;
+  line-height: 218.5px;
+  background-color: rgb(100,100,100);
+  color: white;
+  background-image: url('./assets/default_movie_image.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  font-size: 28px;
 }
+.imageContainer {
+  margin: 2px;
+  text-align: center;
+  vertical-align: middle;
+  overflow: hidden;
+  height: 222px;
+  line-height: 222px;
+  position: relative;
+}
+
+/* Search View */
+.backContainer {
+  height: 40px;
+  line-height: 40px;
+  vertical-align: middle;
+}
+.backImage {
+  width: 20px;
+  position: relative;
+  top: 5px;
+}
+.backWords {
+  position: relative;
+  top: 1px;
+}
+
+/* current filter overlay */
+.filterItem {
+  display: inline-block;
+}
+.buffer {
+  margin: 0 10px;
+}
+.filterHeader {
+  width: 100%;
+}
+.filterButton {
+  width: 20px;
+}
+.filterOverlayContainer {
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+.filterOverlayContainer.ng-enter {
+  transition:0.4s linear all;
+  opacity:0;
+}
+.filterOverlayContainer.ng-enter.ng-enter-active {
+  opacity:1;
+}
+.filterOverlayContainer.ng-leave {
+  transition:0.4s linear all;
+  opacity:1;
+}
+.filterOverlayContainer.ng-leave.ng-leave-active {
+  opacity:0;
+}
+.filterContainer {
+  position: fixed;
+  z-index: 2;
+  bottom: 0;
+  width: 100%;
+  background-color: rgba(105, 135, 190, 1);
+  text-align: center;
+  color: white;
+  height: 70%;
+  overflow: scroll;
+}
+.filterContainer.ng-leave {
+  transition: 0.4s height;
+  height: 70%;
+}
+.filterContainer.ng-leave.ng-leave-active {
+  height: 0;
+}
+.filterContainer.ng-enter.ng-enter-active {
+  height: 70%;
+}
+.filterContainer.ng-enter {
+  transition: 0.4s height;
+  height: 0;
+}
+.filterTitle {
+  padding-top: 1em;
+  margin: 0;
+  font-size: 22px;
+}
+.filterCategory {
+  padding-top: 1em;
+  margin: 0;
+  font-size: 18px;
+}
+.filterProviderContainer {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 15px auto 0 auto;
+  max-width: 700px;
+}
+.selectorSelected {
+  border-top-color: #1b435e;
+   background: #1b435e;
+}
+.capitalize {
+  text-transform: capitalize;
+}
+.filterName {
+  font-size: 14px;
+  margin: 0 auto 1px auto;
+}
+
+/* title modal overlay */
 .descriptionModalOverlay {
   display: flex;
   align-items: center;
@@ -182,6 +331,7 @@ a {
   border-radius: 20px;
   width: 35px;
   height: 35px;
+  cursor: pointer;
 }
 .iconContainer {
   display: flex;
@@ -229,18 +379,17 @@ a {
 width: 100%;
 height: 100%;
 }
-
 .modalAvailableOn {
   text-align: center;
   margin-bottom: -7px;
 }
 
+/* Infinite Scroll */
 .loadingData {
   text-align: center;
   font-size: 22px;
   position: relative;
 }
-
 .loadingData:after {
   overflow: hidden;
   display: inline-block;
@@ -252,13 +401,11 @@ height: 100%;
   position: absolute;
   bottom: -8px;
 }
-
 @keyframes ellipsis {
   to {
     width: 1.25em;
   }
 }
-
 @-webkit-keyframes ellipsis {
   to {
     width: 1.25em;
@@ -322,7 +469,6 @@ padding-bottom: 5px;
   font: 12px/26px Arial, sans-serif;
   font-weight: bold;
 }
-
 .slideBlock {
   display: block;
   width: 34px;
@@ -338,104 +484,6 @@ padding-bottom: 5px;
   transition: all 0.4s ease;
   box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.3);
 }
-.titleImageContainer {
-  display: inline-block;
-  width: 150px;
-  vertical-align: middle;
-  display: inline-block;
-  height: 218.5px;
-  line-height: 218.5px;
-  background-color: rgb(100,100,100);
-  color: white;
-  background-image: url('./assets/default_movie_image.png');
-  background-repeat: no-repeat;
-  background-position: center;
-  font-size: 28px;
-}
-.filterButton {
-  position: absolute;
-  right: 15px;
-  width: 20px;
-  top: 6px;
-}
-.filterOverlayContainer {
-  position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
-  left: 0;
-  top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  background-color: rgb(0,0,0); /* Fallback color */
-  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-}
-.filterOverlayContainer.ng-enter {
-  transition:0.4s linear all;
-  opacity:0;
-}
-.filterOverlayContainer.ng-enter.ng-enter-active {
-  opacity:1;
-}
-.filterOverlayContainer.ng-leave {
-  transition:0.4s linear all;
-  opacity:1;
-}
-.filterOverlayContainer.ng-leave.ng-leave-active {
-  opacity:0;
-}
-.filterContainer {
-  position: fixed;
-  z-index: 2;
-  bottom: 0;
-  width: 100%;
-  background-color: rgba(105, 135, 190, 1);
-  text-align: center;
-  color: white;
-  height: 70%;
-  overflow: scroll;
-}
-.filterContainer.ng-leave {
-  transition: 0.4s height;
-  height: 70%;
-}
-.filterContainer.ng-leave.ng-leave-active {
-  height: 0;
-}
-.filterContainer.ng-enter.ng-enter-active {
-  height: 70%;
-}
-.filterContainer.ng-enter {
-  transition: 0.4s height;
-  height: 0;
-}
-.filterTitle {
-  padding-top: 1em;
-  margin: 0;
-  font-size: 22px;
-}
-.filterCategory {
-  padding-top: 1em;
-  margin: 0;
-  font-size: 18px;
-}
-
-.filterProviderContainer {
-  display: flex;
-  flex-wrap: wrap;
-  margin: 15px auto 0 auto;
-  max-width: 700px;
-}
-@media (hover: hover) {
-  .close:hover::before, .close:hover::after {
-    background: rgb(150,150,150);
-  }
-}
-.selectorSelected {
-  border-top-color: #1b435e;
-   background: #1b435e;
-}
-.capitalize {
-  text-transform: capitalize;
-}
 
 /* CLOSE BUTTON */
 .modalXBox {
@@ -450,6 +498,7 @@ padding-bottom: 5px;
   width: 25px;
   height: 25px;
   overflow: hidden;
+  cursor: pointer;
 }
 .close::before, .close::after {
   content: '';
@@ -482,66 +531,13 @@ padding-bottom: 5px;
 .close.rounded::before, .close.rounded::after {
   border-radius: 5px;
 }
-/* end close button */
-.floatContainer {
-  width:auto;
-  height:2em;
-  overflow:hidden;
-  padding-right: 5px;
+@media (hover: hover) {
+  .close:hover::before, .close:hover::after {
+    background: rgb(150,150,150);
+  }
 }
-.searchContainer {
-  display: inline-block;
-  position: relative;
-  margin: 2px 0 0 5px;
-  width: 95%;
-  padding-right: 32px;
-}
-.searchBar {
-  border-radius: 2px 0 0 2px;
-  border: none;
-  background-color: white;
-  outline: none;
-  color: black;
-  height: 27px;
-  font-size: 16px;
-  width: 100%;
-}
-.searchIconContainer {
-  display: inline-block;
-  background-color: orange;
-  margin: 0;
-  height: 27px;
-  width: 32px;
-  position: absolute;
-  right: 0;
-  top: 0;
-  border-radius: 0 2px 2px 0;
-  line-height: 27px;
-  vertical-align: middle;
-  text-align: center;
-}
-.searchIcon {
-  width: 20px;
-  margin: 3px auto;
-}
-.filterName {
-  font-size: 14px;
-  margin: 0 auto 1px auto;
-}
-.backContainer {
-  height: 40px;
-  line-height: 40px;
-  vertical-align: middle;
-}
-.backImage {
-  width: 20px;
-  position: relative;
-  top: 5px;
-}
-.backWords {
-  position: relative;
-  top: 1px;
-}
+
+/* hover on title functionality */
 .titleHover {
   cursor: pointer;
   position: absolute;
@@ -568,7 +564,6 @@ padding-bottom: 5px;
   text-decoration: none;
   border: none;
 }
-
 .hoverButton:hover {
   background: #bababa;
   background-image: -webkit-linear-gradient(top, #999999, #737373);

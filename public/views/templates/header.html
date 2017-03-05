@@ -1,19 +1,19 @@
 <div class="header">
-  <div class="logoContainer">
-    <a href="/"><img class="browserstreamLogo" src="../assets/logo.png" /></a>
+  <div class="topHeader">
+    <div class="logoContainer">
+      <a href="/"><img class="browserstreamLogo" src="../assets/logo.png" /></a>
+    </div>
+    <div class="floatContainer">
+      <form class="searchContainer" ng-submit="searchMovie()">
+        <input type="text" class="searchBar" ng-model="search.searchInput" placeholder="Find a Title" />
+        <input type="submit" style="display:none">
+        <div class="searchIconContainer">
+          <img class="searchIcon" src="../../assets/search_icon.png" ng-click="searchMovie()"/>
+        </div>
+      </form>
+    </div>
   </div>
-  <div class="floatContainer">
-    <form class="searchContainer" ng-submit="searchMovie()">
-      <input type="text" class="searchBar" ng-model="search.searchInput" placeholder="Find a Title" />
-      <input type="submit" style="display:none">
-      <div class="searchIconContainer">
-        <img class="searchIcon" src="../../assets/search_icon.png" ng-click="searchMovie()"/>
-      </div>
-    </form>
+  <div class="filterHeader">
+    <img class="filterButton" ng-click="openPrefs()" src="../assets/filter.png" ng-hide="hideFilter"/>
   </div>
-  <!-- <img class="filterButton" ng-click="openPrefs()" src="../assets/filter.png" ng-hide="hideFilter"/> -->
-</div>
-<div class="container">
-    <div class="right"></div>
-    <div class="left"></div>
 </div>
