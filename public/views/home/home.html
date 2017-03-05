@@ -22,8 +22,13 @@
       {{title.title_name}}
     </div>
     <div ng-if="title.showTitleOptions" class="titleHover">
-      <button ng-click="clickModal($event, null, title)">Watch</button>
-      <button ng-click="displaySummary(title); title.showTitleOptions = false">Info</button>
+      <div class="hoverTitle">
+        {{title.title_name}}
+      </div>
+      <div class="hoverButtonContainer">
+        <button ng-click="clickModal($event, null, title)" class="hoverButton">Watch</button>
+        <button ng-click="displaySummary(title); title.showTitleOptions = false" class="hoverButton">Info</button>
+      </div>
     </div>
   </div>
 </div>
