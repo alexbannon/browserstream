@@ -7,7 +7,7 @@ var redis = require('redis');
 var redisClient = redis.createClient();
 
 function searchTitle(searchQuery, callback) {
-  var query = 'SELECT * from title WHERE title_name ILIKE ($1) ORDER BY imdb_votes DESC NULLS LAST LIMIT 10';
+  var query = 'SELECT * from title WHERE to_tsvector(\'simple\', title_name) @@ plainto_tsquery(\'simple\', $1) ORDER BY imdb_votes DESC NULLS LAST LIMIT 10';
   searchQuery = '%' + searchQuery + '%';
   var queryValues = [searchQuery];
   pg.connect(config.POSTGRES_CONNECT, function(err, client, done) {
