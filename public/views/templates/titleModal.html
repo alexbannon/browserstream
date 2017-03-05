@@ -27,7 +27,7 @@
     </div>
     <div class="modalBottomInfo">
       <div class="iconContainer">
-        <div class="providerIcon" ng-click="clickModalProvider(provider, $event);" ng-class="provider" ng-repeat="provider in selectedTitleObject.providers_names">
+        <div class="providerIcon" ng-click="clickModal($event, provider);" ng-class="provider" ng-repeat="provider in selectedTitleObject.providers_names">
           <img class="iconLogo" ng-class="provider" ng-src="../../assets/{{provider}}.png" />
         </div>
       </div>

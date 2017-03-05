@@ -45,12 +45,15 @@ angular.module('browserstreams.home', ['ngRoute', 'ngCookies'])
   $scope.savePrefs = function() {
     $rootScope.bodyClass = false;
     $scope.showFilter = false;
-    console.log($scope.changeTracking.changesMade);
     if ($scope.changeTracking.changesMade) {
       LocalStorage.saveUserSettings($scope.userSettings);
       $scope.titleScroll.changeItemsList($scope.userSettings);
       $scope.changeTracking.changesMade = false;
     }
+  };
+
+  $scope.showTitleOptions = function() {
+    console.log('mouseover');
   };
 
   $scope.searchMovie = function() {
@@ -69,13 +72,10 @@ angular.module('browserstreams.home', ['ngRoute', 'ngCookies'])
     $scope.titleScroll.nextPage($scope.userSettings.providers, $scope.userSettings.titleType, $scope.userSettings.genres);
   };
 
-  $scope.clickModal = function($event) {
+  $scope.clickModal = function($event, providerOverride, titleObjectOverride) {
     $event.stopPropagation();
-    Modal.handleProviderTitleClick($scope.selectedTitleObject);
-  };
-  $scope.clickModalProvider = function(provider, $event) {
-    $event.stopPropagation();
-    Modal.handleProviderTitleClick($scope.selectedTitleObject, provider);
+    var titleObject = titleObjectOverride || $scope.selectedTitleObject;
+    Modal.handleProviderTitleClick(titleObject, providerOverride);
   };
 
 }]);

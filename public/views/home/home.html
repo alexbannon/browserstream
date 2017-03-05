@@ -14,12 +14,16 @@
   </div>
 </div>
 <div id="titlesContainer" class="titlesContainer" infinite-scroll='loadMoreTitles()' infinite-scroll-disabled='titleScroll.busy' infinite-scroll-distance='0.25' infinite-scroll-listen-for-event="itemsNotLongEnough">
-  <div ng-repeat="title in titleScroll.items" class="imageContainer" ng-click="displaySummary(title)" ng-if="title.imdb_rating">
+  <div ng-repeat="title in titleScroll.items" class="imageContainer" ng-click="displaySummary(title)" ng-if="title.imdb_rating" ng-mouseover="title.showTitleOptions = true;" ng-mouseleave="title.showTitleOptions = false">
     <div ng-if="title.image_url">
       <span class="centerImageHelper"></span><img class="posterImage" ng-src="{{title.image_url}}" />
     </div>
     <div class="titleImageContainer" ng-if="!title.image_url">
       {{title.title_name}}
+    </div>
+    <div ng-if="title.showTitleOptions" class="titleHover">
+      <button ng-click="clickModal($event, null, title)">Watch</button>
+      <button ng-click="displaySummary(title); title.showTitleOptions = false">Info</button>
     </div>
   </div>
 </div>
