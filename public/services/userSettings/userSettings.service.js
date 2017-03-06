@@ -16,7 +16,7 @@ angular.module('browserstreams')
       localStorageGenres = localStorageGenres ? localStorageGenres.split(',') : ['Action/Adventure', 'Comedy', 'Drama', 'Family', 'Fantasy', 'Horror/Thriller', 'Mystery/Crime', 'Romance'];
       var localStorageSortBy = LocalStorage.getFromStorage('sortBy');
       localStorageSortBy = localStorageSortBy ? localStorageSortBy : 'best';
-      if (localStorageSortBy !== 'best' || localStorageSortBy !== 'worst' || localStorageSortBy !== 'alphabetical') {
+      if (localStorageSortBy !== 'best' && localStorageSortBy !== 'worst' && localStorageSortBy !== 'alphabetical') {
         localStorageSortBy = 'best';
       }
 

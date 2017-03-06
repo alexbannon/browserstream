@@ -9,7 +9,8 @@ angular.module('browserstreams.home', ['ngRoute', 'ngCookies'])
   });
   $routeProvider.when('/search/:searchTerm', {
     templateUrl: 'views/home/home.html',
-    controller: 'HomeCtrl'
+    controller: 'HomeCtrl',
+    reloadOnSearch: false
   });
 
 }])
@@ -19,10 +20,6 @@ angular.module('browserstreams.home', ['ngRoute', 'ngCookies'])
   $scope.search = {
     searchInput: undefined
   };
-
-  if ($routeParams && $routeParams.searchTerm) {
-    $scope.searchMovie($routeParams.searchTerm);
-  }
 
   $scope.userSettings = UserSettings.generateUserSettings();
   $scope.changeTracking = {
@@ -69,7 +66,7 @@ angular.module('browserstreams.home', ['ngRoute', 'ngCookies'])
       $scope.titleScroll.search(search);
       $scope.hideFilter = true;
       $scope.search.searchInput = '';
-      // TODO history change
+      $location.path('/search/' + search, false);
     }
   };
 
@@ -78,6 +75,7 @@ angular.module('browserstreams.home', ['ngRoute', 'ngCookies'])
     $scope.titleScroll.busy = false;
     $scope.hideFilter = false;
     $scope.titleScroll.changeItemsList($scope.userSettings);
+    $location.path('/');
   };
 
   $scope.selectProvider = function() {
@@ -149,4 +147,10 @@ angular.module('browserstreams.home', ['ngRoute', 'ngCookies'])
   $scope.clearFilters = function() {
     $scope.userSettings = UserSettings.generateUserSettings(true);
   };
+
+  if ($routeParams && $routeParams.searchTerm) {
+    $scope.searchMovie($routeParams.searchTerm);
+  }
+
+
 }]);

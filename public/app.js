@@ -10,7 +10,7 @@ angular.module('browserstreams', [
   $routeProvider.otherwise({redirectTo: '/'});
   $locationProvider.html5Mode(true);
 }])
-.run(['$rootScope', function($rootScope){
+.run(['$rootScope', '$location', '$route', function($rootScope, $location, $route){
   // this is to change the API request to be dependent on screen size so its not requesting unnecessary titles
   $rootScope.numFilms = 30;
   var width = 770, height = 1023;
@@ -28,4 +28,18 @@ angular.module('browserstreams', [
   $rootScope.numFilms = $rootScope.numFilms >= 120 ? 120 : $rootScope.numFilms;
   // round up to tens place to reduce clutter in caching system
   $rootScope.numFilms = (Math.ceil($rootScope.numFilms / 10) * 10);
+
+  // to prevent reloading the home controller on search
+
+  var original = $location.path;
+    $location.path = function (path, reload) {
+        if (reload === false) {
+            var lastRoute = $route.current;
+            var un = $rootScope.$on('$locationChangeSuccess', function () {
+                $route.current = lastRoute;
+                un();
+            });
+        }
+        return original.apply($location, [path]);
+    };
 }]);

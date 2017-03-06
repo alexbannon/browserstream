@@ -1,3 +1,4 @@
+'use strict';
 angular.module('browserstreams')
 
 .factory('TitleScroll', function($http, $rootScope, $timeout, TitlesApi) {
@@ -11,6 +12,12 @@ angular.module('browserstreams')
     this.error = false;
     this.searchError = false;
     this.noDataError = false;
+    this.clearErrors = function() {
+      this.error = false;
+      this.noDataError = false;
+      this.searchError = false;
+      this.userSearch = false;
+    }.bind(this);
   };
 
   TitleScroll.prototype.nextPage = function(providersArray, titleTypeArray, genresArray, emitEvent) {
@@ -97,10 +104,7 @@ angular.module('browserstreams')
 
   TitleScroll.prototype.changeItemsList = function(userSettings) {
     this.sort = userSettings.sortBy;
-    this.error = false;
-    this.noDataError = false;
-    this.searchError = false;
-    this.userSearch = false;
+    this.clearErrors();
     this.items = [];
     this.start = 0;
     this.nextPage(userSettings.providers, userSettings.titleType, userSettings.genres, 'checkHeight');
@@ -114,6 +118,8 @@ angular.module('browserstreams')
       TitlesApi.searchForTitle(searchTerm).then(function(result){
         if (!result || result.data.length === 0) {
           self.searchError = true;
+        } else {
+          self.clearErrors();
         }
         self.items = result.data;
       }).catch(function(err){
