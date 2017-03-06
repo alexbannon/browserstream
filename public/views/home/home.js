@@ -36,15 +36,9 @@ angular.module('browserstreams.home', ['ngRoute', 'ngCookies'])
     $scope.displayModal = false;
     $rootScope.bodyClass = false;
   };
-  $scope.openPrefs = function() {
-    $rootScope.bodyClass = true;
-    $scope.displayModal = false;
-    $scope.showFilter = true;
-  };
-
   $scope.savePrefs = function() {
     $rootScope.bodyClass = false;
-    $scope.showFilter = false;
+    $scope.showPrefs = false;
     if ($scope.changeTracking.changesMade) {
       LocalStorage.saveUserSettings($scope.userSettings);
       $scope.titleScroll.changeItemsList($scope.userSettings);
@@ -52,12 +46,7 @@ angular.module('browserstreams.home', ['ngRoute', 'ngCookies'])
     }
   };
 
-  $scope.showTitleOptions = function() {
-    console.log('mouseover');
-  };
-
   $scope.searchMovie = function() {
-    console.log('search');
     if ($scope.search.searchInput) {
       $location.path('/search/' + $scope.search.searchInput);
     }
@@ -66,7 +55,6 @@ angular.module('browserstreams.home', ['ngRoute', 'ngCookies'])
   $scope.selectProvider = function() {
     LocalStorage.saveUserSettings($scope.userSettings);
     $scope.titleScroll.changeItemsList($scope.userSettings);
-
   };
   $scope.loadMoreTitles = function() {
     $scope.titleScroll.nextPage($scope.userSettings.providers, $scope.userSettings.titleType, $scope.userSettings.genres);
@@ -78,15 +66,52 @@ angular.module('browserstreams.home', ['ngRoute', 'ngCookies'])
     Modal.handleProviderTitleClick(titleObject, providerOverride);
   };
 
-  $scope.movies = [
-  'Hunt for Red October',
-  'Avatar',
-  'Whatever Trevor',
-  'This is the End',
-  'The Shining',
-  'Breaking Bad',
-  'Pulp Fiction',
-  'The Quick Brown Fox Jumped Over the Lazy Dog'
-];
+  $scope.openFilter = function(whichFilter) {
+    $scope.showPrefs = true;
+    $scope.filterName = whichFilter;
+    $scope.headerProperName;
+    $scope.activeFilterCount = 0;
+    $scope.filterOptionsCount = 0;
+
+    switch (whichFilter) {
+      case 'genres':
+        $scope.headerProperName = 'Filter By Genres';
+        break;
+      case 'titleType':
+        $scope.headerProperName = 'Filter By Video Type';
+        break;
+      case 'sortBy':
+        $scope.headerProperName = 'Sort By...';
+        return;
+      default:
+        $scope.showPrefs = false;
+    }
+    $scope.filter = $scope.userSettings[whichFilter];
+    for (var i = 0; i < $scope.userSettings[whichFilter].length; i++) {
+      $scope.filterOptionsCount++;
+      if ($scope.userSettings[whichFilter][i].selected) {
+        $scope.activeFilterCount++;
+      }
+    }
+  };
+
+  $scope.allOn = function(filter) {
+    var newCount = 0;
+    if (filter === 'genres') {
+      for (var i = 0; i < $scope.userSettings[filter].length; i++) {
+        newCount++;
+        $scope.userSettings[filter][i].selected = true;
+      }
+      $scope.activeFilterCount = newCount;
+    }
+  };
+
+  $scope.flipFilter = function(filterItem) {
+    if ((filterItem.selected && $scope.activeFilterCount > 1) || !filterItem.selected) {
+      filterItem.selected ? $scope.activeFilterCount-- : $scope.activeFilterCount++;
+      filterItem.selected = !filterItem.selected;
+    }
+  };
+
 
 }]);

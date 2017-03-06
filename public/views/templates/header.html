@@ -13,7 +13,70 @@
       </form>
     </div>
   </div>
-  <div class="filterHeader">
-    <img class="filterButton" ng-click="openPrefs()" src="../assets/filter.png" ng-hide="hideFilter"/>
+  <div class="filterHeader" ng-if="!hideFilter">
+    <div class="optionContainer" ng-click="openFilter('genres')">
+      <span class="optionName">Genres</span>
+      <img class="optionArrow" src="../../assets/downArrow.png"/>
+    </div>
+    <div class="optionContainer" ng-click="openFilter('titleType')">
+      <span class="optionName">Video Types</span>
+      <img class="optionArrow" src="../../assets/downArrow.png"/>
+    </div>
+    <div class="optionContainer" ng-click="openFilter('sortBy')">
+      <span class="optionName">Sort By</span>
+      <img class="optionArrow" src="../../assets/downArrow.png"/>
+    </div>
+  </div>
+  <div class="filterOverlayContainer" ng-if="showPrefs">
+    <div class="filterOverlay" ng-click="savePrefs()" ></div>
+    <div class="filterWindow" ng-class="filterName">
+      <div class="filterCategory capitalize">
+        {{headerProperName}}
+      </div>
+      <div ng-if="filterName === 'genres'" class="filterItem buffer" ng-click="allOn('genres'); changeTracking.changesMade = true">
+        <div class="leftContainer">
+          <div class="filterName capitalize">
+            All On
+          </div>
+        </div>
+        <div class="rightContainer">
+          <div class="sliderContainer floatRight">
+            <div class="slider">
+              <div class="slideBlock" ng-class="filterOptionsCount === activeFilterCount ? 'sliderSelected' : 'sliderDeselected'"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div ng-if="filterName === 'sortBy'">
+        <div class="filterItem buffer" ng-repeat="sort in userSettings.sortList" ng-click="userSettings.sortBy = sort; changeTracking.changesMade = true">
+          <div class="leftContainer">
+            <div class="filterName capitalize">
+              {{sort}}
+            </div>
+          </div>
+          <div class="rightContainer">
+            <div class="sliderContainer floatRight">
+              <div class="slider">
+                <div class="slideBlock" ng-class="userSettings.sortBy === sort ? 'sliderSelected' : 'sliderDeselected'"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div ng-if="filterName !== 'sortBy'" class="filterItem buffer" ng-repeat="filterItem in filter" ng-click="flipFilter(filterItem); changeTracking.changesMade = true">
+        <div class="leftContainer">
+          <div class="filterName capitalize">
+            {{filterItem.name}}
+          </div>
+        </div>
+        <div class="rightContainer">
+          <div class="sliderContainer floatRight">
+            <div class="slider">
+              <div class="slideBlock" ng-class="filterItem.selected ? 'sliderSelected' : 'sliderDeselected'"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
