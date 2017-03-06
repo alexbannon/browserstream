@@ -3,7 +3,6 @@
 angular.module('browserstreams', [
   'ngRoute',
   'browserstreams.home',
-  'browserstreams.searchResults',
   'infinite-scroll',
   'ngAnimate'
 ])

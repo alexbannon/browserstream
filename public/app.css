@@ -100,6 +100,13 @@ a {
 .optionContainer {
   display: inline-block;
   margin: 4px 10px;
+  cursor: pointer;
+  border: 1px solid rgba(0,0,0,0);
+  border-radius: 4px;
+  padding: 2px;
+}
+.optionContainer:hover {
+  border: 1px solid rgb(0, 0, 0);
 }
 .optionArrow {
   width: 10px;
@@ -285,10 +292,12 @@ margin: 0 auto 0 10px;
   width: 20px;
   position: relative;
   top: 5px;
+  cursor: pointer;
 }
 .backWords {
   position: relative;
   top: 1px;
+  cursor: pointer;
 }
 
 /* title modal overlay */
@@ -618,7 +627,7 @@ padding-bottom: 5px;
   margin: 10px auto;
   text-align: center;
 }
-.travoltaContainer {
+.errorImageContainer {
   margin: 10px auto;
   text-align: center;
 }

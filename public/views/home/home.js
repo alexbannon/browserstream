@@ -7,13 +7,22 @@ angular.module('browserstreams.home', ['ngRoute', 'ngCookies'])
     templateUrl: 'views/home/home.html',
     controller: 'HomeCtrl'
   });
+  $routeProvider.when('/search/:searchTerm', {
+    templateUrl: 'views/home/home.html',
+    controller: 'HomeCtrl'
+  });
+
 }])
 
-.controller('HomeCtrl', ['$scope', '$cookies', 'Modal', 'TitlesApi', 'LocalStorage', 'TitleScroll', '$rootScope', 'UserSettings', '$location', function($scope, $cookies, Modal, TitlesApi, LocalStorage, TitleScroll, $rootScope, UserSettings, $location) {
+.controller('HomeCtrl', ['$scope', '$cookies', 'Modal', 'TitlesApi', 'LocalStorage', 'TitleScroll', '$rootScope', 'UserSettings', '$location', '$routeParams', function($scope, $cookies, Modal, TitlesApi, LocalStorage, TitleScroll, $rootScope, UserSettings, $location, $routeParams) {
 
   $scope.search = {
     searchInput: undefined
   };
+
+  if ($routeParams && $routeParams.searchTerm) {
+    $scope.searchMovie($routeParams.searchTerm);
+  }
 
   $scope.userSettings = UserSettings.generateUserSettings();
   $scope.changeTracking = {
@@ -46,10 +55,29 @@ angular.module('browserstreams.home', ['ngRoute', 'ngCookies'])
     }
   };
 
-  $scope.searchMovie = function() {
-    if ($scope.search.searchInput) {
-      $location.path('/search/' + $scope.search.searchInput);
+  $scope.whichErrorImage = function() {
+    var source = '../../assets/confusedTravolta.gif';
+    if ($scope.titleScroll.error) {
+      source = '../../assets/simpsonsDead.gif';
     }
+    return source;
+  };
+
+  $scope.searchMovie = function(searchOverride) {
+    var search = searchOverride || $scope.search.searchInput;
+    if (search) {
+      $scope.titleScroll.search(search);
+      $scope.hideFilter = true;
+      $scope.search.searchInput = '';
+      // TODO history change
+    }
+  };
+
+  $scope.backToTitles = function() {
+    $scope.titleScroll.items = [];
+    $scope.titleScroll.busy = false;
+    $scope.hideFilter = false;
+    $scope.titleScroll.changeItemsList($scope.userSettings);
   };
 
   $scope.selectProvider = function() {

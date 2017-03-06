@@ -1,5 +1,11 @@
 <div ng-include="'/views/templates/header.html'"></div>
-<div class="selectorBackground">
+<div class="selectorBackground" ng-if="hideFilter">
+  <div class="backContainer" ng-click="backToTitles()">
+    <img src="/assets/back.png" class="backImage" />
+    <span class="backWords">BACK</span>
+  </div>
+</div>
+<div class="selectorBackground" ng-if="!hideFilter">
   <div class="selectorContainer">
     <div ng-repeat="provider in userSettings.providers" class="providerContainer" ng-click="provider.selected = !provider.selected; selectProvider();">
       <img ng-src="{{provider.imageSource}}" class="logo" />
@@ -14,20 +20,18 @@
   </div>
 </div>
 <div id="titlesContainer" class="titlesContainer" infinite-scroll='loadMoreTitles()' infinite-scroll-disabled='titleScroll.busy' infinite-scroll-distance='0.25' infinite-scroll-listen-for-event="itemsNotLongEnough">
-  <div ng-if="titleScroll.noDataError">
-    <div class="topError">
+  <div ng-if="titleScroll.noDataError || titleScroll.error || titleScroll.searchError">
+    <div class="topError" ng-if="titleScroll.noDataError">
       Whoa. There aren't any titles to be found. Let's try <span class="clearFilters" ng-click=clearFilters()>clearing all your filters?</span>
     </div>
-    <div class="travoltaContainer">
-      <img src="../../assets/confusedTravolta.gif" />
-    </div>
-  </div>
-  <div ng-if="titleScroll.error">
-    <div class="topError">
+    <div class="topError" ng-if="titleScroll.error">
       Sorry about that, but something went wrong when trying to retrieve your data. There's a solid chance my server is overloaded, but I still recommend refreshing like crazy anyway.
     </div>
-    <div class="travoltaContainer">
-      <img src="../../assets/simpsonsDead.gif" />
+    <div class="topError" ng-if="titleScroll.searchError">
+      Whoa. That title doesn't seem to be available on any of the providers yet. That's a pretty big bummer.
+    </div>
+    <div class="errorImageContainer">
+      <img ng-src="{{whichErrorImage()}}" />
     </div>
   </div>
   <div ng-repeat="title in titleScroll.items" class="imageContainer" ng-click="displaySummary(title)" ng-mouseover="title.showTitleOptions = true;" ng-mouseleave="title.showTitleOptions = false">
@@ -48,5 +52,5 @@
     </div>
   </div>
 </div>
-<div class="loadingData" ng-show='titleScroll.busy'>Loading</div>
+<div class="loadingData" ng-show='titleScroll.busy && (!titleScroll.error && !titleScroll.noDataError && !titleScroll.searchError && !titleScroll.userSearch)'>Loading</div>
 <div ng-include="'/views/templates/titleModal.html'"></div>

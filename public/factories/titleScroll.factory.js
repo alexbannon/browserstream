@@ -1,13 +1,16 @@
 angular.module('browserstreams')
 
-.factory('TitleScroll', function($http, $rootScope, $timeout) {
+.factory('TitleScroll', function($http, $rootScope, $timeout, TitlesApi) {
   var TitleScroll = function(sort, limit) {
     this.sort = sort;
     this.items = [];
+    this.userSearch = false;
     this.busy = false;
     this.start = 0;
     this.limit = limit;
     this.error = false;
+    this.searchError = false;
+    this.noDataError = false;
   };
 
   TitleScroll.prototype.nextPage = function(providersArray, titleTypeArray, genresArray, emitEvent) {
@@ -96,9 +99,29 @@ angular.module('browserstreams')
     this.sort = userSettings.sortBy;
     this.error = false;
     this.noDataError = false;
+    this.searchError = false;
+    this.userSearch = false;
     this.items = [];
     this.start = 0;
     this.nextPage(userSettings.providers, userSettings.titleType, userSettings.genres, 'checkHeight');
+  };
+
+  TitleScroll.prototype.search = function(searchTerm) {
+    var self = this;
+    self.busy = true;
+    this.userSearch = true;
+    if (searchTerm) {
+      TitlesApi.searchForTitle(searchTerm).then(function(result){
+        if (!result || result.data.length === 0) {
+          self.searchError = true;
+        }
+        self.items = result.data;
+      }).catch(function(err){
+        self.busy = false;
+        self.error = true;
+        console.log('error searching api: ' + err);
+      });
+    }
   };
 
   return TitleScroll;
