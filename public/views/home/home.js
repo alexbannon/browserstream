@@ -69,7 +69,7 @@ angular.module('browserstreams.home', ['ngRoute', 'ngCookies'])
   $scope.openFilter = function(whichFilter) {
     $scope.showPrefs = true;
     $scope.filterName = whichFilter;
-    $scope.headerProperName;
+    $scope.headerProperName = '';
     $scope.activeFilterCount = 0;
     $scope.filterOptionsCount = 0;
 
@@ -108,7 +108,11 @@ angular.module('browserstreams.home', ['ngRoute', 'ngCookies'])
 
   $scope.flipFilter = function(filterItem) {
     if ((filterItem.selected && $scope.activeFilterCount > 1) || !filterItem.selected) {
-      filterItem.selected ? $scope.activeFilterCount-- : $scope.activeFilterCount++;
+      if (filterItem.selected) {
+        $scope.activeFilterCount--;
+      } else {
+        $scope.activeFilterCount++;
+      }
       filterItem.selected = !filterItem.selected;
     }
   };
