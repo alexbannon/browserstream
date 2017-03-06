@@ -28,7 +28,7 @@ angular.module('browserstreams')
           console.log('provider not found');
           return;
       }
-      $window.location.href = destinationUrl;
+      $window.open(destinationUrl, '_blank');
     }
   };
 }]);

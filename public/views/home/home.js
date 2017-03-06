@@ -64,6 +64,7 @@ angular.module('browserstreams.home', ['ngRoute', 'ngCookies'])
     $event.stopPropagation();
     var titleObject = titleObjectOverride || $scope.selectedTitleObject;
     Modal.handleProviderTitleClick(titleObject, providerOverride);
+    $scope.displayModal = false;
   };
 
   $scope.openFilter = function(whichFilter) {
