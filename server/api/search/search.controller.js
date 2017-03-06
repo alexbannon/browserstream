@@ -7,7 +7,7 @@ var redis = require('redis');
 var redisClient = redis.createClient();
 
 function searchTitle(searchQuery, callback) {
-  var query = 'SELECT * from title WHERE to_tsvector(\'simple\', title_name) @@ plainto_tsquery(\'simple\', $1) ORDER BY imdb_votes DESC NULLS LAST LIMIT 10';
+  var query = 'SELECT t.title_id, t.title_name, t.imdb_id, t.image_url, t.imdb_rating, array_agg( p.provider_id ) as providers_ids, array_agg( p.name ) as providers_names FROM provider_title as pt JOIN provider as p ON pt.provider_id = p.provider_id JOIN title as t ON t.title_id = pt.title_id WHERE to_tsvector(\'simple\', t.title_name) @@ plainto_tsquery(\'simple\', $1) GROUP BY t.title_id, t.title_name ORDER BY t.imdb_votes DESC NULLS LAST LIMIT 10';
   searchQuery = '%' + searchQuery + '%';
   var queryValues = [searchQuery];
   pg.connect(config.POSTGRES_CONNECT, function(err, client, done) {

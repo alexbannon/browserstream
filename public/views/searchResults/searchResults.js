@@ -9,7 +9,7 @@ angular.module('browserstreams.searchResults', ['ngRoute', 'ngCookies'])
   });
 }])
 
-.controller('SearchCtrl', ['$scope', '$routeParams', 'TitlesApi', function($scope, $routeParams, TitlesApi) {
+.controller('SearchCtrl', ['$scope', '$routeParams', 'TitlesApi', '$rootScope', function($scope, $routeParams, TitlesApi, $rootScope) {
   $scope.hideFilter = true;
 
   $scope.search = {
@@ -26,6 +26,21 @@ angular.module('browserstreams.searchResults', ['ngRoute', 'ngCookies'])
       });
     }
   }
+  $scope.displaySummary = function(titleObject) {
+    $scope.selectedTitleObject = titleObject;
+    $scope.displayModal = true;
+    $rootScope.bodyClass = true;
+    TitlesApi.getAdditionalTitleInfo(titleObject.title_id).then(function(result) {
+      $scope.additionalTitleInfo = result.data[0];
+    }).catch(function(error) {
+      console.log('error retrieving more title info ', error);
+    });
+  };
+  $scope.hideModal = function() {
+    $scope.displayModal = false;
+    $rootScope.bodyClass = false;
+  };
+
 
   search($routeParams.searchTerm);
 

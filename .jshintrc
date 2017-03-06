@@ -18,6 +18,7 @@
     "confirm"              : false,
     "context"              : false,
     "describe"             : false,
+    "document"             : false,
     "expect"               : false,
     "it"                   : false,
     "xit"                  : false,
