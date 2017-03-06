@@ -4,7 +4,10 @@ angular.module('browserstreams')
 
 .service('UserSettings', ['LocalStorage', function(LocalStorage) {
   return {
-    generateUserSettings: function() {
+    generateUserSettings: function(override) {
+      if (override) {
+        LocalStorage.clearStorage();
+      }
       var localStorageSelections = LocalStorage.getFromStorage('providerSelections');
       localStorageSelections = localStorageSelections ? localStorageSelections.split(',') : ['netflix', 'hbo_go', 'amazon_prime', 'hulu'];
       var localStorageTitleTypes = LocalStorage.getFromStorage('titleTypes');

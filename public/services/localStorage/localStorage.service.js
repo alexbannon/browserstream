@@ -47,9 +47,11 @@ angular.module('browserstreams')
       if (!$rootScope.localStorageAvailable) {
         var expireDate = new Date();
         expireDate.setDate(expireDate.getDate() + 2555);
+        var domain = '.' + window.location.hostname;
         $cookies.put(key, value, {
           path: '/',
-          expires: expireDate
+          expires: expireDate,
+          domain: domain
         });
       } else {
         $window.localStorage[key] = value;
@@ -66,6 +68,22 @@ angular.module('browserstreams')
         valueToReturn = $window.localStorage[key];
       }
       return valueToReturn;
+    },
+    clearStorage: function() {
+      if ($rootScope.localStorageAvailable === undefined) {
+        $rootScope.localStorageAvailable = supportsHtml5Storage();
+      }
+      if (!$rootScope.localStorageAvailable) {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+          var cookie = cookies[i];
+          var eqPos = cookie.indexOf('=');
+          var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+          document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT';
+        }
+      } else {
+        window.localStorage.clear();
+      }
     }
   };
 }]);

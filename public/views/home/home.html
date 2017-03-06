@@ -14,7 +14,23 @@
   </div>
 </div>
 <div id="titlesContainer" class="titlesContainer" infinite-scroll='loadMoreTitles()' infinite-scroll-disabled='titleScroll.busy' infinite-scroll-distance='0.25' infinite-scroll-listen-for-event="itemsNotLongEnough">
-  <div ng-repeat="title in titleScroll.items" class="imageContainer" ng-click="displaySummary(title)" ng-if="title.imdb_rating" ng-mouseover="title.showTitleOptions = true;" ng-mouseleave="title.showTitleOptions = false">
+  <div ng-if="titleScroll.noDataError">
+    <div class="topError">
+      Whoa. There aren't any titles to be found. Let's try <span class="clearFilters" ng-click=clearFilters()>clearing all your filters?</span>
+    </div>
+    <div class="travoltaContainer">
+      <img src="../../assets/confusedTravolta.gif" />
+    </div>
+  </div>
+  <div ng-if="titleScroll.error">
+    <div class="topError">
+      Sorry about that, but something went wrong when trying to retrieve your data. There's a solid chance my server is overloaded, but I still recommend refreshing like crazy anyway.
+    </div>
+    <div class="travoltaContainer">
+      <img src="../../assets/simpsonsDead.gif" />
+    </div>
+  </div>
+  <div ng-repeat="title in titleScroll.items" class="imageContainer" ng-click="displaySummary(title)" ng-mouseover="title.showTitleOptions = true;" ng-mouseleave="title.showTitleOptions = false">
     <div ng-if="title.image_url">
       <span class="centerImageHelper"></span><img class="posterImage" ng-src="{{title.image_url}}" />
     </div>

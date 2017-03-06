@@ -66,6 +66,9 @@ angular.module('browserstreams')
       }
     }).then(function(response) {
       if (this.items.length === 0) {
+        if (response.data.length === 0) {
+          this.noDataError = true;
+        }
         this.items = response.data;
       } else {
         this.items.push(...response.data);
@@ -82,7 +85,9 @@ angular.module('browserstreams')
     }.bind(this)).catch(function(err) {
       console.log(err);
       this.busy = false;
-      this.error = true;
+      if (this.items.length === 0) {
+        this.error = true;
+      }
     }.bind(this));
 
   };
@@ -90,6 +95,7 @@ angular.module('browserstreams')
   TitleScroll.prototype.changeItemsList = function(userSettings) {
     this.sort = userSettings.sortBy;
     this.error = false;
+    this.noDataError = false;
     this.items = [];
     this.start = 0;
     this.nextPage(userSettings.providers, userSettings.titleType, userSettings.genres, 'checkHeight');

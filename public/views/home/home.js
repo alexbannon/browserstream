@@ -117,5 +117,7 @@ angular.module('browserstreams.home', ['ngRoute', 'ngCookies'])
     }
   };
 
-
+  $scope.clearFilters = function() {
+    $scope.userSettings = UserSettings.generateUserSettings(true);
+  };
 }]);
