@@ -65,5 +65,5 @@ app.disable('x-powered-by');
 require('./routes.js')(app);
 
 // listen (start app with node server.js) ======================================
-app.listen(port);
+app.listen(port, '0.0.0.0');
 console.log('App listening on port ' + port);

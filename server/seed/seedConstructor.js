@@ -114,7 +114,7 @@ var Seed = function(limit, poolClient, providerId, providerName, offset, titleTy
         url += 'i=' + imdbId;
         console.log(url);
         request(url, function(error, response, body) {
-          if (!error && response.statusCode === 200) {
+          if (!error && response && response.statusCode === 200) {
             body = JSON.parse(body);
             if (body.imdbID) {
               insertDataIntoDB(body, false, (err, result) => {
@@ -129,9 +129,13 @@ var Seed = function(limit, poolClient, providerId, providerName, offset, titleTy
               reject('no imdbId');
             }
           } else {
+            var errorToReturn = error;
+            if (response && response.statusCode) {
+              errorToReturn = response.statusCode;
+            }
             console.log('ERROR WITH OMDBAPI');
-            console.log(response.statusCode);
-            reject('ERROR WITH OMDBAPI: ' + response.statusCode);
+            console.log(errorToReturn);
+            reject('ERROR WITH OMDBAPI: ' + errorToReturn);
           }
         });
       });
