@@ -82,21 +82,26 @@ function init(client, done, limit, offset) {
     }
     var finishedCounter = 0;
     for (var x = 0; x < resultsToTransform.length; x++) {
-      downloadImageAndStoreInS3(resultsToTransform[x], function(id, path, s3Url) {
-        var query = `UPDATE title SET s3url = '${s3Url}' WHERE title_id = ${id}`;
-        console.log(id, path, s3Url);
-        console.log(query);
-        pgQuery(client, done, query, function(result) {
-          console.log('db updated');
-          fs.unlink(path, function(){
-            console.log('file uploaded to s3, successfully added to db, and deleted');
-            if (++finishedCounter === resultsToTransform.length) {
-              // recursion
-              init(client, done, limit, (offset + limit));
-            }
+      if (!resultsToTransform[x].imageUrl) {
+        if (++finishedCounter === resultsToTransform.length) {
+          init(client, done, limit, (offset + limit));
+        }
+      } else {
+        downloadImageAndStoreInS3(resultsToTransform[x], function(id, path, s3Url) {
+          var query = `UPDATE title SET s3url = '${s3Url}' WHERE title_id = ${id}`;
+          console.log(id, path, s3Url);
+          console.log(query);
+          pgQuery(client, done, query, function(result) {
+            console.log('db updated');
+            fs.unlink(path, function(){
+              console.log('file uploaded to s3, successfully added to db, and deleted');
+              if (++finishedCounter === resultsToTransform.length) {
+                init(client, done, limit, (offset + limit));
+              }
+            });
           });
         });
-      });
+      }
     }
   });
 }
