@@ -9,10 +9,10 @@ angular.module('browserstreams')
     },
     link: function(scope, element) {
       element.bind('error', function() {
-        var e = $compile('<div class="titleImageContainer">{{replacedTitle}}</div>')(scope);
+        var e = $compile('<div class="titleImageContainer"><div class="titleName">{{replacedTitle}}</div></div>')(scope);
         scope.$apply(function() {
           element.replaceWith(e);
-        })
+        });
       });
     }
   };
