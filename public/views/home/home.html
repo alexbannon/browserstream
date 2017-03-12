@@ -36,9 +36,9 @@
   </div>
   <div ng-repeat="title in titleScroll.items" class="imageContainer" ng-click="displaySummary(title)" ng-mouseover="title.showTitleOptions = true;" ng-mouseleave="title.showTitleOptions = false">
     <div ng-if="title.image_url">
-      <span class="centerImageHelper"></span><img class="posterImage" ng-src="{{title.image_url}}" />
+      <span class="centerImageHelper"></span><img class="posterImage" ng-src="{{title.image_url}}" err-src replaced-title="{{title.title_name}}"/>
     </div>
-    <div class="titleImageContainer" ng-if="!title.image_url">
+    <div class="titleImageContainer" ng-if="!title.image_url || title.image_error">
       {{title.title_name}}
     </div>
     <div ng-if="title.showTitleOptions" class="titleHover">
@@ -52,5 +52,5 @@
     </div>
   </div>
 </div>
-<div class="loadingData" ng-show='titleScroll.busy && (!titleScroll.error && !titleScroll.noDataError && !titleScroll.searchError && !titleScroll.userSearch)'>Loading</div>
+<div class="loadingData" ng-show='titleScroll.busy && (!titleScroll.error && !titleScroll.noDataError && !titleScroll.searchError && !titleScroll.userSearch && !titleScroll.atBottom)'>Loading</div>
 <div ng-include="'/views/templates/titleModal.html'"></div>
