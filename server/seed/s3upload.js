@@ -3,7 +3,6 @@ var config = require('../config/environment/config.js')();
 var fs = require('fs');
 var request = require('request');
 var pg = require('pg');
-var resultsToTransform = [];
 
 var s3Client = new Upload(config.AWSBUCKETNAME, {
   aws: {
@@ -68,6 +67,7 @@ function endConnection(done) {
 }
 
 function init(client, done, limit, offset) {
+  var resultsToTransform = [];
   pgQuery(client, done, `SELECT * FROM title WHERE title.s3url IS NULL LIMIT ${limit} OFFSET ${offset}`, function(result){
     if (!result || !result.rows || result.rows.length === 0) {
       console.log('recursion complete');
