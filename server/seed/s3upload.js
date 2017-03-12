@@ -37,7 +37,7 @@ function downloadImageAndStoreInS3(resultToAdd, callback) {
 
     s3Client.upload(path, {}, function(err, versions) {
       if (err) {
-        throw err;
+        callback(null, null, null, err);
       } else {
         callback(resultToAdd.id, path, versions[0].url);
       }
@@ -87,19 +87,26 @@ function init(client, done, limit, offset) {
           init(client, done, limit, (offset + limit));
         }
       } else {
-        downloadImageAndStoreInS3(resultsToTransform[x], function(id, path, s3Url) {
-          var query = `UPDATE title SET s3url = '${s3Url}' WHERE title_id = ${id}`;
-          console.log(id, path, s3Url);
-          console.log(query);
-          pgQuery(client, done, query, function(result) {
-            console.log('db updated');
-            fs.unlink(path, function(){
-              console.log('file uploaded to s3, successfully added to db, and deleted');
-              if (++finishedCounter === resultsToTransform.length) {
-                init(client, done, limit, (offset + limit));
-              }
+        downloadImageAndStoreInS3(resultsToTransform[x], function(id, path, s3Url, error) {
+          if (error) {
+            console.log(error);
+            if (++finishedCounter === resultsToTransform.length) {
+              init(client, done, limit, (offset + limit));
+            }
+          } else {
+            var query = `UPDATE title SET s3url = '${s3Url}' WHERE title_id = ${id}`;
+            console.log(id, path, s3Url);
+            console.log(query);
+            pgQuery(client, done, query, function(result) {
+              console.log('db updated');
+              fs.unlink(path, function(){
+                console.log('file uploaded to s3, successfully added to db, and deleted');
+                if (++finishedCounter === resultsToTransform.length) {
+                  init(client, done, limit, (offset + limit));
+                }
+              });
             });
-          });
+          }
         });
       }
     }
