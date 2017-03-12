@@ -67,7 +67,7 @@ function endConnection(done) {
 
 function init(client, done, limit, offset) {
   var resultsToTransform = [];
-  pgQuery(client, done, `SELECT * FROM title WHERE s3url IS NULL LIMIT ${limit} OFFSET ${offset}`, function(result){
+  pgQuery(client, done, `SELECT * FROM title WHERE s3url IS NULL AND image_url IS NOT NULL LIMIT ${limit} OFFSET ${offset}`, function(result){
     if (!result || !result.rows || result.rows.length === 0) {
       console.log('recursion complete');
       endConnection(done);
