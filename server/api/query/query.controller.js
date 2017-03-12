@@ -68,7 +68,7 @@ function requestStreams(providers, titleType, sort, offset, limit, genres, callb
 
   }
 
-  var query = `SELECT t.title_id, t.title_name, t.imdb_id, t.image_url, t.imdb_rating, array_agg( p.provider_id ) as providers_ids, array_agg( p.name ) as providers_names FROM provider_title as pt JOIN provider as p ON pt.provider_id = p.provider_id JOIN title as t ON t.title_id = pt.title_id WHERE p.name IN ${providerParams} AND t.type IN ${titleTypeParams} ${genresInsert} GROUP BY t.title_id, t.title_name ORDER BY ${sortQuery} NULLS LAST LIMIT ${limit} OFFSET ${offset};`;
+  var query = `SELECT DISTINCT t.title_id, t.title_name, t.imdb_id, t.image_url, t.imdb_rating, array_agg( p.provider_id ) as providers_ids, array_agg( p.name ) as providers_names FROM provider_title as pt JOIN provider as p ON pt.provider_id = p.provider_id JOIN title as t ON t.title_id = pt.title_id WHERE p.name IN ${providerParams} AND t.type IN ${titleTypeParams} ${genresInsert} GROUP BY t.title_id, t.title_name ORDER BY ${sortQuery} NULLS LAST LIMIT ${limit} OFFSET ${offset};`;
   pg.connect(config.POSTGRES_CONNECT, function(err, client, done) {
     if (err) {
       callback('could not connect to postgres db');
