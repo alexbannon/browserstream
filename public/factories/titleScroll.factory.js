@@ -7,6 +7,7 @@ angular.module('browserstreams')
     this.items = [];
     this.userSearch = false;
     this.busy = false;
+    this.atBottom = false;
     this.start = 0;
     this.limit = limit;
     this.error = false;
@@ -17,6 +18,8 @@ angular.module('browserstreams')
       this.noDataError = false;
       this.searchError = false;
       this.userSearch = false;
+      this.atBottom = false;
+      this.busy = false;
     }.bind(this);
   };
 
@@ -93,9 +96,11 @@ angular.module('browserstreams')
         $rootScope.$emit('itemsNotLongEnough');
       }
     }.bind(this)).catch(function(err) {
-      console.log(err);
-      this.busy = false;
-      if (this.items.length === 0) {
+      if (err && err.status === 404) {
+        this.atBottom = true;
+      } else {
+        console.log(err);
+        this.items = [];
         this.error = true;
       }
     }.bind(this));

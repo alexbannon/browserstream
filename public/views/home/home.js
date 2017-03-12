@@ -89,8 +89,8 @@ angular.module('browserstreams.home', ['ngRoute', 'ngCookies'])
   $scope.clickModal = function($event, providerOverride, titleObjectOverride) {
     $event.stopPropagation();
     var titleObject = titleObjectOverride || $scope.selectedTitleObject;
+    $scope.hideModal();
     Modal.handleProviderTitleClick(titleObject, providerOverride);
-    $scope.displayModal = false;
   };
 
   $scope.openFilter = function(whichFilter) {
