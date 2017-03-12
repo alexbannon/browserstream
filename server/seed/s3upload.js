@@ -68,10 +68,6 @@ function endConnection(done) {
 }
 
 function init(client, done, limit, offset) {
-  if (offset === 50) {
-    console.log('stopping...');
-    endConnection(done);
-  }
   pgQuery(client, done, `SELECT * FROM title WHERE title.s3url IS NULL LIMIT ${limit} OFFSET ${offset}`, function(result){
     if (!result || !result.rows || result.rows.length === 0) {
       console.log('recursion complete');
