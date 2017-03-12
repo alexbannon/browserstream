@@ -56,7 +56,10 @@ var CompletenessCheck = function(client) {
         this.getTotalGuideboxCount(this.totalGuideboxCount).then(function(result) {
           console.log(result);
           this.getDbConnections().then(result => {
+            console.log('got this many titles inserted: ' + parseInt(result));
             // if at least 90% of provider_titles got inserted, I'm calling it a success and deleting old ones
+            var boolToRespond = ((this.totalGuideboxCount * (0.9)) < parseInt(result));
+            console.log('was it over 90%: ' + boolToRespond);
             if ((this.totalGuideboxCount * (0.9)) < parseInt(result)) {
               this.removeOldConnections().then(response => {
                 resolve(response);
@@ -90,8 +93,10 @@ var CompletenessCheck = function(client) {
 
   this.removeOldConnections = function() {
     return new Promise((resolve, reject) => {
+      console.log(`delete everything where date_updated is not ${this.dateToday}`);
       this.client.query(`DELETE FROM provider_title WHERE date_updated <> '${this.dateToday}'`, (err, result) => {
         if (err) {
+          console.log('ugh something went wrong');
           reject(err);
         } else {
           console.log(result);
