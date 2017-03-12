@@ -34,7 +34,6 @@ var download = function(uri, filename, callback){
 function downloadImageAndStoreInS3(resultToAdd, callback) {
   var path = `tempimages/${resultToAdd.id}`;
   download(resultToAdd.imageUrl, path, function(){
-
     s3Client.upload(path, {}, function(err, versions) {
       if (err) {
         callback(null, null, null, err);
@@ -68,7 +67,7 @@ function endConnection(done) {
 
 function init(client, done, limit, offset) {
   var resultsToTransform = [];
-  pgQuery(client, done, `SELECT * FROM title WHERE title.s3url IS NULL LIMIT ${limit} OFFSET ${offset}`, function(result){
+  pgQuery(client, done, `SELECT * FROM title WHERE s3url IS NULL LIMIT ${limit} OFFSET ${offset}`, function(result){
     if (!result || !result.rows || result.rows.length === 0) {
       console.log('recursion complete');
       endConnection(done);
