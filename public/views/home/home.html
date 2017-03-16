@@ -31,7 +31,7 @@
       Whoa. That title doesn't seem to be available on any of the providers yet. That's a pretty big bummer.
     </div>
     <div class="errorImageContainer">
-      <img ng-src="{{whichErrorImage()}}" />
+      <img class="errorImage" ng-src="{{whichErrorImage()}}" />
     </div>
   </div>
   <div ng-repeat="title in titleScroll.items" class="imageContainer" ng-click="displaySummary(title)" ng-mouseover="title.showTitleOptions = true;" ng-mouseleave="title.showTitleOptions = false">

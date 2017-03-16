@@ -27,6 +27,12 @@ angular.module('browserstreams')
     if (this.busy || this.error) {
       return;
     }
+    var self = this;
+    function noItemsNotBusy() {
+      self.items = [];
+      self.noDataError = true;
+      self.busy = false;
+    }
     this.busy = true;
     var providerCount = 0;
     var url = '/api/query?sort='+this.sort+'&start='+this.start;
@@ -37,7 +43,7 @@ angular.module('browserstreams')
       }
     }
     if (providerCount === 0) {
-      this.busy = false;
+      noItemsNotBusy();
       return;
     }
 
@@ -50,7 +56,7 @@ angular.module('browserstreams')
       }
     }
     if (titleCount === 0) {
-      this.busy = false;
+      noItemsNotBusy();
       return;
     }
 
@@ -64,7 +70,10 @@ angular.module('browserstreams')
         turnedOffGenreCount++;
       }
     }
-    if (turnedOffGenreCount > 0) {
+    if (turnedOffGenreCount === genresArray.length) {
+      noItemsNotBusy();
+      return;
+    } else if (turnedOffGenreCount > 0) {
       url += urlGenreAddition;
     }
 

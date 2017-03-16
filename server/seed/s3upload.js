@@ -72,6 +72,27 @@ function init(client, done, limit, offset) {
       console.log('recursion complete');
       endConnection(done);
     }
+    function s3ImageCallback(id, path, s3Url, error) {
+      if (error) {
+        console.log(error);
+        if (++finishedCounter === resultsToTransform.length) {
+          init(client, done, limit, (offset + limit));
+        }
+      } else {
+        var query = `UPDATE title SET s3url = '${s3Url}' WHERE title_id = ${id}`;
+        console.log(id, path, s3Url);
+        console.log(query);
+        pgQuery(client, done, query, function(result) {
+          console.log('db updated: ' + result);
+          fs.unlink(path, function(){
+            console.log('file uploaded to s3, successfully added to db, and deleted');
+            if (++finishedCounter === resultsToTransform.length) {
+              init(client, done, limit, (offset + limit));
+            }
+          });
+        });
+      }
+    }
     for (var i = 0; i < result.rows.length; i++) {
       var resultToTransform = {
         id: result.rows[i].title_id,
@@ -86,27 +107,7 @@ function init(client, done, limit, offset) {
           init(client, done, limit, (offset + limit));
         }
       } else {
-        downloadImageAndStoreInS3(resultsToTransform[x], function(id, path, s3Url, error) {
-          if (error) {
-            console.log(error);
-            if (++finishedCounter === resultsToTransform.length) {
-              init(client, done, limit, (offset + limit));
-            }
-          } else {
-            var query = `UPDATE title SET s3url = '${s3Url}' WHERE title_id = ${id}`;
-            console.log(id, path, s3Url);
-            console.log(query);
-            pgQuery(client, done, query, function(result) {
-              console.log('db updated');
-              fs.unlink(path, function(){
-                console.log('file uploaded to s3, successfully added to db, and deleted');
-                if (++finishedCounter === resultsToTransform.length) {
-                  init(client, done, limit, (offset + limit));
-                }
-              });
-            });
-          }
-        });
+        downloadImageAndStoreInS3(resultsToTransform[x], s3ImageCallback);
       }
     }
   });

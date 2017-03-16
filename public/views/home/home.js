@@ -105,7 +105,7 @@ angular.module('browserstreams.home', ['ngRoute', 'ngCookies'])
         $scope.headerProperName = 'Filter By Genres';
         break;
       case 'titleType':
-        $scope.headerProperName = 'Filter By Video Type';
+        $scope.headerProperName = 'Filter By Content Type';
         break;
       case 'sortBy':
         $scope.headerProperName = 'Sort By...';
@@ -122,30 +122,32 @@ angular.module('browserstreams.home', ['ngRoute', 'ngCookies'])
     }
   };
 
-  $scope.allOn = function(filter) {
+  $scope.flipAllOnOff = function(filter, turnOffAll) {
     var newCount = 0;
     if (filter === 'genres') {
       for (var i = 0; i < $scope.userSettings[filter].length; i++) {
         newCount++;
-        $scope.userSettings[filter][i].selected = true;
+        $scope.userSettings[filter][i].selected = !turnOffAll;
+      }
+      if (turnOffAll) {
+        newCount = 0;
       }
       $scope.activeFilterCount = newCount;
     }
   };
 
   $scope.flipFilter = function(filterItem) {
-    if ((filterItem.selected && $scope.activeFilterCount > 1) || !filterItem.selected) {
-      if (filterItem.selected) {
-        $scope.activeFilterCount--;
-      } else {
-        $scope.activeFilterCount++;
-      }
-      filterItem.selected = !filterItem.selected;
+    if (filterItem.selected) {
+      $scope.activeFilterCount--;
+    } else {
+      $scope.activeFilterCount++;
     }
+    filterItem.selected = !filterItem.selected;
   };
 
   $scope.clearFilters = function() {
     $scope.userSettings = UserSettings.generateUserSettings(true);
+    $scope.titleScroll.changeItemsList($scope.userSettings);
   };
 
   if ($routeParams && $routeParams.searchTerm) {
