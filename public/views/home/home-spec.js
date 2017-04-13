@@ -15,3 +15,5 @@ describe('angularjs homepage todo list', function() {
     // expect(completedAmount.count()).toEqual(2);
   });
 });
+// && (webdriver-manager start) && sleep 5 && protractor conf.js
+// TODO: put protractor test back into precommit hook - currently breaking unless run separately
